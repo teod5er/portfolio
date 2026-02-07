@@ -1,280 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teo Peter's Archive</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #000;
-            --accent: #00ff00;
-            --panel-w: 400px;
-            --item-size: 180px; 
-            --gap: 200px; 
-        }
-
-        * {
-            user-select: none;
-            -webkit-user-select: none;
-            box-sizing: border-box;
-            cursor: none !important;
-        }
-
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            background: var(--bg-color);
-            color: #fff; font-family: 'Inter', sans-serif;
-            overflow: hidden;
-        }
-
-        /* Custom Cursor */
-        #custom-cursor {
-            position: fixed; width: 20px; height: 20px;
-            pointer-events: none; z-index: 9999;
-            mix-blend-mode: difference;
-        }
-        #custom-cursor::before, #custom-cursor::after {
-            content: ''; position: absolute; background: white;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-        }
-        #custom-cursor::before { width: 100%; height: 1px; }
-        #custom-cursor::after { width: 1px; height: 100%; }
-
-        /* Loading Screen */
-        #loader {
-            position: fixed; inset: 0; background: #000; z-index: 1000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease;
-        }
-        .loader-text { font-weight: 900; letter-spacing: 15px; font-size: 14px; margin-bottom: 20px; animation: pulse 1s infinite; }
-        .loader-bar { width: 150px; height: 1px; background: #222; position: relative; overflow: hidden; }
-        .loader-progress { position: absolute; width: 100%; height: 100%; background: var(--accent); transform: translateX(-100%); animation: load 1s linear forwards; }
-        @keyframes load { to { transform: translateX(0); } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        .header {
-            position: fixed; top: 0; width: 100%; padding: 30px;
-            display: flex; justify-content: space-between; z-index: 100;
-            align-items: center; pointer-events: none;
-        }
-        .header > div, .nav-links { pointer-events: auto; }
-        .nav-links { display: flex; gap: 20px; }
-        .nav-item {
-            background: none; border: none; color: white; opacity: 0.5;
-            text-transform: uppercase; font-size: 11px; letter-spacing: 2px; transition: 0.3s;
-        }
-        .nav-item.active { opacity: 1; color: var(--accent); }
-
-        #viewport { width: 100vw; height: 100vh; overflow: hidden; position: relative; touch-action: none; }
-
-        /* Blur Effect - Only for Desktop */
-        @media (min-width: 769px) {
-            #viewport:has(.item:hover) .item:not(:hover) {
-                filter: blur(30px); opacity: 0.2; transition-delay: 0.1s;
-            }
-        }
-
-        .item {
-            position: absolute; width: var(--item-size); aspect-ratio: 1 / 1;
-            background: #111; will-change: transform, filter;
-            transition: filter 0.8s cubic-bezier(0.23, 1, 0.32, 1), 
-                        opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-                        transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .item.pushed { transform: scale(0.9) !important; }
-        .item img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-
-        /* Sidebar */
-        #side-panel {
-            position: fixed; right: -100%; top: 0;
-            width: var(--panel-w); height: 100%;
-            background: #050505; border-left: 1px solid #1a1a1a;
-            z-index: 2000; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            padding: 80px 40px; overflow-y: auto;
-        }
-        #side-panel.open { transform: translateX(-100%); right: 0; }
-        .close-btn { font-size: 32px; margin-bottom: 20px; opacity: 0.5; display: inline-block; }
-        .panel-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; margin-bottom: 30px; }
-
-        #dimmer {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-            opacity: 0; pointer-events: none; transition: 0.5s; z-index: 1500;
-        }
-        #dimmer.active { opacity: 1; pointer-events: auto; }
-
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            :root { --item-size: 130px; --gap: 120px; --panel-w: 100%; }
-            .header { padding: 20px; flex-direction: column; gap: 15px; text-align: center; }
-            #custom-cursor { display: none; }
-            * { cursor: auto !important; }
-            #side-panel { border-left: none; }
-        }
-    </style>
+    <title>Teo Peter - Work</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
-
-    <div id="custom-cursor"></div>
-    <div id="loader">
-        <div class="loader-text">ARHIVE</div>
-        <div class="loader-bar"><div class="loader-progress"></div></div>
-    </div>
-
-    <header class="header">
-        <div style="font-weight: 900; letter-spacing: -1px; font-size: 18px;">TEO PETER'S ARCHIVE</div>
-        <nav class="nav-links">
-            <button class="nav-item active" data-filter="all" onclick="filterItems('all', this)">All</button>
-            <button class="nav-item" data-filter="foundation" onclick="filterItems('foundation', this)">System</button>
-            <button class="nav-item" data-filter="expression" onclick="filterItems('expression', this)">Visuals</button>
+    <header>
+        <div class="logo">Teo Peter</div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active"><span class="dot"></span> Work</a></li>
+                <li><a href="about.html"><span class="dot"></span> About</a></li>
+                <li><a href="archive.html"><span class="dot"></span> Archive</a></li>
+            </ul>
         </nav>
+        <div class="header-spacer"></div>
     </header>
 
-    <div id="dimmer" onclick="closePanel()"></div>
-    <aside id="side-panel">
-        <div class="close-btn" onclick="closePanel()">×</div>
-        <div id="panel-content"></div>
-    </aside>
+    <main>
+        <section class="hero">
+            <h1>
+                Junior designer focused on user interfaces, interested in
+                creative processes behind building brands.
+                <br>
+                Currently working and learning at Sawraft Studio in Zagreb.
+            </h1>
+        </section>
 
-    <div id="viewport"></div>
+        <section class="projects">
+            <!-- Project 1 -->
+            <article class="project-card">
+                <div class="image-container">
+                    <div class="placeholder"></div>
+                </div>
+                <div class="project-info">
+                    <span class="badge">Coming soon</span>
+                    <h2>INmusic festival</h2>
+                </div>
+            </article>
 
-    <script>
-        const basePhotos = [
-            { type: 'foundation', title: 'Geometric Order', imgId: '1614850523296-d8c1af93d400' },
-            { type: 'expression', title: 'Abstract Light', imgId: '1550684848-fac1c5b4e853' },
-            { type: 'foundation', title: 'Digital Flow', imgId: '1618005182384-a83a8bd57fbe' },
-            { type: 'expression', title: 'Neon Textures', imgId: '1633167606207-d840b5070fc2' },
-            { type: 'foundation', title: 'Minimal Forms', imgId: '1604871000636-074fa5117945' },
-            { type: 'expression', title: 'Dark Gradient', imgId: '1618556450991-2f1af64e8191' }
-        ];
+            <!-- Project 2 -->
+            <article class="project-card">
+                <div class="image-container">
+                    <div class="placeholder placeholder-light"></div>
+                </div>
+                <div class="project-info">
+                    <span class="badge">Coming soon</span>
+                    <h2>Island of Ist</h2>
+                </div>
+            </article>
 
-        const PHOTOS = Array.from({ length: 36 }, (_, i) => ({
-            ...basePhotos[i % basePhotos.length],
-            id: i,
-            url: `https://images.unsplash.com/photo-${basePhotos[i % basePhotos.length].imgId}?auto=format&fit=crop&w=600&q=80`
-        }));
+            <!-- Project 3 -->
+            <article class="project-card">
+                <div class="image-container">
+                    <div class="placeholder placeholder-beige"></div>
+                </div>
+                <div class="project-info">
+                    <span class="badge">Coming soon</span>
+                    <h2>Pasareta</h2>
+                </div>
+            </article>
+        </section>
+    </main>
 
-        const viewport = document.getElementById('viewport');
-        const cursor = document.getElementById('custom-cursor');
-        const getItemSize = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--item-size'));
-        const getGapSize = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap'));
-        
-        const cols = 8;
-        const rows = 6;
-        let pos = { x: 0, y: 0 }, vel = { x: 0, y: 0 }, isDragging = false, lastMouse = { x: 0, y: 0 };
-        let activeItems = [];
-        let currentFilter = 'all';
+    <footer>
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <span class="large-email">teo_peter@outlook.com</span>
+                <span class="large-email">teo_peter@outlook.com</span>
+                <span class="large-email">teo_peter@outlook.com</span>
+                <span class="large-email">teo_peter@outlook.com</span>
+            </div>
+        </div>
+        <div class="footer-meta">
+            <span>2026 © Teo Peter</span>
+            <span>Instagram</span>
+        </div>
+    </footer>
 
-        // Cursor move
-        window.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-
-        function init() {
-            const itemSize = getItemSize();
-            const gap = getGapSize();
-            pos.x = (window.innerWidth / 2) - (itemSize / 2);
-            pos.y = (window.innerHeight / 2) - (itemSize / 2);
-
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    document.getElementById('loader').style.opacity = '0';
-                    setTimeout(() => document.getElementById('loader').remove(), 500);
-                }, 1000);
-            });
-
-            viewport.innerHTML = '';
-            PHOTOS.forEach((data, i) => {
-                const el = document.createElement('div');
-                el.className = 'item';
-                el.innerHTML = `<img src="${data.url}" alt="work">`;
-                el.onclick = () => {
-                    if (Math.abs(vel.x) < 2 && Math.abs(vel.y) < 2) {
-                        el.classList.add('pushed');
-                        setTimeout(() => { openPanel(data); el.classList.remove('pushed'); }, 200);
-                    }
-                };
-                viewport.appendChild(el);
-                activeItems.push({ 
-                    el, data, 
-                    origX: (i % cols) * (itemSize + gap), 
-                    origY: Math.floor(i / cols) * (itemSize + gap) 
-                });
-            });
-            requestAnimationFrame(update);
-        }
-
-        const handleDown = (x, y) => { isDragging = true; lastMouse = { x, y }; };
-        const handleMove = (x, y) => {
-            if (!isDragging) return;
-            const dx = x - lastMouse.x;
-            const dy = y - lastMouse.y;
-            pos.x += dx; pos.y += dy;
-            vel = { x: dx, y: dy };
-            lastMouse = { x, y };
-        };
-
-        window.onmousedown = e => handleDown(e.clientX, e.clientY);
-        window.onmousemove = e => handleMove(e.clientX, e.clientY);
-        window.onmouseup = () => isDragging = false;
-        window.ontouchstart = e => handleDown(e.touches[0].clientX, e.touches[0].clientY);
-        window.ontouchmove = e => handleMove(e.touches[0].clientX, e.touches[0].clientY);
-        window.ontouchend = () => isDragging = false;
-
-        function update() {
-            if (!isDragging) {
-                pos.x += vel.x; pos.y += vel.y;
-                vel.x *= 0.95; vel.y *= 0.95;
-            }
-
-            const itemSize = getItemSize();
-            const gap = getGapSize();
-            const fullW = cols * (itemSize + gap);
-            const fullH = rows * (itemSize + gap);
-
-            activeItems.forEach(item => {
-                let x = (item.origX + pos.x) % fullW;
-                let y = (item.origY + pos.y) % fullH;
-                if (x < -itemSize) x += fullW;
-                if (y < -itemSize) y += fullH;
-                if (x > fullW - itemSize) x -= fullW;
-                if (y > fullH - itemSize) y -= fullH;
-                
-                item.el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                
-                // Filter logic
-                const isMatch = currentFilter === 'all' || item.data.type === currentFilter;
-                item.el.style.opacity = isMatch ? '1' : '0.05';
-                item.el.style.pointerEvents = isMatch ? 'auto' : 'none';
-            });
-            requestAnimationFrame(update);
-        }
-
-        function openPanel(data) {
-            document.getElementById('panel-content').innerHTML = `
-                <img src="${data.url}" class="panel-img">
-                <h2 style="margin:0; font-size:24px; font-weight:900;">${data.title}</h2>
-                <p style="color:var(--accent); font-size:10px; letter-spacing:2px; margin-top:10px;">${data.type.toUpperCase()}</p>
-                <p style="opacity:0.6; line-height:1.8; margin-top:20px;">Archival entry #${data.id} / TP_STUDIO</p>
-            `;
-            document.getElementById('side-panel').classList.add('open');
-            document.getElementById('dimmer').classList.add('active');
-        }
-
-        function closePanel() {
-            document.getElementById('side-panel').classList.remove('open');
-            document.getElementById('dimmer').classList.remove('active');
-        }
-
-        function filterItems(type, btn) {
-            currentFilter = type;
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
-
-        init();
-    </script>
+    <script src="script.js"></script>
 </body>
+
 </html>

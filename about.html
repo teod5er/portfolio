@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teo Peter - About</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .about-main {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .profile-section {
+            margin-bottom: 6rem;
+            margin-top: 6em;
+        }
+
+        .profile-placeholder {
+            width: 80px;
+            height: 80px;
+            background-color: #e0e0e0;
+            margin-bottom: 2rem;
+            /* Simple avatar placeholder */
+            background-image: url('img/profile-photo.png');
+            background-size: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 4px;
+        }
+
+        .bio-text p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: #111;
+            width: 90%;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4rem;
+        }
+
+        .info-section h3 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 1em;
+
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .skill-column h4 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .skill-list {
+            list-style: none;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .experience-list,
+        .education-list,
+        .client-list {
+            list-style: none;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 0.95rem;
+        }
+
+        .list-item span:first-child {
+            font-weight: 500;
+        }
+
+        .list-item .date,
+        .list-item .meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .client-list .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .client-tags {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .mini-badge {
+            background-color: #eee;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 2px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body class="about-page">
+    <header>
+        <div class="logo">Teo Peter</div>
+        <nav>
+            <ul>
+                <li><a href="index.html"><span class="dot"></span> Work</a></li>
+                <li><a href="about.html" class="active"><span class="dot"></span> About</a></li>
+                <li><a href="archive.html"><span class="dot"></span> Archive</a></li>
+            </ul>
+        </nav>
+        <div class="header-spacer"></div>
+    </header>
+
+    <main class="about-main">
+        <section class="profile-section">
+            <div class="profile-placeholder"></div>
+            <div class="bio-text">
+                <p>I'm a junior designer based in Zagreb, working at a marketing agency after graduating in graphic
+                    design. I focus on visual identity, branding, and interactive design, with an interest in improving
+                    user and consumer experience through clear ideas and complete solution.</p>
+                <p>My work is rooted in typography, simplicity, and thoughtful brand strategy, and I care about both
+                    users and collaborators.</p>
+            </div>
+        </section>
+
+        <div class="info-grid">
+            <section class="info-section">
+                <h3>Skills & tools</h3>
+                <div class="skills-grid">
+                    <div class="skill-column">
+                        <ul class="skill-list">
+                            <li>Interaction design</li>
+                            <li>User flows</li>
+                            <li>Wireframing</li>
+                            <li>Prototyping</li>
+                            <li>Information Architecture</li>
+                            <li>Design systems</li>
+                            <li>Branding</li>
+                            <li>Print & Prepress Preparation</li>
+                        </ul>
+                    </div>
+                    <div class="skill-column">
+                        <ul class="skill-list">
+                            <li>Figma</li>
+                            <li>Illustrator + Photoshop + InDesign</li>
+                            <li>Premiere Pro</li>
+                            <li style="margin-top: 1rem;">Notion / Google Workspace</li>
+                            <li>Slack / Teams</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="info-section">
+                <h3>Skills & tools</h3>
+                <ul class="list-grid">
+                    <li class="list-grid-item">
+                        <span class="item-title">Interaction design/span>
+                            <span class="item-title">User flows</span>
+                    </li>
+                    <li class="list-grid-item">
+                        <span class="item-title">Sawraft studio</span>
+                        <span class="item-title">Sawraft studio</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="info-section">
+                <h3>Experience</h3>
+                <ul class="list-grid">
+                    <li class="list-grid-item">
+                        <span class="item-title">Sawraft studio</span>
+                        <span class="item-badge"><span class="badge">UX/UI Designer</span></span>
+                        <span class="item-date">2023 — Present</span>
+                    </li>
+                    <li class="list-grid-item">
+                        <span class="item-title">Social Wizard agency</span>
+                        <span class="item-badge"><span class="badge">Student Designer</span></span>
+                        <span class="item-date">2022 — 2023</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="info-section">
+                <h3>Education</h3>
+                <ul class="list-grid">
+                    <li class="list-grid-item">
+                        <span class="item-title">Faculty of Graphic Arts</span>
+                        <span class="item-badge"><span class="badge">MA</span></span>
+                        <span class="item-date">2019 — 2024</span>
+                    </li>
+                    <li class="list-grid-item">
+                        <span class="item-title">School of Design</span>
+                        <span class="item-badge"><span class="badge">BA</span></span>
+                        <span class="item-date">2016 — 2019</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="info-section">
+                <h3>Clients</h3>
+                <ul class="list-grid">
+                    <li class="list-grid-item">
+                        <span class="item-title">INmusic festival</span>
+                        <span class="item-badge"><span class="badge">Branding</span><span class="badge">Web
+                                design</span></span>
+                        <span class="item-date">2025</span>
+                    </li>
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <span class="large-email">teo_peter@outlook.com</span>
+                <span class="large-email">teo_peter@outlook.com</span>
+                <span class="large-email">teo_peter@outlook.com</span>
+                <span class="large-email">teo_peter@outlook.com</span>
+            </div>
+        </div>
+        <div class="footer-meta">
+            <span>2026 © Teo Peter</span>
+            <span>Instagram</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
