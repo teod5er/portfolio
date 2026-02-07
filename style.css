@@ -3,7 +3,7 @@
     --text-color: #1a1a1a;
     --nav-bg: #ececec;
     --font-main: 'Inter', sans-serif;
-    --color-bg: #f4f4f0;
+    --color-bg: #FDFDFD;
     /* Light beige/grey background */
     --color-text: #111;
     --color-accent: #e5e5e0;
@@ -62,7 +62,19 @@ header {
     font-weight: 500;
     pointer-events: auto;
     position: static;
+}
 
+.logo a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.2s ease;
+}
+
+.logo a:hover {
+    opacity: 0.6;
 }
 
 /* Navigation */
@@ -131,7 +143,7 @@ nav a.active .dot {
     height: 4px;
     background-color: transparent;
     /* Invisible by default */
-    margin-right: 6px;
+    margin-right: 12px;
     margin-bottom: 2px;
     /* Visual alignment */
     border-radius: 0;
@@ -166,7 +178,7 @@ nav a.active .dot {
 
 /* Footer */
 footer {
-    padding: 0 0 2rem 0;
+
     /* Removed top padding, managed by layout */
     overflow: hidden;
     margin-top: 8rem;
@@ -360,7 +372,7 @@ body.about-page .container {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 750px;
+    max-width: 560px;
     margin: 0 auto;
     text-align: center;
     padding: 0 2rem;
@@ -431,6 +443,65 @@ body.about-page .container {
     font-size: 1.5rem;
     font-weight: 400;
     margin: 0;
+}
+
+/* Toast Notification */
+#toast-notification {
+    display: none;
+
+
+    /* Match nav background */
+
+
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    bottom: 2em;
+    transform: translate(-50%, -50%);
+    /* Center perfectly */
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+
+
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    background-color: transparent;
+    position: relative;
+
+    transform: translateX(-50%);
+    background-color: #ebebeb35;
+    backdrop-filter: blur(100px);
+    padding: 12px 24px;
+    border-radius: 4px;
+    z-index: 100;
+
+    display: inline-block
+}
+
+#toast-notification.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Footer Interactions */
+.large-email {
+    transition: 0.3s ease;
+}
+
+.large-email:hover {
+    opacity: 0.1;
+    /* Grey out on hover */
+}
+
+.footer-meta a {
+    text-decoration: none;
+    color: #111;
+    transition: opacity 0.2s ease;
+}
+
+.footer-meta a:hover {
+    opacity: 0.6;
 }
 
 /* Specific Card Styles */
