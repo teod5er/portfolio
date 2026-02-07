@@ -70,7 +70,8 @@ nav {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    background: #EBEBEB;
+    background: #ebebeb45;
+    backdrop-filter: blur(100px);
     padding: 6px;
     border-radius: 4px;
     z-index: 100;
@@ -301,12 +302,17 @@ footer {
 .list-grid-item .item-title {
     text-align: left;
 
+
+
 }
 
 .list-grid-item .item-badge {
     text-align: center;
     justify-self: left;
-    /* Ensure centering in grid cell */
+
+    display: flex;
+    gap: 1em;
+
 }
 
 /* Re-styling badge inside list to ensure it's centered */
@@ -354,7 +360,7 @@ body.about-page .container {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 680px;
+    max-width: 750px;
     margin: 0 auto;
     text-align: center;
     padding: 0 2rem;
@@ -404,8 +410,7 @@ body.about-page .container {
 
 .badge {
     display: inline-block;
-    border: 1px solid #e0e0dc;
-    padding: 2px 4px;
+
     background-color: transparent;
     border-radius: 2px;
     font-size: 0.65rem;
@@ -413,11 +418,17 @@ body.about-page .container {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #666;
-    margin-bottom: 0.25rem;
+
+}
+
+.project-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
 }
 
 .project-info h2 {
-    font-size: 0.95rem;
+    font-size: 1.5rem;
     font-weight: 400;
     margin: 0;
 }
