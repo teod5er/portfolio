@@ -208,7 +208,6 @@ footer {
     line-height: 1.2;
     /* Updated line height */
     font-family: var(--font-main);
-    font-weight: 300;
     letter-spacing: -0.04em;
     color: #000;
     padding: 0 4rem;
@@ -236,25 +235,126 @@ footer {
     /* Ensure it aligns with logo */
 }
 
+/* Mobile Hamburger Menu Button */
+.hamburger-btn {
+    display: none;
+    width: 40px;
+    height: 40px;
+    background-color: #ebebeb45;
+    backdrop-filter: blur(100px);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    pointer-events: auto;
+    position: relative;
+    z-index: 200;
+}
+
+/* Orange dot inside the button */
+.hamburger-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background-color: #FF4D00;
+}
+
+.hamburger-btn:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Mobile Navigation Overlay */
+.mobile-nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ebebeb45;
+    backdrop-filter: blur(100px);
+    z-index: 150;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-nav-overlay ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.mobile-nav-overlay li {
+    margin: 1.5rem 0;
+}
+
+.mobile-nav-overlay a {
+    text-decoration: none;
+    color: #111;
+    font-size: 1.5rem;
+    font-weight: 400;
+    display: inline-flex;
+    align-items: center;
+    transition: opacity 0.2s ease;
+}
+
+.mobile-nav-overlay a:hover {
+    opacity: 0.6;
+}
+
+.mobile-nav-overlay a .dot {
+    width: 6px;
+    height: 6px;
+    margin-right: 12px;
+    background-color: transparent;
+}
+
+.mobile-nav-overlay a.active .dot {
+    background-color: #FF4D00;
+}
+
 @media (max-width: 768px) {
     header {
         padding: 1.5rem;
-        justify-content: center;
-    }
-
-    .logo,
-    .header-spacer {
-        position: static;
-        display: none;
-        /* Actually,
-        looking at the MOBILE visual request: "navigation on mobile should look like this" -> The screenshot 'Active Document' is desktop. The USER UPLOADED IMAGE 1 seems to be the mobile reference. It shows: "Work About Archive" centered in a grey pill. So on mobile, we just show the pill. */
+        justify-content: space-between;
     }
 
     .logo {
         display: block;
-        position: absolute;
-        left: 1.5rem;
-        top: 1.5rem;
+        position: static;
+        pointer-events: auto;
+    }
+
+    .header-spacer {
+        display: none;
+    }
+
+    /* Hide desktop nav on mobile */
+    nav {
+        display: none;
+    }
+
+    /* Show hamburger button on mobile */
+    .hamburger-btn {
+        display: block;
+    }
+
+    /* Show mobile nav overlay structure on mobile */
+    .mobile-nav-overlay {
+        display: flex;
     }
 
     .hero {
@@ -272,7 +372,6 @@ footer {
 
     .large-email {
         font-size: 13vw;
-        /* Slightly smaller to fit if needed, or keep huge */
     }
 
     footer {
@@ -281,7 +380,6 @@ footer {
 
     .footer-meta {
         padding: 0 1.5rem;
-        /* Match mobile header padding */
     }
 
     .project-grid {
@@ -372,7 +470,7 @@ body.about-page .container {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 560px;
+    max-width: 660px;
     margin: 0 auto;
     text-align: center;
     padding: 0 2rem;
@@ -394,7 +492,7 @@ body.about-page .container {
     gap: 8rem;
     max-width: 1300px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
 }
 
 .project-card {
@@ -544,6 +642,7 @@ body.about-page .container {
 
     .hero {
         padding: 4rem 1.5rem;
+        width: 80%;
     }
 
     .hero h1 {
