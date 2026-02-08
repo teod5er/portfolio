@@ -328,7 +328,7 @@ footer {
 
 @media (max-width: 768px) {
     header {
-        padding: 1.5rem;
+        padding: 1rem;
         justify-content: space-between;
     }
 
@@ -385,6 +385,8 @@ footer {
     .project-grid {
         grid-template-columns: 1fr;
     }
+
+
 }
 
 /* About Page Specifics */
@@ -508,14 +510,24 @@ body.about-page .container {
     background-color: #e0e0dc;
     border-radius: 2px;
     transition: transform 0.3s ease;
+    background-color: #EEEADD;
+    background-image: url(img/inmusic.png);
+    background-size: cover;
+    background-position: center;
 }
 
 .placeholder-light {
     background-color: #ABC0CD;
+    background-image: url(img/ist.png);
+    background-size: cover;
+    background-position: center;
 }
 
 .placeholder-beige {
     background-color: #EEEADD;
+    background-image: url(img/pasareta.png);
+    background-size: cover;
+    background-position: center;
 }
 
 .badge {
@@ -632,7 +644,7 @@ body.about-page .container {
 
 @media (max-width: 768px) {
     header {
-        padding: 1.5rem;
+        padding: 1rem;
     }
 
     .logo,
