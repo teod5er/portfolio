@@ -70,5 +70,26 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // Project Page Header Scroll Effect
+    const projectTitle = document.querySelector('.header-project-title');
+    const header = document.querySelector('header');
+
+    if (projectTitle && header) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 200) {
+                projectTitle.classList.add('visible');
+                header.classList.add('project-scrolled');
+            } else {
+                projectTitle.classList.remove('visible');
+                header.classList.remove('project-scrolled');
+            }
+        });
+    }
+    // Clean URL (remove .html from address bar)
+    if (window.location.pathname.endsWith('.html')) {
+        const cleanUrl = window.location.pathname.replace(/\.html$/, '');
+        window.history.replaceState(null, '', cleanUrl);
+    }
 });
 

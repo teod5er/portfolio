@@ -137,6 +137,42 @@ nav a.active .dot {
     background-color: #FF4D00;
 }
 
+/* Central Header Project Title */
+.header-project-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+}
+
+.header-project-title.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Hide nav when project title is visible */
+header.project-scrolled nav {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.project-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: opacity 0.3s ease;
+}
+
+.project-link:hover {
+    opacity: 0.9;
+}
+
 .dot {
     display: inline-block;
     width: 4px;
@@ -511,7 +547,7 @@ body.about-page .container {
     border-radius: 2px;
     transition: transform 0.3s ease;
     background-color: #EEEADD;
-    background-image: url(img/inmusic.png);
+    background-image: url(img/inm1.png);
     background-size: cover;
     background-position: center;
 }

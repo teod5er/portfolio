@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teo Peter - INmusic Festival</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon.png">
+    <style>
+        .project-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12rem 1rem 4rem;
+        }
+
+        .project-intro {
+            margin-bottom: 2rem;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0.6;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .project-intro h1 {
+            font-size: 2rem;
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 4rem;
+            letter-spacing: -0.02em;
+        }
+
+        .project-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .img-large {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .img-grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+        }
+
+        .img-grid-5 .img-item {
+            aspect-ratio: 2/3;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .img-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .img-grid-3 .img-item {
+            aspect-ratio: 1/1;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        /* Hero Image Styles */
+        .hero-img {
+            background-image: url('img/inmusic_hero.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .poster-1 {
+            background-image: url('img/inm1.png');
+            background-size: cover;
+        }
+
+        .poster-2 {
+            background-image: url('img/inm2.png');
+            background-size: cover;
+        }
+
+        .poster-3 {
+            background-image: url('img/inm3.png');
+            background-size: cover;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .project-intro h1 {
+                font-size: 2.2rem;
+            }
+
+            .img-grid-5 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .img-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="project-page">
+    <header>
+        <div class="logo"><a href="index.html">Teo Peter</a></div>
+
+        <!-- Central Title Hidden by Default -->
+        <div class="header-project-title">INmusic Festival #19</div>
+
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active"><span class="dot"></span> Work</a></li>
+                <li><a href="about.html"><span class="dot"></span> About</a></li>
+                <li><a href="archive.html"><span class="dot"></span> Archive</a></li>
+            </ul>
+        </nav>
+        <button class="hamburger-btn" aria-label="Open menu"></button>
+        <div class="header-spacer"></div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay">
+        <ul>
+            <li><a href="index.html" class="active"><span class="dot"></span> Work</a></li>
+            <li><a href="about.html"><span class="dot"></span> About</a></li>
+            <li><a href="archive.html"><span class="dot"></span> Archive</a></li>
+        </ul>
+    </div>
+
+    <main class="project-main">
+        <section class="project-intro">
+            <div class="project-tags">
+                <span>Branding</span>
+                <span>Visual Identity</span>
+                <span>Year 2025</span>
+            </div>
+            <h1>INmusic Festival #19</h1>
+        </section>
+
+        <section class="project-gallery">
+            <div class="img-large hero-img poster-1"></div>
+
+            <div class="img-large hero-img poster-2"></div>
+
+            <div class="img-large hero-img poster-3"></div>
+
+
+        </section>
+    </main>
+
+    <footer>
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <span class="large-email">teo_peter@outlook.com</span>
+                <span class="large-email">teo_peter@outlook.com</span>
+                <span class="large-email">teo_peter@outlook.com</span>
+                <span class="large-email">teo_peter@outlook.com</span>
+            </div>
+        </div>
+        <div class="footer-meta">
+            <span>2026 © Teo Peter</span>
+
+            <div>
+                <a href="https://www.instagram.com/teopeter.work/" target="_blank">Instagram</a>
+                <a href="https://www.linkedin.com/in/teo-peter-4516621a3/" target="_blank"
+                    style="margin-left: 20px;">LinkedIn</a>
+            </div>
+        </div>
+        <div id="toast-notification">Email copied to clipboard.</div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
