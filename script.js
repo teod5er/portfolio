@@ -71,6 +71,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Navigation Hide/Show on Scroll (logo stays visible)
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const nav = document.querySelector('nav');
+
+    function updateNavVisibility() {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+            // Scrolling down & past threshold
+            nav.classList.add('nav-hidden');
+        } else if (currentScrollY < lastScrollY) {
+            // Scrolling up
+            nav.classList.remove('nav-hidden');
+        }
+
+        lastScrollY = currentScrollY;
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(updateNavVisibility);
+            ticking = true;
+        }
+    });
+
     // Project Page Header Scroll Effect
     const projectTitle = document.querySelector('.header-project-title');
     const header = document.querySelector('header');
@@ -86,6 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Scroll Fade-In Animation
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const fadeInObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+                fadeInObserver.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe project cards on index page
+    const projectCards = document.querySelectorAll('.project-card');
+    projectCards.forEach(card => fadeInObserver.observe(card));
+
+    // Observe gallery items on project pages
+    const galleryItems = document.querySelectorAll('.img-large');
+    galleryItems.forEach(item => fadeInObserver.observe(item));
+
     // Clean URL (remove .html from address bar)
     if (window.location.pathname.endsWith('.html')) {
         const cleanUrl = window.location.pathname.replace(/\.html$/, '');
