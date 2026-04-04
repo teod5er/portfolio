@@ -72,9 +72,10 @@
 
         .skill-list {
             list-style: none;
-            font-size: 0.95rem;
             line-height: 1.8;
         }
+
+
 
         .experience-list,
         .education-list,
@@ -85,9 +86,9 @@
         .list-item {
             display: flex;
             justify-content: space-between;
-            padding: 1rem 0;
+            padding: 0.5rem 0px;
             border-bottom: 1px solid #f5f5f5;
-            font-size: 0.95rem;
+
         }
 
         .list-item span:first-child {
@@ -164,13 +165,11 @@
                 <div class="skills-grid">
                     <div class="skill-column">
                         <ul class="skill-list">
-                            <li>Interaction design</li>
                             <li>User flows</li>
-                            <li>Wireframing</li>
-                            <li>Prototyping</li>
+                            <li>Wireframing & protoyping</li>
                             <li>Information Architecture</li>
-                            <li>Design systems</li>
-                            <li>Branding</li>
+                            <li>Design systems & branding</li>
+                            <li>Front-end technologies</li>
                             <li>Print & Prepress Preparation</li>
                         </ul>
                     </div>
@@ -192,15 +191,31 @@
             <section class="info-section">
                 <h3>Experience</h3>
                 <ul class="list-grid">
+
+
                     <li class="list-grid-item">
-                        <span class="item-title">Sawraft studio</span>
-                        <span class="item-badge"><span class="badge">UX/UI Designer</span></span>
                         <span class="item-date">2023 — Present</span>
+                        <div class="item-title-wrapper">
+                            <span class="item-title">UX/UI designer at <a href="http://Sawraft.com"
+                                    target="_blank">Sawraft
+                                    studio</a></span>
+                            <div class="item-description">
+                                <p>Designed user flows and high-fidelity screens for an AI platform dashboard, including
+                                    UX copywriting. Collaborated on brand strategies and idenitties.</p>
+
+                            </div>
+                        </div>
                     </li>
+
                     <li class="list-grid-item">
-                        <span class="item-title">Social Wizard digital agency</span>
-                        <span class="item-badge"><span class="badge">Student Designer</span></span>
-                        <span class="item-date">2022 — 2023</span>
+                        <span class="item-date">2022 — 2024</span>
+                        <div class="item-title-wrapper">
+                            <span class="item-title">Student graphic designer at <a href="https://social-wizard.com"
+                                    target="_blank">Social Wizard digital agency</a></span>
+                            <div class="item-description">
+                                <p>Working on promotional materials for social media and offline advertising.</p>
+                            </div>
+                        </div>
                     </li>
                 </ul>
             </section>
@@ -208,54 +223,65 @@
             <section class="info-section">
                 <h3>Education</h3>
                 <ul class="list-grid">
+
+
                     <li class="list-grid-item">
-                        <span class="item-title">Faculty of Graphic Arts </span>
-                        <span class="item-badge"><span class="badge">GRAPHIC PRODUCT DESIGN, (MA)</span></span>
                         <span class="item-date">2023 — 2025</span>
+                        <span class="item-title">Design of graphic products (MA) at <a
+                                href="https://www.grf.unizg.hr/diplomski-studij/" target="_blank">Faculty
+                                of graphic arts, Zagreb </a></span>
                     </li>
+
                     <li class="list-grid-item">
-                        <span class="item-title">Faculty of Graphic Arts</span>
-                        <span class="item-badge"><span class="badge">GRAPHIC PRODUCT DESIGN (BA)</span></span>
                         <span class="item-date">2019 — 2022</span>
+                        <span class="item-title">Design of graphic products (BA) at <a
+                                href="https://www.grf.unizg.hr/prijediplomski-studij/" target="_blank">Faculty
+                                of graphic arts, Zagreb </a></span>
                     </li>
+
+
                 </ul>
             </section>
 
             <section class="info-section">
-                <h3>Clients</h3>
+
+
+                <h3>Awards
+                </h3>
                 <ul class="list-grid">
+
+
+
                     <li class="list-grid-item">
-                        <span class="item-title">INmusic festival</span>
-                        <span class="item-badge"><span class="badge">Branding</span><span class="badge">Web
-                                design</span></span>
-                        <span class="item-date">2025</span>
+                        <span class="item-date">2021</span>
+                        <span class="item-title">
+                            Dean’s award for best student of the generation
+                        </span>
                     </li>
 
                     <li class="list-grid-item">
-                        <span class="item-title">Makamana restaurant</span>
-                        <span class="item-badge"><span class="badge">Web design</span></span>
-                        <span class="item-date">2025</span>
-                    </li>
-
-                    <li class="list-grid-item">
-                        <span class="item-title">PEG concept</span>
-                        <span class="item-badge"><span class="badge">Branding</span></span>
-                        <span class="item-date">2025</span>
-                    </li>
-
-                    <li class="list-grid-item">
-                        <span class="item-title">BN beauty</span>
-                        <span class="item-badge"><span class="badge">Branding</span><span
-                                class="badge">Branding</span></span>
                         <span class="item-date">2023</span>
+                        <span class="item-title">
+                            Dean’s award for best student of the generation
+                        </span>
                     </li>
 
-
-
+                    <li class="list-grid-item">
+                        <span class="item-date">2023</span>
+                        <span class="item-title">
+                            1st place at student Ecotrophelia competition, Zagreb (Pumpkina - packaging)
+                        </span>
+                    </li>
 
                 </ul>
             </section>
+
+
         </div>
+
+        <section class="download-section">
+            <button class="download-btn" onclick="downloadPortfolioPDF()">Download Portfolio (PDF)</button>
+        </section>
     </main>
 
     <footer>
@@ -273,6 +299,7 @@
                 <a href="https://www.instagram.com/teopeter.work/" target="_blank">Instagram</a>
                 <a href="https://www.linkedin.com/in/teo-peter-4516621a3/" target="_blank"
                     style="margin-left: 20px;">LinkedIn</a>
+                <a href="blog.html" style="margin-left: 20px;">Blog</a>
             </div>
         </div>
         <div id="toast-notification">Email copied to clipboard.</div>
