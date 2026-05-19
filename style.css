@@ -70,7 +70,7 @@ header {
 
 h1 {
     font-size: var(--fs-h1);
-    font-weight: 600;
+    font-weight: 400;
     color: var(--black);
     letter-spacing: -0.02em;
     line-height: 1.2;
