@@ -52,7 +52,7 @@ body {
 
 header {
     display: flex;
-    align-items: center;
+    align-items: left;
     gap: 24px;
 }
 
