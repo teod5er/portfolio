@@ -178,6 +178,7 @@ h3 {
 }
 
 .project-thumb {
+    max-width:150px;
     width: 192px;
     aspect-ratio: 16 / 10;
     border-radius: 8px;
