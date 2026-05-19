@@ -252,6 +252,12 @@
             setTimeout(() => { link.textContent = original; }, 2000);
         });
     }
+
+    // Uklanjanje .html nastavka iz URL-a
+    if (window.location.href.endsWith('.html')) {
+        const newUrl = window.location.href.replace(/\.html$/, '');
+        window.history.replaceState(null, '', newUrl);
+    }
 </script>
 
 </html>
