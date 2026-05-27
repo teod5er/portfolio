@@ -15,16 +15,15 @@
 
 <body>
 
-    <div class="container">
+    <div class="container fade-in">
 
-        <header>
+        <header class="home-header">
             <div class="profile-photo" style="background-image: url('images/profile.jpg');" role="img"
                 aria-label="Teo Peter profile photo">
             </div>
             <div>
                 <h1>Teo Peter</h1>
-                <p class="subtitle">Graphic and UX/UI designer &nbsp;&middot; &nbsp; Zagreb, Croatia and
-                    remote</p>
+                <p class="subtitle">Graphic and UX/UI designer &nbsp;&middot; &nbsp; Zagreb, Croatia </p>
             </div>
         </header>
 
@@ -35,15 +34,32 @@
         -->
 
         <section>
-            <h2>About</h2>
-            <p class="about-text">
-                Young graphic designer experienced in brand and UX/UI design. Creating user interfaces that please both
-                clients and developers.
-            </p>
+            <div class="entries">
+                <div class="row-grid">
+                    <div class="row-label">About</div>
+                    <div class="row-values">
+                        <p class="highlighted">
+                            Visual designer interested into creating products that please both clients and
+                            developers. Passionate about simplicity and good branding.
+                        </p>
+
+                        <div class="tags-container">
+                            <span class="tag"><a href="#experience">Experience</a></span>
+                            <span class="tag"><a href="#selected-works">Works</a></span>
+                            <span class="tag"><a href="#tools-and-skills">Tools and skills</a></span>
+                            <span class="tag"><a href="#education">Education</a></span>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
         </section>
 
-        <section>
-            <h2>Work Experience</h2>
+        <div class="divider"></div>
+
+        <section id="experience">
+            <h2>Experience</h2>
 
             <div class="entries">
 
@@ -54,13 +70,9 @@
                             <h3><a href="https://www.sawraft.com/" target="_blank" rel="noopener">UX/UI designer at
                                     Sawraft Studio <img src="images/arrow.svg" alt="" class="arrow-icon"></a></h3>
                             <p>UX/UI, branding, design systems</p>
-                            <p>Zagreb, HR</p>
+                            <p>Zagreb, Croatia</p>
                         </div>
-                        <div class="project-thumbs">
-                            <div class="project-thumb" style="background-image: url('images/sawraft.jpg');" role="img"
-                                aria-label="Sawraft Studio project thumbnail">
-                            </div>
-                        </div>
+
                     </div>
                 </div>
 
@@ -72,7 +84,7 @@
                                     Social Wizard Full service agency <img src="images/arrow.svg" alt=""
                                         class="arrow-icon"></a></h3>
                             <p>Brand identity, campaign design, web design</p>
-                            <p>Zagreb, HR</p>
+                            <p>Zagreb, Croatia</p>
                         </div>
                     </div>
                 </div>
@@ -80,52 +92,92 @@
             </div>
         </section>
 
-        <section>
-            <h2>Side Projects</h2>
+        <div class="divider"></div>
+
+        <section id="selected-works">
+            <div style="display: flex; gap: 24px; align-items: baseline;">
+                <h2 style="margin: 0;">Works</h2>
+                <div class="custom-dropdown-container">
+                    <div class="dropdown-trigger" id="dropdown-trigger">Show All</div>
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <div class="dropdown-option" data-value="all">Show All</div>
+                        <div class="dropdown-option" data-value="ux-ui">UX/UI</div>
+                        <div class="dropdown-option" data-value="web-design">Web design</div>
+                        <div class="dropdown-option" data-value="graphic-design">Graphic design and branding</div>
+                    </div>
+                </div>
+            </div>
 
             <div class="entries">
 
-                <div class="entry">
-                    <div class="entry-date">2026</div>
+                <div class="entry" data-category="ux-ui">
+                    <div class="entry-date">2025</div>
                     <div class="entry-content">
                         <div>
-                            <h3>Who was Otti Berger</h3>
-                            <p>Exhibition design / graphic design</p>
+                            <h3><a href="projects/finance-app-reskin.html">Finance app reskin</a></h3>
+                            <p>UX/UI</p>
                         </div>
                         <div class="project-thumbs">
-                            <div class="project-thumb" style="background-image: url('images/otti-berger.jpg');"
-                                role="img" aria-label="Who was Otti Berger project thumbnail">
-                            </div>
+                            <a href="projects/finance-app-reskin.html" style="display: block; width: 100%;">
+                                <div class="project-thumb" style="background-image: url('images/finance-app-hero.jpg');"
+                                    role="img" aria-label="Finance app reskin project thumbnail">
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="entry">
+                <div class="entry" data-category="ux-ui">
+                    <div class="entry-date">12/2025</div>
+                    <div class="entry-content">
+                        <div>
+                            <h3>Split payments system</h3>
+                            <p>UX/UI</p>
+                        </div>
+                        <div class="project-thumbs">
+                            <a href="projects/split-payments-system.html" style="display: block; width: 100%;">
+                                <div class="project-thumb"
+                                    style="background-image: url('images/split-payments-hero.jpg');" role="img"
+                                    aria-label="Split payments system project thumbnail">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="entry" data-category="ux-ui">
                     <div class="entry-date">2025 &mdash; 2026</div>
                     <div class="entry-content">
                         <div>
-                            <h3><a href="https://inmusicfestival.com" target="_blank" rel="noopener">INmusic festival
-                                    <img src="images/arrow.svg" alt="" class="arrow-icon"></a></h3>
-                            <p>Brand identity and campaigns, long-term design collaboration</p>
+                            <h3><a href="projects/real-estate-platform.html">Real estate platform</a></h3>
+                            <p>UX/UI</p>
                         </div>
                         <div class="project-thumbs">
-                            <div class="project-thumb" style="background-image: url('images/inmusic1.jpg');" role="img"
-                                aria-label="INmusic festival project thumbnail">
-                            </div>
-                          
-                            <div class="project-thumb" style="background-image: url('images/inmusic3.jpg');" role="img"
-                                aria-label="INmusic festival project thumbnail">
-                            </div>
+                            <a href="projects/real-estate-platform.html" style="display: block; width: 100%;">
+                                <div class="project-thumb" style="background-image: url('images/real-estate-hero.jpg');"
+                                    role="img" aria-label="Real estate platform project thumbnail">
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="entry">
-                    <div class="entry-date">2022 &mdash; now</div>
+
+                <div class="entry" data-category="graphic-design">
+                    <div class="entry-date">2024 &mdash; 2025</div>
                     <div class="entry-content">
                         <div>
-                            <h3>1postozagrad</h3>
-                            <p>Volunteer work on citizen platform for small urban initiatives</p>
+                            <h3><a href="projects/inmusic-festival.html" rel="noopener">INmusic festival #17</a></h3>
+                            <p>Brand identity and campaigns</p>
+                        </div>
+                        <div class="project-thumbs">
+                            <a href="projects/inmusic-festival.html" rel="noopener"
+                                style="display: block; width: 100%;">
+                                <div class="project-thumb"
+                                    style="background-image: url('images/inmusic-festival-hero.jpg');" role="img"
+                                    aria-label="INmusic festival project thumbnail">
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -133,7 +185,9 @@
             </div>
         </section>
 
-        <section>
+        <div class="divider"></div>
+
+        <section id="tools-and-skills">
             <h2>Tools and skills</h2>
 
             <div class="entries">
@@ -174,7 +228,9 @@
             </div>
         </section>
 
-        <section>
+        <div class="divider"></div>
+
+        <section id="education">
             <h2>Education</h2>
 
             <div class="entries">
@@ -185,7 +241,7 @@
                         <div>
                             <p style="color: var(--black);">Master's in Design of graphic products, Faculty of Graphic
                                 Arts</p>
-                            <p>Zagreb, HR</p>
+                            <p>Zagreb, Croatia</p>
                         </div>
                     </div>
                 </div>
@@ -197,7 +253,7 @@
                             <p style="color: var(--black);">Bachelor in Design of graphic products, Faculty of Graphic
                                 Arts</p>
                             <p>On Dean's list</p>
-                            <p>Zagreb, HR</p>
+                            <p>Zagreb, Croatia</p>
                         </div>
                     </div>
                 </div>
@@ -205,7 +261,9 @@
             </div>
         </section>
 
-        <section>
+        <div class="divider"></div>
+
+        <section id="languages">
             <h2>Languages</h2>
 
             <div class="entries">
@@ -224,7 +282,9 @@
             </div>
         </section>
 
-        <section>
+        <div class="divider"></div>
+
+        <section id="contact">
             <h2>Contact</h2>
 
             <div class="row-grid">
@@ -236,6 +296,19 @@
             </div>
         </section>
 
+        <div class="divider"></div>
+        <footer>
+            Teo Peter &copy; 2026
+        </footer>
+
+    </div>
+
+    <div class="lightbox-overlay" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <div class="lightbox-inner">
+            <div class="lightbox-content-container" id="lightbox-img"></div>
+            <div class="lightbox-caption-overlay" id="lightbox-caption"></div>
+        </div>
     </div>
 
 </body>
@@ -251,10 +324,91 @@
         });
     }
 
-    // Uklanjanje .html nastavka iz URL-a
-    if (window.location.href.endsWith('.html')) {
-        const newUrl = window.location.href.replace(/\.html$/, '');
-        window.history.replaceState(null, '', newUrl);
+    // Uklanjanje .html nastavka iz URL-a (samo ako nije lokalni file sustav da ne baca grešku)
+    try {
+        if (window.location.href.endsWith('.html') && window.location.protocol !== 'file:') {
+            const newUrl = window.location.href.replace(/\.html$/, '');
+            window.history.replaceState(null, '', newUrl);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+
+    // Lightbox logic
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const triggers = document.querySelectorAll('.lightbox-trigger');
+
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', function () {
+            const bgImage = window.getComputedStyle(this).backgroundImage;
+            const captionElem = this.parentElement.querySelector('.gallery-caption');
+            const captionText = captionElem ? captionElem.innerHTML : '';
+
+            if (bgImage && bgImage !== 'none') {
+                lightboxImg.style.backgroundImage = bgImage;
+                if (lightboxCaption) lightboxCaption.innerHTML = captionText;
+                lightbox.classList.add('active');
+            }
+        });
+    });
+
+    if (lightboxClose) {
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+    }
+
+    if (lightbox) {
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox || e.target.classList.contains('lightbox-inner')) {
+                lightbox.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                lightbox.classList.remove('active');
+            }
+        });
+    }
+
+    // Custom Work filter logic
+    const dropdownTrigger = document.getElementById('dropdown-trigger');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    const dropdownOptions = document.querySelectorAll('.dropdown-option');
+    const entries = document.querySelectorAll('#selected-works .entry');
+
+    if (dropdownTrigger && dropdownMenu) {
+        dropdownTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!dropdownMenu.contains(e.target) && e.target !== dropdownTrigger) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        dropdownOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const filterValue = option.getAttribute('data-value');
+                dropdownTrigger.textContent = option.textContent;
+                dropdownMenu.classList.remove('active');
+
+                entries.forEach(entry => {
+                    const category = entry.getAttribute('data-category');
+                    if (filterValue === 'all' || category === filterValue) {
+                        entry.style.display = '';
+                    } else {
+                        entry.style.display = 'none';
+                    }
+                });
+            });
+        });
     }
 </script>
 

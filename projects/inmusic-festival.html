@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INmusic festival · Teo Peter</title>
+    <meta name="description" content="Split payments system project by Teo Peter">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon.png">
+</head>
+
+<body>
+
+    <div class="container fade-in">
+
+        <nav>
+            <a href="javascript:history.back()"
+                style="display: inline-flex; align-items: center; gap: 8px; color: var(--gray);">
+                <img src="../images/back.svg" alt="" class="arrow-icon"> Back
+            </a>
+        </nav>
+
+        <header>
+            <div>
+                <h1>INmusic festival</h1>
+                <p class="subtitle">Brand identity and campaigns&nbsp;&middot; &nbsp; 2026</p>
+
+            </div>
+        </header>
+
+
+
+        <!-- OVDJE STAVI SVOJU HERO SLIKU ('../images/hero-slika.jpg') -->
+        <div class="hero-image" style="background-image: url('../images/inmusic-festival-hero.jpg'); "
+            title="Hero image placeholder"></div>
+
+        <section>
+
+            <div class="entries">
+                <div class="row-grid">
+                    <div class="row-label">About</div>
+                    <div class="row-values">
+                        <p class="highlighted">The largest music festival that has been featuring top music acts in
+                            Croatia for 20 years. </p>
+                    </div>
+                </div>
+                <div class="row-grid">
+                    <div class="row-label">Work</div>
+                    <div class="row-values">
+                        <p>A long-term design collaboration aimed at balancing the organization's needs, modernizing the
+                            design, and appealing to a broader audience.</p>
+                    </div>
+                </div>
+                <div class="row-grid">
+                    <div class="row-label">My tasks</div>
+                    <div class="row-values">
+                        <p>Brand assets</p>
+                        <p>Social media posts</p>
+                        <p>Website refresh</p>
+                        <p>Festival merchandise</p>
+                        <p>Outdoor campaigns</p>
+                        <p>Active communication with the organization team</p>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="gallery-grid">
+
+
+
+            <div class="gallery-item">
+
+                <!-- OVDJE ZAMIJENI URL SLIKE sa svojom slikom -->
+                <div class="gallery-image lightbox-trigger"
+                    style="background-image: url('../images/inmusic-festival-img1.jpg');" title="Placeholder"></div>
+                <div class="gallery-caption">Festival days aree color-coded for easier communication and a unified
+                    identity.</div>
+            </div>
+
+            <div class="gallery-item">
+
+                <!-- OVDJE ZAMIJENI URL SLIKE sa svojom slikom -->
+                <div class="gallery-image lightbox-trigger"
+                    style="background-image: url('../images/inmusic-festival-img2.jpg');" title="Placeholder"></div>
+
+            </div>
+
+            <div class="gallery-item">
+
+                <!-- OVDJE ZAMIJENI URL SLIKE sa svojom slikom -->
+                <div class="gallery-image lightbox-trigger"
+                    style="background-image: url('../images/inmusic-festival-img3.jpg');" title="Placeholder"></div>
+                <div class="gallery-caption">Color, shapes, typography, raster create dynamic brand identity.</div>
+            </div>
+
+            <div class="gallery-item">
+
+                <!-- OVDJE ZAMIJENI URL SLIKE sa svojom slikom -->
+                <div class="gallery-image lightbox-trigger"
+                    style="background-image: url('../images/inmusic-festival-img4.jpg');" title="Placeholder"></div>
+                <div class="gallery-caption">The website visually matches the rest of the brand identity but keeps the
+                    existing structure.</div>
+            </div>
+
+
+
+
+
+
+
+        </section>
+
+        <div class="divider"></div>
+
+
+
+        <footer>
+            Teo Peter &copy; 2026
+        </footer>
+    </div>
+
+    <div class="lightbox-overlay" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <div class="lightbox-inner">
+            <div class="lightbox-content-container" id="lightbox-img"></div>
+            <div class="lightbox-caption-overlay" id="lightbox-caption"></div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    // Uklanjanje .html nastavka iz URL-a (samo ako nije lokalni file sustav da ne baca grešku)
+    try {
+        if (window.location.href.endsWith('.html') && window.location.protocol !== 'file:') {
+            const newUrl = window.location.href.replace(/\.html$/, '');
+            window.history.replaceState(null, '', newUrl);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+
+    // Lightbox logic
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const triggers = document.querySelectorAll('.lightbox-trigger');
+
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', function () {
+            const bgImage = window.getComputedStyle(this).backgroundImage;
+            const captionElem = this.parentElement.querySelector('.gallery-caption');
+            const captionText = captionElem ? captionElem.innerHTML : '';
+
+            if (bgImage && bgImage !== 'none') {
+                lightboxImg.style.backgroundImage = bgImage;
+                if (lightboxCaption) lightboxCaption.innerHTML = captionText;
+                lightbox.classList.add('active');
+            }
+        });
+    });
+
+    if (lightboxClose) {
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+    }
+
+    if (lightbox) {
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox || e.target.classList.contains('lightbox-inner')) {
+                lightbox.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                lightbox.classList.remove('active');
+            }
+        });
+    }
+</script>
+
+</html>
