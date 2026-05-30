@@ -6,6 +6,19 @@
     padding: 0;
 }
 
+html,
+body {
+    /* Tvoja standardna točkica (veličina 20x20, centar klika na 4 4) */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="black"/></svg>') 4 4, auto;
+}
+
+/* Kada prijeđeš mišem preko linka ili gumba: */
+a:hover,
+button:hover {
+    /* Točkica se smanjuje na 8x8 piksela, a hotspot se prilagođava na 4 4 */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="black"/></svg>') 4 4, pointer;
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -489,6 +502,11 @@ h3 {
 }
 
 footer {
+    color: var(--gray);
+    font-size: var(--fs-base);
+}
+
+footer a {
     color: var(--gray);
     font-size: var(--fs-base);
 }
