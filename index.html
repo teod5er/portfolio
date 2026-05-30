@@ -36,7 +36,7 @@
         <section>
             <div class="entries">
                 <div class="row-grid">
-                    <div class="row-label">About</div>
+                    <div class="row-label"></div>
                     <div class="row-values">
                         <p class="highlighted">
                             Visual designer interested into creating products that please both clients and
@@ -44,10 +44,10 @@
                         </p>
 
                         <div class="tags-container">
-                            <span class="tag"><a href="#experience">Experience</a></span>
-                            <span class="tag"><a href="#selected-works">Works</a></span>
-                            <span class="tag"><a href="#tools-and-skills">Tools and skills</a></span>
-                            <span class="tag"><a href="#education">Education</a></span>
+                            <span class="tag"><a href="#selected-works" data-filter="ux-ui">UX/UI</a></span>
+                            <span class="tag"><a href="#selected-works" data-filter="web-design">Web design</a></span>
+                            <span class="tag"><a href="#selected-works" data-filter="graphic-design">Graphic design and
+                                    branding</a></span>
                         </div>
                     </div>
 
@@ -176,6 +176,23 @@
                                 <div class="project-thumb"
                                     style="background-image: url('images/inmusic-festival-hero.jpg');" role="img"
                                     aria-label="INmusic festival project thumbnail">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="entry" data-category="graphic-design">
+                    <div class="entry-date">2025</div>
+                    <div class="entry-content">
+                        <div>
+                            <h3><a href="projects/otti-berger.html" rel="noopener">Who is Otti Berger?</a></h3>
+                            <p>Exhibition design</p>
+                        </div>
+                        <div class="project-thumbs">
+                            <a href="projects/otti-berger.html" rel="noopener" style="display: block; width: 100%;">
+                                <div class="project-thumb" style="background-image: url('images/otti-berger-hero.jpg');"
+                                    role="img" aria-label="Otti Berger project thumbnail">
                                 </div>
                             </a>
                         </div>
@@ -410,6 +427,35 @@
             });
         });
     }
+
+
+    // Tag click filter logic
+    const tagLinks = document.querySelectorAll('.tags-container .tag a[data-filter]');
+    tagLinks.forEach(tagLink => {
+        tagLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const filterValue = tagLink.getAttribute('data-filter');
+
+            // Apply filter to entries
+            entries.forEach(entry => {
+                const category = entry.getAttribute('data-category');
+                if (category === filterValue) {
+                    entry.style.display = '';
+                } else {
+                    entry.style.display = 'none';
+                }
+            });
+
+            // Sync dropdown label
+            const matchingOption = document.querySelector(`.dropdown-option[data-value="${filterValue}"]`);
+            if (matchingOption && dropdownTrigger) {
+                dropdownTrigger.textContent = matchingOption.textContent;
+            }
+
+            // Smooth scroll to Works section
+            document.getElementById('selected-works').scrollIntoView({ behavior: 'smooth' });
+        });
+    });
 </script>
 
 </html>

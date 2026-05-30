@@ -1,0 +1,39 @@
+# Teo Peter
+
+> Graphic and UX/UI designer based in Zagreb, Croatia. Interested in creating products that please both clients and developers. Passionate about simplicity and good branding.
+
+## About
+
+Teo Peter is a graphic and UX/UI designer based in Zagreb, Croatia. His work sits at the intersection of visual clarity and functional design — he focuses on creating products and identities that feel intuitive to users, achievable for developers, and meaningful for clients. He has a strong passion for simplicity, typography, and well-crafted branding.
+
+## Experience
+
+Teo has been working as a UX/UI designer at Sawraft Studio since 2022, where he is involved in UX/UI design, branding, and the creation of design systems. Alongside this, between 2022 and 2024, he worked as a student designer at Social Wizard, a full-service agency in Zagreb, where he contributed to brand identity projects, campaign design, and web design.
+
+## Selected Works
+
+His portfolio includes a finance app reskin completed in 2025, where he redesigned the visual and interaction layer of an existing financial product. He also designed a split payments system (late 2025), focusing on clear UX flows for a complex transactional feature. From 2025 to 2026 he worked on a real estate platform, handling the full UX/UI across a property listing and search product. On the graphic design side, he led the brand identity and campaign design for INmusic festival #17 (2024–2025), one of Croatia's largest music festivals. He also created the exhibition design for "Who is Otti Berger?" (2025), a design-focused exhibition.
+
+## Skills
+
+Teo's core competency is UI/UX design — including wireframing, user flows, and interactive prototyping. Beyond digital product design, he works across branding and creative direction, with a deep appreciation for typography and layout. He is also experienced in product research, print preparation, presentation design, and video editing.
+
+## Tools
+
+His primary design tool is Figma, which he uses across its ecosystem — Design, Make, Slides, and Jam. For visual production he relies on the Adobe suite: Photoshop, Illustrator, InDesign, and Premiere. He is comfortable working within collaborative environments using tools like Slack, Teams, Notion, and Jira, and uses Google Workspace and Microsoft Office for documentation and presentations.
+
+## AI in Work
+
+Teo actively integrates AI into his design workflow. He uses AI-powered image editing features in Figma and Photoshop, leverages Gemini and Claude for UI copywriting assistance, and uses Figma Make for rapid prototyping.
+
+## Education
+
+Teo holds a Master's degree in Design of Graphic Products from the Faculty of Graphic Arts in Zagreb (2022–2024). He completed his Bachelor's degree in the same programme between 2019 and 2022, graduating on the Dean's list.
+
+## Languages
+
+He is a native Croatian speaker and is fluent in English at a C1 level.
+
+## Contact
+
+Email: teo_peter@outlook.com

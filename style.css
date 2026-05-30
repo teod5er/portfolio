@@ -12,7 +12,7 @@ html {
 
 :root {
     --black: #111111;
-    --gray: #6D6D6D;
+    --gray: #747474;
     --border: #E5E5E5;
     --bg-subtle: #F5F5F5;
 
@@ -426,7 +426,8 @@ h3 {
 }
 
 .lightbox-trigger:hover {
-    opacity: 0.8;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+
 }
 
 /* ── Project Subpage Grid ─────────────────────────────────── */
@@ -472,7 +473,7 @@ h3 {
     aspect-ratio: 300 / 190;
     background-color: var(--bg-subtle);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 4px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -483,7 +484,7 @@ h3 {
 }
 
 .gallery-caption {
-    font-size: 18px;
+    font-size: 16px;
     color: var(--gray);
 }
 
@@ -508,6 +509,20 @@ footer {
     display: inline-flex;
     align-items: center;
     gap: 4px;
+}
+
+.dropdown-trigger::after {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    position: relative;
+    top: -2px;
+    margin-left: 2px;
+    transition: transform 0.2s ease;
 }
 
 .dropdown-trigger:hover {
