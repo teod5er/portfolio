@@ -6,6 +6,10 @@
     padding: 0;
 }
 
+@view-transition {
+    navigation: auto;
+}
+
 html,
 body {
     /* Tvoja standardna točkica (veličina 20x20, centar klika na 4 4) */
@@ -350,6 +354,7 @@ h3 {
 
 /* ── Animations ───────────────────────────────────────────── */
 
+/*
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -365,6 +370,8 @@ h3 {
 .fade-in {
     animation: fadeIn 0.6s ease-out forwards;
 }
+
+*/
 
 /* ── Lightbox Overlay ─────────────────────────────────────── */
 
@@ -434,12 +441,13 @@ h3 {
 }
 
 .lightbox-trigger {
-    cursor: pointer;
-    transition: opacity 0.2s;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-size 1s;
 }
 
 .lightbox-trigger:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    background-size: 102%;
 
 }
 
