@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="hr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teo Peter</title>
+    <meta
+      name="description"
+      content="Minimalisticki portfolio za web, app, branding i publishing radove."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header" aria-label="Glavno zaglavlje">
+        
+      </header>
+
+      <main id="app" tabindex="-1"></main>
+
+      <footer class="site-footer" id="contact">
+        <button class="email-copy" type="button" data-copy="teo_peter@outlook.com">
+          <span>Teo Peter © 2026 </span>
+        </button>
+        <nav class="social-links" aria-label="Drustvene mreze">
+          <a href="https://www.linkedin.com/in/teo-peter-4516621a3/" data-profile="linkedin" target="_blank">LinkedIn</a>
+          <a href="mailto:teo_peter@outlook.com" data-profile="mail" target="_blank">Mail</a>
+          
+        </nav>
+      </footer>
+    </div>
+
+    <nav class="bottom-switch" aria-label="Navigacija portfolija">
+      <div class="switch-core" role="tablist" aria-label="CV i projekti">
+        <button class="switch-button" type="button" data-view="cv" role="tab">About</button>
+        <button class="switch-button" type="button" data-view="projects" role="tab">Work</button>
+      </div>
+      <div class="category-bar" aria-label="Kategorije radova">
+        <button type="button" data-category="All">All</button>
+        <button type="button" data-category="Web">Web</button>
+        <button type="button" data-category="App">App</button>
+        <button type="button" data-category="Publishing">Publishing</button>
+      </div>
+    </nav>
+
+
+    <script src="script.js"></script>
+  </body>
+</html>
