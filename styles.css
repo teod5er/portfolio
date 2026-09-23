@@ -677,6 +677,11 @@ body::after {
     min-height: auto;
   }
 
+  .summary-link {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
   #project-title {
     font-size: 28px;
     width: 100%;
@@ -776,4 +781,5 @@ body::after {
     visibility: visible;
   }
 }
+
 
