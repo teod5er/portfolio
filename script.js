@@ -256,6 +256,10 @@ const switchButtons = [...document.querySelectorAll(".switch-button")];
 const categoryButtons = [...document.querySelectorAll(".category-bar button")];
 const projectsButton = document.querySelector('[data-view="projects"]');
 
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
 function setProfileLinks() {
   const linkedin = document.querySelector('[data-profile="linkedin"]');
   const threads = document.querySelector('[data-profile="threads"]');
@@ -352,35 +356,82 @@ function removeProjectDescription() {
   document.querySelector(".project-description")?.remove();
 }
 
-function runTypingEffect(element, text, speed = 30, callback) {
-  let i = 0;
-  element.textContent = "";
-  function type() {
-    if (i < text.length) {
-      element.textContent += text.charAt(i);
-      i++;
-      setTimeout(type, speed);
-    } else if (callback) {
-      callback();
+function introWordsMarkup(text) {
+  return text
+    .split(/(\s+)/)
+    .map((part) => {
+      if (/\s+/.test(part)) return part;
+      return `<span class="intro-word" style="--intro-weight: 400">${part}</span>`;
+    })
+    .join("");
+}
+
+function initIntroWeightInteraction() {
+  const intro = document.querySelector("#cv-title");
+  const words = [...document.querySelectorAll(".intro-word")];
+
+  if (!intro || !words.length) return;
+
+  intro.addEventListener("pointermove", (event) => {
+    words.forEach((word) => {
+      const bounds = word.getBoundingClientRect();
+      const centerX = bounds.left + bounds.width / 2;
+      const centerY = bounds.top + bounds.height / 2;
+      const distance = Math.hypot(event.clientX - centerX, event.clientY - centerY);
+      const influence = Math.max(0, 1 - distance / 280);
+      const weight = Math.round(400 + influence * 300);
+
+      word.style.setProperty("--intro-weight", weight);
+    });
+  });
+
+  intro.addEventListener("pointerleave", () => {
+    words.forEach((word) => word.style.setProperty("--intro-weight", 400));
+  });
+}
+
+function initCopyButtons() {
+  document.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-copy]");
+    if (!button) return;
+
+    const value = button.dataset.copy;
+    const label = button.querySelector("span");
+    const originalLabel = label?.textContent || button.textContent;
+
+    try {
+      await navigator.clipboard.writeText(value);
+      if (label) label.textContent = "Copied";
+      setTimeout(() => {
+        if (label) label.textContent = originalLabel;
+      }, 1600);
+    } catch {
+      window.prompt("Copy e-mail:", value);
     }
-  }
-  type();
+  });
 }
 
 function renderCv() {
   removeProjectDescription();
   state.view = "cv";
 
-  const shouldAnimate = !hasAnimatedIntro;
-
   app.innerHTML = `
     <article class="view cv-view fade-in-section" aria-labelledby="cv-title">
       <section class="cv-hero">
-        <h1 id="cv-title"><span id="typed-intro"></span><span class="typing-cursor" style="${shouldAnimate ? '' : 'display: none;'}"></span></h1>
+        <h1 id="cv-title" class="intro-reveal">${introWordsMarkup(portfolio.intro)}</h1>
         <p class="lead">${portfolio.introSecond}</p>
+        <div class="summary-actions">
+          <a class="summary-link" href="https://chatgpt.com/?q=Give+me+a+concise%2C+well-sourced+summary+of+Teo+Peter%2C+a+graphic+designer+from+Zagreb.+Cover+his+projects%2C+put+focus+on+UX%2FUI+solution+and+branding+work%2C+previous+experience%2C+education%2C+and+notable+design+projects+as+well+as+published+research+articles+in+Acta+Graphica.+Make+it+short+and+helpful.&utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">
+            <img src="ai-icon.svg" alt="" />
+            <span>Get a summary</span>
+          </a>
+          <button class="summary-link copy-email-link" type="button" data-copy="teo_peter@outlook.com">
+            <span>Copy e-mail</span>
+          </button>
+        </div>
       </section>
 
-      <div class="rest-of-content" style="opacity: ${shouldAnimate ? '0' : '1'}; transition: opacity 0.8s ease;">
+      <div class="rest-of-content content-reveal">
         <section class="cv-section" aria-labelledby="skills-title">
           <h2 id="skills-title">Skills</h2>
           <div class="skill-columns">
@@ -451,35 +502,9 @@ function renderCv() {
     </article>
   `;
 
-  const typedTarget = document.getElementById("typed-intro");
-  const cursorTarget = document.querySelector(".typing-cursor");
-  const restContent = document.querySelector(".rest-of-content");
   const bottomSwitch = document.querySelector(".bottom-switch");
-
-  if (shouldAnimate) {
-    hasAnimatedIntro = true;
-    
-    if (typedTarget && restContent) {
-      runTypingEffect(typedTarget, portfolio.intro, 15, () => {
-        setTimeout(() => {
-          if (cursorTarget) cursorTarget.style.display = "none";
-          restContent.style.opacity = "1";
-          if (bottomSwitch) {
-            bottomSwitch.classList.add("is-loaded");
-          }
-        }, 100); 
-      });
-    }
-
-    if (bottomSwitch) {
-      bottomSwitch.classList.add("is-loaded");
-    }
-  } else {
-    if (typedTarget) typedTarget.textContent = portfolio.intro;
-    if (bottomSwitch) {
-      bottomSwitch.classList.add("is-loaded");
-    }
-  }
+  if (bottomSwitch) bottomSwitch.classList.add("is-loaded");
+  initIntroWeightInteraction();
 }
 
 function renderProjects() {
@@ -613,7 +638,7 @@ function route() {
 
   updateSwitch();
   setInitialSwitchWidth(); 
-  window.scrollTo({ top: 0, behavior: "instant" });
+  window.scrollTo({ top: 0, behavior: "smooth" });
   app.focus({ preventScroll: true });
 }
 
@@ -649,6 +674,7 @@ categoryButtons.forEach((button) => {
 window.addEventListener("hashchange", route);
 setProfileLinks();
 updateCategoryCounts();
+initCopyButtons();
 route();
 initMultilingualGreeting();
 
