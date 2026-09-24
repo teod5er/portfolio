@@ -298,11 +298,12 @@ function updateSwitch(projectTitle = null) {
   }
 
   switchButtons.forEach((button) => {
-    const isSelected = button.dataset.view === activeView;
+    const isProjectsButton = button.dataset.view === "projects";
+    const isSelected = isProjectDetail ? isProjectsButton : button.dataset.view === activeView;
     button.setAttribute("aria-selected", String(isSelected));
     button.classList.toggle("is-active", isSelected);
-    button.classList.toggle("is-hidden", false);
-    button.classList.toggle("is-back", isProjectDetail && button.dataset.view === "projects");
+    button.classList.toggle("is-hidden", isProjectDetail && !isProjectsButton);
+    button.classList.toggle("is-back", isProjectDetail && isProjectsButton);
   });
 
   categoryButtons.forEach((button) => {
@@ -311,11 +312,11 @@ function updateSwitch(projectTitle = null) {
 
   if (bottomSwitchMain) {
     bottomSwitchMain.classList.toggle("is-projects", state.view === "projects");
-    bottomSwitchMain.classList.toggle("is-hidden", isProjectDetail); 
+    bottomSwitchMain.classList.toggle("is-hidden", false);
   }
 
   if (projectsButton) {
-    projectsButton.textContent = isProjectDetail ? "Back to work" : "Work";
+    projectsButton.textContent = isProjectDetail ? "Back to Works" : "Work";
   }
 }
 
