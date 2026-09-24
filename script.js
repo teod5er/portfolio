@@ -433,7 +433,7 @@ function renderCv() {
 
       <div class="rest-of-content content-reveal">
         <section class="cv-section" aria-labelledby="skills-title">
-          <h2 id="skills-title">Skills&Tools</h2>
+          <h2 id="skills-title">Skills and tools</h2>
           <div class="skill-columns">
             ${portfolio.skillGroups
               .map(
