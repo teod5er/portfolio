@@ -702,24 +702,24 @@ body::after {
   }
 
   .bottom-switch {
-    right: 12px;
-    left: 12px;
-    transform: none !important;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%) !important;
     border-radius: 12px;
-    display: flex;
+    display: inline-flex;
     justify-content: center;
-    max-width: none !important;
+    width: fit-content;
+    max-width: calc(100% - 24px);
     padding: 6px;
-    width: calc(100% - 24px);
   }
 
   .bottom-switch.is-loaded:hover {
-    transform: none !important;
+    transform: translateX(-50%) !important;
   }
 
   .switch-core {
     display: flex;
-    width: 100%;
+    width: auto;
     gap: 6px;
   }
 
