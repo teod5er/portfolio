@@ -168,7 +168,7 @@ h3 {
   gap: 12px;
   width: fit-content;
   margin-top: clamp(32px, 5vw, 56px);
-  padding: 18px 24px;
+  padding: 16px 24px;
   border: 1px solid var(--line);
   border-radius: 12px;
   font-size: var(--font-size);
@@ -531,9 +531,9 @@ body::after {
   position: fixed;
   z-index: 5;
   right: 0;
-  bottom: 0;
+  bottom: calc(0px - env(safe-area-inset-bottom, 0px));
   left: 0;
-  height: 100px;
+  height: calc(100px + env(safe-area-inset-bottom, 0px));
   content: "";
   pointer-events: none;
   background: linear-gradient(to bottom, transparent 0%, rgb(243 243 243 / 0.2) 55%, rgb(243 243 243 / 0.72) 100%);
@@ -658,7 +658,7 @@ body::after {
   }
 
   .site-shell {
-    padding: 1em;
+    padding: 0.5em;
   }
 
   .gallery-row {
