@@ -123,6 +123,23 @@ const portfolio = {
 };
 
 const works = [
+  {
+    slug: "skola-grada",
+    title: "Škola grada",
+    description: "Škola Grada (School of the City) is a multi-month interdisciplinary educational program organized by the Tomislav Gotovac Institute. Its visual identity is playful and dynamic, easily adaptable for online communication and promotion.",
+    client: "Tomislav Gotovac Institute",
+    year: "2026",
+    category: "Publishing",
+    services: ["Graphic design, Animation"],
+    images: [
+      "publishing_skola-grada/skola-grada-hero.jpg",
+      "publishing_skola-grada/1a.jpg",
+      "publishing_skola-grada/1b.mp4",
+      "publishing_skola-grada/2a.jpg",
+      "publishing_skola-grada/2b.mp4",
+      "publishing_skola-grada/3.jpg",
+    ],
+  },
   
   {
     slug: "diskrepancija-journal",
