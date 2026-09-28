@@ -527,7 +527,7 @@ text-wrap: balance;
   overflow: hidden;
 }
 
-body::after {
+.progressive-blur {
   position: fixed;
   z-index: 5;
   right: 0;
@@ -632,9 +632,9 @@ body::after {
 }
 
 .switch-button.is-back {
-  min-width: 220px;
-  padding-left: 5px;
-  padding-right: 5px;
+  
+  padding-left: 8px;
+  padding-right: 8px;
   background: transparent;
   color: var(--muted);
 }
