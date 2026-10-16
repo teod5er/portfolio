@@ -1,0 +1,2364 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Logo3D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+/* Figma dark aesthetic — flush panels, compact 11px type, Figma blue
+   (#0D99FF) accent, flat controls, dense properties. */
+
+:root {
+  /* Figma UI 3 — floating cards, dark neutral canvas, larger radius */
+  --app-bg: #1a1a1a;
+  --bg: #262626;
+  --surface: #2c2c2c;
+  --surface-2: #383838;
+  --surface-3: #4a4a4a;
+  --surface-4: #5e5e5e;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --divider: rgba(255, 255, 255, 0.06);
+  --text: #ffffff;
+  --text-dim: #b3b3b3;
+  --text-faint: #7a7a7a;
+  --accent: #0c8ce9;
+  --accent-hover: #0d99ff;
+  --accent-soft: rgba(12, 140, 233, 0.15);
+  --danger: #f24822;
+  --success: #14ae5c;
+
+  --font-ui: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --radius: 5px;
+  --radius-pill: 999px;
+  --radius-md: 8px;
+  --radius-lg: 13px;
+
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+
+body {
+  background: var(--app-bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  line-height: 1.4;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button { font-family: inherit; }
+input, select { font-family: inherit; }
+
+/* UI 3: panels are floating cards, inset from screen edges */
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 8px;
+}
+
+/* ============= Top bar — floating pill ============= */
+.topbar {
+  flex: 0 0 auto;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  position: relative;
+  z-index: 20;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(255,255,255,0.04);
+}
+
+.filename {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 6px 12px;
+  background: transparent;
+  border-radius: var(--radius-md);
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.1s ease;
+  background: none;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.btn.icon-only {
+  width: 32px;
+  padding: 0;
+}
+
+.btn-ghost {
+  background: var(--surface-2);
+  color: var(--text);
+}
+.btn-ghost:hover { background: var(--surface-3); }
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+}
+.btn-primary:hover { background: var(--accent-hover); }
+
+.btn svg { width: 14px; height: 14px; }
+
+.menu-wrap { position: relative; }
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.25);
+  padding: 6px;
+  min-width: 220px;
+  z-index: 30;
+}
+.menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0 12px;
+  background: none;
+  border: none;
+  color: var(--text);
+  text-align: left;
+  font-size: 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: inherit;
+  height: 32px;
+}
+.menu button:hover { background: var(--accent); color: white; }
+.menu button:hover .ext { color: rgba(255,255,255,0.7); }
+.menu button .ext {
+  margin-left: auto;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+.menu-sep {
+  height: 1px;
+  background: var(--divider);
+  margin: 4px 2px;
+}
+
+/* ============= Workspace ============= */
+.workspace {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.canvas-area {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(255,255,255,0.04);
+}
+
+#canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.frame-guide {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.frame-guide .inner {
+  border: 1px solid var(--accent);
+  outline: 1px solid rgba(13, 153, 255, 0.3);
+  outline-offset: 0;
+  border-radius: 0;
+}
+
+.view-info {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+.view-info .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+}
+
+.canvas-tools {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 2px;
+}
+.canvas-tools .icon-btn {
+  width: 26px; height: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.canvas-tools .icon-btn:hover { color: var(--text); background: var(--surface-2); }
+.canvas-tools .icon-btn svg { width: 12px; height: 12px; }
+
+.drop-overlay {
+  position: absolute;
+  inset: 12px;
+  border: 2px dashed var(--accent);
+  background: var(--accent-soft);
+  border-radius: var(--radius-md);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 15;
+}
+.drop-overlay.show { display: flex; }
+.drop-overlay .msg {
+  color: var(--text);
+  font-weight: 500;
+  background: var(--surface);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+}
+
+/* ============= Right panel — floating card ============= */
+.panel {
+  flex: 0 0 260px;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 0 0 0.5px rgba(255,255,255,0.04);
+}
+
+.panel::-webkit-scrollbar { width: 10px; }
+.panel::-webkit-scrollbar-track { background: transparent; }
+.panel::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 5px; border: 2px solid var(--surface); }
+
+/* Preview block at top */
+.preview {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--divider);
+}
+.preview-img {
+  width: 100%;
+  max-width: 100%;
+  min-height: 64px;
+  max-height: 72px;
+  background: #fafafa;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview-img svg, .preview-img img { max-width: 100%; max-height: 50px; display: block; }
+.preview-img.empty {
+  color: var(--text-faint);
+  font-size: 11px;
+  padding: 14px 20px;
+  background: var(--surface-2);
+}
+.preview-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface-2);
+  border: none;
+  color: var(--text-dim);
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.1s;
+  height: 24px;
+}
+.preview-action:hover { color: var(--text); background: var(--surface-3); }
+.preview-action.active {
+  background: var(--accent);
+  color: white;
+}
+.preview-action svg { width: 11px; height: 11px; }
+.preview-action:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Section */
+.section {
+  padding: 10px 12px 14px;
+  border-bottom: 1px solid var(--divider);
+}
+.section:last-child { border-bottom: none; }
+.section-title {
+  font-size: 11px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  letter-spacing: 0;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Row */
+.row {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  min-height: 24px;
+}
+.row:last-child { margin-bottom: 0; }
+.row-label {
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 400;
+}
+.row-control {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 24px;
+}
+
+/* Figma-style slider */
+.slider {
+  position: relative;
+  flex: 1;
+  height: 24px;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+.slider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--surface-3);
+  border-radius: 1px;
+  transform: translateY(-50%);
+}
+.slider .fill {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 2px;
+  width: var(--pct, 0%);
+  background: var(--accent);
+  border-radius: 1px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.slider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: var(--pct, 0%);
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 1px solid rgba(0,0,0,0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+.slider:hover::after { transform: translate(-50%, -50%) scale(1.1); }
+.slider.dragging::after { transform: translate(-50%, -50%) scale(1.15); }
+
+.slider-value {
+  min-width: 28px;
+  text-align: right;
+  color: var(--text-dim);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* Segmented control */
+.seg {
+  display: flex;
+  flex: 1;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  padding: 2px;
+  gap: 0;
+  height: 24px;
+}
+.seg-opt {
+  flex: 1;
+  padding: 0 8px;
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  color: var(--text-dim);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.1s;
+  font-family: inherit;
+}
+.seg-opt:hover { color: var(--text); }
+.seg-opt.active {
+  background: var(--surface-4);
+  color: var(--text);
+}
+
+/* Color input — small flat square with hex readout */
+.color-input {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--border-strong);
+  flex-shrink: 0;
+}
+.color-input input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%; height: 100%;
+}
+.color-input .swatch {
+  width: 100%; height: 100%;
+}
+.row-control.right-align {
+  justify-content: flex-end;
+}
+
+/* Select-looking button */
+.select-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface-2);
+  border: none;
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 0 8px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  height: 24px;
+}
+.select-btn:hover { background: var(--surface-3); }
+.select-btn .caret {
+  color: var(--text-faint);
+  font-size: 8px;
+}
+
+/* Icon buttons (align, etc.) */
+.icon-btn {
+  width: 24px; height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border: none;
+  color: var(--text-dim);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.icon-btn:hover { color: var(--text); background: var(--surface-3); }
+.icon-btn svg { width: 12px; height: 12px; }
+.icon-btn.active { background: var(--accent); color: white; }
+
+/* Canvas size footer */
+.canvas-size {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  background: var(--surface);
+  border-top: 1px solid var(--divider);
+  margin-top: auto;
+}
+.canvas-size .label {
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text);
+}
+.canvas-size .label .caret { color: var(--text-faint); font-size: 8px; }
+.canvas-size .dims {
+  display: flex;
+  gap: 6px;
+  color: var(--text-dim);
+  font-size: 11px;
+}
+.canvas-size .dim {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 0 6px;
+  height: 24px;
+}
+.canvas-size .dim .k {
+  color: var(--text-faint);
+  font-size: 10px;
+  font-weight: 500;
+}
+.canvas-size .dim input {
+  width: 42px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  text-align: right;
+  padding: 0;
+  outline: none;
+}
+.canvas-size .dim:hover { background: var(--surface-3); }
+.canvas-size .dim:focus-within { background: var(--surface-3); outline: 1px solid var(--accent); outline-offset: -1px; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.error { background: var(--danger); border-color: var(--danger); color: white; }
+.toast.success { background: var(--success); border-color: var(--success); color: white; }
+
+/* Loading */
+.loading {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30,30,30,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 10;
+  border-radius: var(--radius-lg);
+}
+.loading.show { display: flex; }
+.spinner {
+  width: 28px; height: 28px;
+  border: 2px solid var(--surface-3);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============= Mobile ============= */
+@media (max-width: 820px) {
+  .workspace { flex-direction: column; }
+  .canvas-area { flex: 1 1 50%; min-height: 40vh; }
+  .panel {
+    flex: 1 1 50%;
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--divider);
+    max-height: 55vh;
+  }
+  .filename { display: none; }
+}
+
+@media (max-width: 500px) {
+  .topbar { padding: 0 8px; height: 44px; }
+}
+
+/* Focus visible */
+button:focus-visible,
+.slider:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+</style>
+
+<div class="app">
+  <div class="topbar">
+    <input type="file" id="file-input" accept=".svg,image/svg+xml,image/png,image/jpeg" hidden>
+    <button class="btn btn-ghost" id="upload-btn">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 11V3M8 3l-3 3M8 3l3 3M3 11v2a1 1 0 001 1h8a1 1 0 001-1v-2"/></svg>
+      Upload
+    </button>
+    <div class="filename" id="filename">sample.svg</div>
+    <div class="actions">
+      <button class="btn btn-ghost icon-only" id="reload-btn" title="Reload page">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 11-1.63-3.91M13.5 2.5v3h-3"/></svg>
+      </button>
+      <div class="menu-wrap">
+        <button class="btn btn-primary" id="export-btn">
+          Export
+          <svg viewBox="0 0 10 6" fill="currentColor"><path d="M0 0h10L5 6z"/></svg>
+        </button>
+        <div class="menu" id="export-menu" hidden>
+          <button data-format="png" data-scale="1">
+            Image <span class="ext">PNG 1×</span>
+          </button>
+          <button data-format="png" data-scale="1.5">
+            Image <span class="ext">PNG 1.5×</span>
+          </button>
+          <button data-format="png" data-scale="2">
+            Image <span class="ext">PNG 2×</span>
+          </button>
+          <button data-format="png" data-scale="4">
+            Image <span class="ext">PNG 4×</span>
+          </button>
+          <div class="menu-sep"></div>
+          <button data-format="stl">
+            3D model <span class="ext">STL.zip</span>
+          </button>
+          <button data-format="glb">
+            3D model <span class="ext">GLB.zip</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <div class="canvas-area" id="canvas-area">
+      <canvas id="canvas"></canvas>
+      <div class="frame-guide"><div class="inner" id="frame-guide-inner"></div></div>
+      <div class="view-info">
+        <div class="dot"></div>
+        <span id="view-info-text">1080 × 1080 · drag to orbit</span>
+      </div>
+      <div class="canvas-tools">
+        <button class="icon-btn" id="reset-view-btn" title="Reset view">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8a5 5 0 019-3M13 8a5 5 0 01-9 3M12 3v3h-3M4 13v-3h3"/></svg>
+        </button>
+      </div>
+      <div class="drop-overlay" id="drop-overlay">
+        <div class="msg">Drop SVG or PNG to load</div>
+      </div>
+      <div class="loading" id="loading"><div class="spinner"></div></div>
+    </div>
+
+    <aside class="panel">
+      <div class="preview">
+        <div class="preview-img" id="preview-img"></div>
+        <button class="preview-action" id="invert-btn" title="Invert shape detection (swap foreground / background)" hidden>
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5l3-3 3 3M5 2v10M12 9l-3 3-3-3M9 12V2"/></svg>
+          Invert
+        </button>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">Bevel</h3>
+        <div class="row">
+          <div class="row-label">Depth</div>
+          <div class="row-control">
+            <div class="slider" data-param="depth" data-min="2" data-max="80" data-value="20"><div class="fill"></div></div>
+            <div class="slider-value" id="val-depth">20</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Size</div>
+          <div class="row-control">
+            <div class="slider" data-param="bevelSize" data-min="0" data-max="8" data-value="1" data-step="0.1"><div class="fill"></div></div>
+            <div class="slider-value" id="val-bevelSize">1.0</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Thickness</div>
+          <div class="row-control">
+            <div class="slider" data-param="bevelThickness" data-min="0" data-max="8" data-value="1" data-step="0.1"><div class="fill"></div></div>
+            <div class="slider-value" id="val-bevelThickness">1.0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">Material</h3>
+        <div class="row" style="grid-template-columns: 1fr;">
+          <div class="seg" data-param="materialType">
+            <button class="seg-opt active" data-value="realistic">realistic</button>
+            <button class="seg-opt" data-value="glass">glass</button>
+            <button class="seg-opt" data-value="flat">flat</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Color</div>
+          <div class="row-control right-align">
+            <label class="color-input">
+              <input type="color" id="color-input" value="#4f46ff">
+              <div class="swatch" id="color-swatch" style="background: #4f46ff"></div>
+            </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Roughness</div>
+          <div class="row-control">
+            <div class="slider" data-param="roughness" data-min="0" data-max="1" data-value="0.25" data-step="0.01"><div class="fill"></div></div>
+            <div class="slider-value" id="val-roughness">25</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Metallic</div>
+          <div class="row-control">
+            <div class="slider" data-param="metallic" data-min="0" data-max="1" data-value="0.15" data-step="0.01"><div class="fill"></div></div>
+            <div class="slider-value" id="val-metallic">15</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Clearcoat</div>
+          <div class="row-control">
+            <div class="slider" data-param="clearcoat" data-min="0" data-max="1" data-value="0.6" data-step="0.01"><div class="fill"></div></div>
+            <div class="slider-value" id="val-clearcoat">60</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Iridescence</div>
+          <div class="row-control">
+            <div class="slider" data-param="iridescence" data-min="0" data-max="1" data-value="0.3" data-step="0.01"><div class="fill"></div></div>
+            <div class="slider-value" id="val-iridescence">30</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Opacity</div>
+          <div class="row-control">
+            <div class="slider" data-param="opacity" data-min="0.1" data-max="1" data-value="1" data-step="0.01"><div class="fill"></div></div>
+            <div class="slider-value" id="val-opacity">100</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">Texture</h3>
+        <div class="row">
+          <div class="row-label">Type</div>
+          <div class="row-control right-align">
+            <button class="select-btn" id="texture-type-btn">
+              <span id="texture-type-label">None</span>
+              <span class="caret">▾</span>
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Strength</div>
+          <div class="row-control">
+            <div class="slider" data-param="textureStrength" data-min="0" data-max="1" data-value="0.5" data-step="0.01"><div class="fill"></div></div>
+            <div class="slider-value" id="val-textureStrength">50</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Scale</div>
+          <div class="row-control">
+            <div class="slider" data-param="textureScale" data-min="0.2" data-max="5" data-value="1" data-step="0.1"><div class="fill"></div></div>
+            <div class="slider-value" id="val-textureScale">1.0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">Align</h3>
+        <div class="row">
+          <div class="row-label">Rotation</div>
+          <div class="row-control right-align">
+            <button class="select-btn" id="rotation-btn">
+              <span id="rotation-label">Front</span>
+              <span class="caret">▾</span>
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Zoom</div>
+          <div class="row-control">
+            <div class="slider" data-param="zoom" data-min="0.4" data-max="2" data-value="1" data-step="0.01"><div class="fill"></div></div>
+            <div class="slider-value" id="val-zoom">1.0</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="row-label">Center</div>
+          <div class="row-control" style="gap: 6px;">
+            <button class="icon-btn" id="center-h-btn" title="Center horizontally">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M4 5h8M4 11h8"/></svg>
+            </button>
+            <button class="icon-btn" id="center-v-btn" title="Center vertically">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M5 4v8M11 4v8"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas-size">
+        <div class="label">Canvas <span class="caret">▾</span></div>
+        <div class="dims">
+          <div class="dim"><span class="k">W</span><input type="number" id="canvas-w" value="1080" min="256" max="4096" step="1"></div>
+          <div class="dim"><span class="k">H</span><input type="number" id="canvas-h" value="1080" min="256" max="4096" step="1"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/SVGLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/exporters/STLExporter.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/exporters/GLTFExporter.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+(function() {
+  'use strict';
+
+  // ====================== Sample SVG ======================
+  // A bold geometric "A" with a triangular hole — good for showing
+  // shape+hole handling in extrusion.
+  const SAMPLE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <path fill="black" d="M100 20 L172 180 L138 180 L122 148 L78 148 L62 180 L28 180 Z M89 118 L111 118 L100 92 Z"/>
+  </svg>`;
+
+  // ====================== State ======================
+  const params = {
+    depth: 20,
+    bevelSize: 1,
+    bevelThickness: 1,
+    materialType: 'realistic',
+    color: '#4f46ff',
+    roughness: 0.25,
+    metallic: 0.15,
+    clearcoat: 0.6,
+    iridescence: 0.3,
+    opacity: 1,
+    textureType: 'none',
+    textureStrength: 0.5,
+    textureScale: 1,
+    rotationPreset: 'front',
+    zoom: 1,
+    canvasW: 1080,
+    canvasH: 1080,
+    invert: false
+  };
+
+  let scene, camera, renderer, controls, envTexture;
+  let currentMesh = null;
+  let currentShapes = null;      // original Shape[] for rebuilds
+  let originalBBox = null;       // bounding box of pre-centered shapes
+  let currentLogoName = 'sample.svg';
+  let currentLogoDataURL = null; // for preview thumbnail
+  let currentSourceType = 'svg'; // 'svg' | 'raster'
+  let lastRasterImage = null;    // { imgData, w, h } cache for re-processing on invert
+  let needsRebuild = false;
+  let rebuildTimer = null;
+
+  // ====================== Setup Three.js ======================
+  const canvas = document.getElementById('canvas');
+  const canvasArea = document.getElementById('canvas-area');
+
+  scene = new THREE.Scene();
+  scene.background = null; // Transparent so CSS gradient shows through
+
+  camera = new THREE.PerspectiveCamera(32, 1, 0.1, 2000);
+  camera.position.set(0, 0, 260);
+
+  renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: true,
+    preserveDrawingBuffer: true
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+
+  // Lighting
+  const ambient = new THREE.AmbientLight(0xffffff, 0.35);
+  scene.add(ambient);
+
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+  keyLight.position.set(2, 3, 4);
+  scene.add(keyLight);
+
+  const fillLight = new THREE.DirectionalLight(0xaabbff, 0.5);
+  fillLight.position.set(-3, -1, 2);
+  scene.add(fillLight);
+
+  const rimLight = new THREE.DirectionalLight(0xffddaa, 0.6);
+  rimLight.position.set(0, -2, -4);
+  scene.add(rimLight);
+
+  // Environment map for reflections
+  function buildEnvironment() {
+    const envScene = new THREE.Scene();
+
+    // Six colored faces for a studio-like reflection
+    const faces = [
+      { pos: [50, 0, 0], color: 0x5a5a65 },
+      { pos: [-50, 0, 0], color: 0x3a3a45 },
+      { pos: [0, 50, 0], color: 0x9095a0 },
+      { pos: [0, -50, 0], color: 0x202028 },
+      { pos: [0, 0, 50], color: 0x606570 },
+      { pos: [0, 0, -50], color: 0x404048 }
+    ];
+    faces.forEach(f => {
+      const plane = new THREE.Mesh(
+        new THREE.PlaneGeometry(100, 100),
+        new THREE.MeshBasicMaterial({ color: f.color, side: THREE.DoubleSide })
+      );
+      plane.position.set(f.pos[0], f.pos[1], f.pos[2]);
+      plane.lookAt(0, 0, 0);
+      envScene.add(plane);
+    });
+
+    // A bright accent to catch highlights
+    const spotlight = new THREE.Mesh(
+      new THREE.SphereGeometry(8, 16, 16),
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
+    );
+    spotlight.position.set(25, 35, 20);
+    envScene.add(spotlight);
+
+    const spotlight2 = new THREE.Mesh(
+      new THREE.SphereGeometry(4, 16, 16),
+      new THREE.MeshBasicMaterial({ color: 0xffd0a0 })
+    );
+    spotlight2.position.set(-20, -10, 30);
+    envScene.add(spotlight2);
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    envTexture = pmrem.fromScene(envScene).texture;
+    pmrem.dispose();
+    scene.environment = envTexture;
+  }
+  buildEnvironment();
+
+  // Orbit controls
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.1;
+  controls.minDistance = 60;
+  controls.maxDistance = 800;
+  controls.enablePan = true;
+
+  // ====================== Procedural textures ======================
+  const textureCache = {};
+
+  function makeNoiseCanvas(w, h, drawFn) {
+    const c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    const ctx = c.getContext('2d');
+    drawFn(ctx, w, h);
+    return c;
+  }
+
+  function makeMetalTexture() {
+    const canvas = makeNoiseCanvas(512, 512, (ctx, w, h) => {
+      ctx.fillStyle = '#808080';
+      ctx.fillRect(0, 0, w, h);
+      // Brushed metal: horizontal streaks
+      for (let i = 0; i < 2000; i++) {
+        const y = Math.random() * h;
+        const x = Math.random() * w;
+        const len = 20 + Math.random() * 80;
+        const alpha = 0.03 + Math.random() * 0.1;
+        const bright = Math.random() > 0.5;
+        ctx.strokeStyle = bright
+          ? `rgba(255,255,255,${alpha})`
+          : `rgba(0,0,0,${alpha})`;
+        ctx.lineWidth = 0.5 + Math.random() * 1;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + len, y);
+        ctx.stroke();
+      }
+    });
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    return tex;
+  }
+
+  function makePlasticTexture() {
+    const canvas = makeNoiseCanvas(256, 256, (ctx, w, h) => {
+      ctx.fillStyle = '#808080';
+      ctx.fillRect(0, 0, w, h);
+      // Fine speckle
+      const img = ctx.getImageData(0, 0, w, h);
+      for (let i = 0; i < img.data.length; i += 4) {
+        const n = (Math.random() - 0.5) * 30;
+        img.data[i] = 128 + n;
+        img.data[i + 1] = 128 + n;
+        img.data[i + 2] = 128 + n;
+      }
+      ctx.putImageData(img, 0, 0);
+    });
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    return tex;
+  }
+
+  function makeWoodTexture() {
+    const canvas = makeNoiseCanvas(512, 512, (ctx, w, h) => {
+      // Base
+      const grd = ctx.createLinearGradient(0, 0, 0, h);
+      grd.addColorStop(0, '#8a7055');
+      grd.addColorStop(1, '#6b5540');
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, w, h);
+      // Grain lines
+      for (let i = 0; i < 60; i++) {
+        const baseY = Math.random() * h;
+        const amp = 4 + Math.random() * 12;
+        const freq = 0.01 + Math.random() * 0.02;
+        const alpha = 0.1 + Math.random() * 0.3;
+        ctx.strokeStyle = `rgba(50,30,20,${alpha})`;
+        ctx.lineWidth = 0.5 + Math.random() * 2;
+        ctx.beginPath();
+        for (let x = 0; x <= w; x += 2) {
+          const y = baseY + Math.sin(x * freq) * amp;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+    });
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    return tex;
+  }
+
+  function makeMarbleTexture() {
+    const canvas = makeNoiseCanvas(512, 512, (ctx, w, h) => {
+      ctx.fillStyle = '#e8e8e8';
+      ctx.fillRect(0, 0, w, h);
+      // Veins
+      for (let i = 0; i < 15; i++) {
+        ctx.strokeStyle = `rgba(80,80,90,${0.1 + Math.random() * 0.3})`;
+        ctx.lineWidth = 0.5 + Math.random() * 2;
+        ctx.beginPath();
+        let x = Math.random() * w;
+        let y = Math.random() * h;
+        ctx.moveTo(x, y);
+        for (let j = 0; j < 40; j++) {
+          x += (Math.random() - 0.5) * 40;
+          y += (Math.random() - 0.5) * 40;
+          ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      // Subtle noise
+      const img = ctx.getImageData(0, 0, w, h);
+      for (let i = 0; i < img.data.length; i += 4) {
+        const n = (Math.random() - 0.5) * 15;
+        img.data[i] += n;
+        img.data[i + 1] += n;
+        img.data[i + 2] += n;
+      }
+      ctx.putImageData(img, 0, 0);
+    });
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    return tex;
+  }
+
+  function makeConcreteTexture() {
+    const canvas = makeNoiseCanvas(512, 512, (ctx, w, h) => {
+      ctx.fillStyle = '#9a9a98';
+      ctx.fillRect(0, 0, w, h);
+      // Spots and pits
+      for (let i = 0; i < 3000; i++) {
+        const x = Math.random() * w;
+        const y = Math.random() * h;
+        const r = Math.random() * 3;
+        const dark = Math.random() > 0.5;
+        ctx.fillStyle = dark
+          ? `rgba(60,60,58,${0.1 + Math.random() * 0.3})`
+          : `rgba(220,220,218,${0.05 + Math.random() * 0.2})`;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Large grain noise
+      const img = ctx.getImageData(0, 0, w, h);
+      for (let i = 0; i < img.data.length; i += 4) {
+        const n = (Math.random() - 0.5) * 25;
+        img.data[i] += n;
+        img.data[i + 1] += n;
+        img.data[i + 2] += n;
+      }
+      ctx.putImageData(img, 0, 0);
+    });
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    return tex;
+  }
+
+  function getTexture(type) {
+    if (type === 'none') return null;
+    if (!textureCache[type]) {
+      if (type === 'metal') textureCache[type] = makeMetalTexture();
+      else if (type === 'plastic') textureCache[type] = makePlasticTexture();
+      else if (type === 'wood') textureCache[type] = makeWoodTexture();
+      else if (type === 'marble') textureCache[type] = makeMarbleTexture();
+      else if (type === 'concrete') textureCache[type] = makeConcreteTexture();
+    }
+    return textureCache[type];
+  }
+
+  // ====================== Material ======================
+  function makeMaterial() {
+    const common = {
+      color: new THREE.Color(params.color),
+      opacity: params.opacity,
+      transparent: params.opacity < 1
+    };
+
+    const tex = getTexture(params.textureType);
+    let roughnessMap = null;
+    let normalMap = null;
+    if (tex) {
+      const scale = params.textureScale;
+      const clonedRough = tex.clone();
+      clonedRough.needsUpdate = true;
+      clonedRough.wrapS = clonedRough.wrapT = THREE.RepeatWrapping;
+      clonedRough.repeat.set(scale, scale);
+      roughnessMap = clonedRough;
+
+      const clonedNormal = tex.clone();
+      clonedNormal.needsUpdate = true;
+      clonedNormal.wrapS = clonedNormal.wrapT = THREE.RepeatWrapping;
+      clonedNormal.repeat.set(scale, scale);
+      normalMap = clonedNormal;
+    }
+
+    // Texture biases: a metal/wood/concrete/marble texture pushes certain
+    // base properties, but user sliders remain authoritative.
+    const texType = params.textureType;
+    const metalBias  = texType === 'metal' ? 0.85 : 0;
+    const roughBias  = texType === 'metal' ? -0.1
+                      : (texType === 'wood' || texType === 'concrete' || texType === 'marble') ? 0.3
+                      : 0;
+    const clamp01 = v => Math.max(0, Math.min(1, v));
+
+    let mat;
+    if (params.materialType === 'realistic') {
+      mat = new THREE.MeshPhysicalMaterial({
+        ...common,
+        metalness: clamp01(params.metallic + metalBias * params.textureStrength),
+        roughness: clamp01(params.roughness + roughBias * params.textureStrength),
+        envMapIntensity: 1.1,
+        clearcoat: params.clearcoat,
+        clearcoatRoughness: Math.max(0.03, params.roughness * 0.5),
+        iridescence: params.iridescence,
+        iridescenceIOR: 1.3,
+        iridescenceThicknessRange: [100, 400],
+        roughnessMap,
+        normalMap,
+        normalScale: new THREE.Vector2(params.textureStrength * 0.6, params.textureStrength * 0.6)
+      });
+    } else if (params.materialType === 'glass') {
+      mat = new THREE.MeshPhysicalMaterial({
+        ...common,
+        metalness: params.metallic * 0.3, // glass stays mostly dielectric
+        roughness: Math.max(0.02, params.roughness * 0.5),
+        transmission: 0.95 * params.opacity,
+        transparent: true,
+        opacity: Math.max(params.opacity, 0.1),
+        ior: 1.5,
+        thickness: Math.max(params.depth * 0.15, 1),
+        envMapIntensity: 1.4,
+        clearcoat: Math.max(params.clearcoat, 0.4),
+        clearcoatRoughness: 0.08,
+        iridescence: params.iridescence,
+        iridescenceIOR: 1.3,
+        iridescenceThicknessRange: [100, 400],
+        side: THREE.DoubleSide,
+        normalMap,
+        normalScale: new THREE.Vector2(params.textureStrength * 0.3, params.textureStrength * 0.3)
+      });
+    } else { // flat
+      mat = new THREE.MeshStandardMaterial({
+        ...common,
+        metalness: 0,
+        roughness: clamp01(0.8 + params.roughness * 0.2),
+        envMapIntensity: 0.2,
+        normalMap,
+        normalScale: new THREE.Vector2(params.textureStrength * 0.5, params.textureStrength * 0.5)
+      });
+    }
+    return mat;
+  }
+
+  // ====================== Geometry ======================
+  function buildGeometryFromShapes(shapes) {
+    const settings = {
+      depth: params.depth,
+      bevelEnabled: params.bevelSize > 0 || params.bevelThickness > 0,
+      bevelSize: params.bevelSize,
+      bevelThickness: params.bevelThickness,
+      bevelOffset: 0,
+      bevelSegments: 4,
+      curveSegments: 24,
+      steps: 1
+    };
+    // Try all shapes at once; if that throws (one bad self-intersecting
+    // contour can kill the whole call), filter the bad ones individually.
+    let geo;
+    try {
+      geo = new THREE.ExtrudeGeometry(shapes, settings);
+    } catch (e) {
+      console.warn('Full extrude failed, filtering bad shapes:', e.message);
+      const good = [];
+      for (const s of shapes) {
+        try {
+          new THREE.ExtrudeGeometry([s], settings).dispose();
+          good.push(s);
+        } catch (_) { /* skip */ }
+      }
+      if (good.length === 0) throw new Error('No valid shapes to extrude');
+      geo = new THREE.ExtrudeGeometry(good, settings);
+    }
+    // Center the geometry at origin
+    geo.computeBoundingBox();
+    const bb = geo.boundingBox;
+    const cx = (bb.max.x + bb.min.x) / 2;
+    const cy = (bb.max.y + bb.min.y) / 2;
+    const cz = (bb.max.z + bb.min.z) / 2;
+    geo.translate(-cx, -cy, -cz);
+    // Flip Y to go from image coords (y-down) to Three.js (y-up).
+    // scale(1,-1,1) has det=-1, which inverts triangle winding — reverse
+    // vertex order per triangle so face normals keep pointing outward,
+    // otherwise front faces get culled and the mesh looks see-through.
+    geo.scale(1, -1, 1);
+    flipGeometryWinding(geo);
+    geo.computeVertexNormals();
+    return geo;
+  }
+
+  function flipGeometryWinding(geometry) {
+    const index = geometry.index;
+    if (index) {
+      const arr = index.array;
+      for (let i = 0; i < arr.length; i += 3) {
+        const tmp = arr[i + 1];
+        arr[i + 1] = arr[i + 2];
+        arr[i + 2] = tmp;
+      }
+      index.needsUpdate = true;
+      return;
+    }
+    // Non-indexed: swap vertices 2 and 3 across every per-vertex attribute
+    const attrs = geometry.attributes;
+    for (const key in attrs) {
+      const attr = attrs[key];
+      const arr = attr.array;
+      const stride = attr.itemSize;
+      for (let i = 0; i < arr.length; i += stride * 3) {
+        for (let j = 0; j < stride; j++) {
+          const tmp = arr[i + stride + j];
+          arr[i + stride + j] = arr[i + stride * 2 + j];
+          arr[i + stride * 2 + j] = tmp;
+        }
+      }
+      attr.needsUpdate = true;
+    }
+  }
+
+  function fitCameraToGeometry(geo) {
+    geo.computeBoundingBox();
+    const bb = geo.boundingBox;
+    const size = new THREE.Vector3();
+    bb.getSize(size);
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const fov = camera.fov * Math.PI / 180;
+    let distance = (maxDim * 1.4) / (2 * Math.tan(fov / 2));
+    distance = Math.max(distance, 100);
+    controls.target.set(0, 0, 0);
+    camera.position.set(0, 0, distance);
+    camera.near = Math.max(0.1, distance / 100);
+    camera.far = distance * 10;
+    camera.updateProjectionMatrix();
+    controls.update();
+  }
+
+  function rebuildMesh(opts) {
+    opts = opts || {};
+    if (!currentShapes || currentShapes.length === 0) return;
+    try {
+      if (currentMesh) {
+        scene.remove(currentMesh);
+        currentMesh.geometry.dispose();
+        if (Array.isArray(currentMesh.material)) {
+          currentMesh.material.forEach(m => m.dispose());
+        } else {
+          currentMesh.material.dispose();
+        }
+        currentMesh = null;
+      }
+      const geo = buildGeometryFromShapes(currentShapes);
+      const mat = makeMaterial();
+      currentMesh = new THREE.Mesh(geo, mat);
+      scene.add(currentMesh);
+      applyRotation();
+      if (opts.fit) {
+        fitCameraToGeometry(geo);
+      }
+    } catch (e) {
+      console.error('rebuildMesh failed:', e);
+      showToast('Error building 3D model: ' + e.message, 'error');
+    }
+  }
+
+  function updateMaterial() {
+    if (!currentMesh) return;
+    if (Array.isArray(currentMesh.material)) {
+      currentMesh.material.forEach(m => m.dispose());
+    } else {
+      currentMesh.material.dispose();
+    }
+    currentMesh.material = makeMaterial();
+  }
+
+  function applyRotation() {
+    if (!currentMesh) return;
+    const presets = {
+      front: [0, 0, 0],
+      iso: [-0.3, 0.5, 0],
+      perspective: [-0.2, 0.8, 0],
+      side: [0, Math.PI / 2 - 0.1, 0],
+      top: [-Math.PI / 2.5, 0, 0],
+      three_quarter: [-0.2, -0.5, 0]
+    };
+    const r = presets[params.rotationPreset] || [0, 0, 0];
+    currentMesh.rotation.set(r[0], r[1], r[2]);
+    currentMesh.scale.setScalar(params.zoom);
+  }
+
+  // ====================== Loaders ======================
+  function loadSVG(svgText, filename) {
+    try {
+      const loader = new THREE.SVGLoader();
+      const data = loader.parse(svgText);
+      const shapes = [];
+      data.paths.forEach(path => {
+        try {
+          const pathShapes = THREE.SVGLoader.createShapes
+            ? THREE.SVGLoader.createShapes(path)
+            : path.toShapes(true);
+          pathShapes.forEach(s => shapes.push(s));
+        } catch (e) {
+          console.warn('Path parse error:', e);
+        }
+      });
+      if (shapes.length === 0) {
+        throw new Error('No shapes found in SVG');
+      }
+      currentShapes = shapes;
+      currentLogoName = filename || 'logo.svg';
+      currentLogoDataURL = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgText)));
+      currentSourceType = 'svg';
+      lastRasterImage = null;
+      params.invert = false;
+      updateInvertButton();
+      updatePreview();
+      updateFilename();
+      rebuildMesh({ fit: true });
+      showToast('Logo loaded', 'success');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to load SVG: ' + e.message, 'error');
+    }
+  }
+
+  // Convert raster image to shapes via alpha / luminance tracing.
+  // Cache raw pixels so an Invert toggle can re-process without re-loading.
+  function loadRasterImage(img, filename) {
+    const MAX_SIZE = 600;
+    const scale = Math.min(1, MAX_SIZE / Math.max(img.width, img.height));
+    const w = Math.max(32, Math.round(img.width * scale));
+    const h = Math.max(32, Math.round(img.height * scale));
+    const c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    const imgData = ctx.getImageData(0, 0, w, h);
+
+    lastRasterImage = { imgData, w, h };
+    currentLogoName = filename || 'logo.png';
+    currentLogoDataURL = c.toDataURL();
+    currentSourceType = 'raster';
+    params.invert = false;
+    updateInvertButton();
+    processRasterImage();
+    updatePreview();
+    updateFilename();
+  }
+
+  // Re-process the cached raster image using current params.invert.
+  function processRasterImage() {
+    if (!lastRasterImage) return;
+    try {
+      const { imgData, w, h } = lastRasterImage;
+
+      // Analyze image: alpha, dark, light coverage
+      let hasAlpha = false;
+      let darkCount = 0, lightCount = 0, opaqueCount = 0;
+      const data = imgData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const a = data[i + 3];
+        if (a < 250) hasAlpha = true;
+        if (a > 128) {
+          opaqueCount++;
+          const lum = (data[i] + data[i + 1] + data[i + 2]) / 3;
+          if (lum < 100) darkCount++;
+          else if (lum > 200) lightCount++;
+        }
+      }
+
+      // Decide detection mode. "Both" means logo+interior+background
+      // all opaque — use luminance; otherwise fall back to alpha.
+      const minSignificant = Math.max(50, opaqueCount * 0.01);
+      const hasBoth = darkCount > minSignificant && lightCount > minSignificant;
+      let mode;
+      if (hasBoth) mode = 'dark';          // dark pixels = shape
+      else if (hasAlpha) mode = 'opaque';  // opaque pixels = shape
+      else mode = 'dark';                  // fallback for solid-background images
+
+      // Apply invert toggle
+      if (params.invert) {
+        if (mode === 'dark') mode = 'light';
+        else if (mode === 'light') mode = 'dark';
+        else if (mode === 'opaque') mode = 'transparent';
+        else if (mode === 'transparent') mode = 'opaque';
+      }
+
+      // Build binary mask
+      const mask = new Uint8Array(w * h);
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const idx = (y * w + x) * 4;
+          const r = data[idx], g = data[idx + 1], b = data[idx + 2], a = data[idx + 3];
+          const lum = (r + g + b) / 3;
+          let on = 0;
+          switch (mode) {
+            case 'dark': on = (a > 128 && lum < 128) ? 1 : 0; break;
+            case 'light': on = (a > 128 && lum >= 128) ? 1 : 0; break;
+            case 'opaque': on = (a > 128) ? 1 : 0; break;
+            case 'transparent': on = (a <= 128) ? 1 : 0; break;
+          }
+          mask[y * w + x] = on;
+        }
+      }
+
+      const shapes = extractShapesFromMask(mask, w, h);
+      if (shapes.length === 0) {
+        throw new Error('No shape detected — try toggling Invert');
+      }
+
+      currentShapes = shapes;
+      rebuildMesh({ fit: true });
+      showToast('Logo loaded (' + shapes.length + ' parts)', 'success');
+    } catch (e) {
+      console.error(e);
+      showToast(e.message, 'error');
+    }
+  }
+
+  // Extract clean, separate THREE.Shapes from a binary mask.
+  // Each connected 1-region is its own Shape; enclosed 0-regions are
+  // nested as holes in their smallest containing solid.
+  function extractShapesFromMask(mask, w, h) {
+    // 1) Find all connected 1-regions (solids)
+    const seenSolid = new Uint8Array(w * h);
+    const solidStarts = [];
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = y * w + x;
+        if (!mask[i] || seenSolid[i]) continue;
+        solidStarts.push({ x, y });
+        floodFillMark(mask, seenSolid, x, y, w, h, 1);
+      }
+    }
+
+    // 2) Mark the background 0-region (0-pixels reachable from border)
+    const seenBg = new Uint8Array(w * h);
+    const bgQueue = [];
+    for (let x = 0; x < w; x++) {
+      if (!mask[x]) { bgQueue.push(x); seenBg[x] = 1; }
+      const bi = (h - 1) * w + x;
+      if (!mask[bi]) { bgQueue.push(bi); seenBg[bi] = 1; }
+    }
+    for (let y = 0; y < h; y++) {
+      const li = y * w;
+      if (!mask[li]) { bgQueue.push(li); seenBg[li] = 1; }
+      const ri = y * w + (w - 1);
+      if (!mask[ri]) { bgQueue.push(ri); seenBg[ri] = 1; }
+    }
+    while (bgQueue.length) {
+      const i = bgQueue.pop();
+      const x = i % w, y = (i / w) | 0;
+      const neighbors = [[1,0],[-1,0],[0,1],[0,-1]];
+      for (const [dx, dy] of neighbors) {
+        const nx = x + dx, ny = y + dy;
+        if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+        const ni = ny * w + nx;
+        if (!mask[ni] && !seenBg[ni]) { seenBg[ni] = 1; bgQueue.push(ni); }
+      }
+    }
+
+    // 3) Find enclosed 0-regions (holes)
+    const seenHole = new Uint8Array(w * h);
+    const holeStarts = [];
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const i = y * w + x;
+        if (mask[i] || seenBg[i] || seenHole[i]) continue;
+        holeStarts.push({ x, y });
+        floodFillMark(mask, seenHole, x, y, w, h, 0);
+      }
+    }
+
+    // 4) Inverted mask for tracing hole boundaries
+    const invMask = new Uint8Array(w * h);
+    for (let i = 0; i < w * h; i++) invMask[i] = mask[i] ? 0 : 1;
+
+    // 5) Trace boundaries (need at least 3 points for a valid polygon)
+    const solidContours = [];
+    for (const s of solidStarts) {
+      const c = traceContour(mask, w, h, s.x, s.y, true);
+      if (c && c.length >= 3) solidContours.push(c);
+    }
+    const holeContours = [];
+    for (const s of holeStarts) {
+      const c = traceContour(invMask, w, h, s.x, s.y, true);
+      if (c && c.length >= 3) holeContours.push(c);
+    }
+
+    // 6) Normalize windings. In image coords (y-down):
+    //    CW traversal => positive signed area.
+    //    After the y-flip in buildGeometryFromShapes this becomes CCW
+    //    in math coords, which THREE wants for outer shapes.
+    function info(points, isOuter) {
+      const sArea = polyArea(points);
+      if (isOuter && sArea < 0) points.reverse();
+      if (!isOuter && sArea > 0) points.reverse();
+      return { points, area: Math.abs(sArea) };
+    }
+    const solids = solidContours.map(c => info(c, true));
+    const holes = holeContours.map(c => info(c, false));
+
+    // 7) Assign each hole to the SMALLEST solid that contains it
+    for (const h of holes) {
+      let parent = null;
+      let parentArea = Infinity;
+      for (const s of solids) {
+        if (s.area < parentArea && pointInPolygon(h.points[0], s.points)) {
+          parent = s;
+          parentArea = s.area;
+        }
+      }
+      h.parent = parent;
+    }
+
+    // 8) Build THREE.Shape per solid
+    const shapes = [];
+    for (const s of solids) {
+      const shape = new THREE.Shape();
+      shape.moveTo(s.points[0].x, s.points[0].y);
+      for (let i = 1; i < s.points.length; i++) {
+        shape.lineTo(s.points[i].x, s.points[i].y);
+      }
+      for (const h of holes) {
+        if (h.parent !== s) continue;
+        const hole = new THREE.Path();
+        hole.moveTo(h.points[0].x, h.points[0].y);
+        for (let i = 1; i < h.points.length; i++) {
+          hole.lineTo(h.points[i].x, h.points[i].y);
+        }
+        shape.holes.push(hole);
+      }
+      shapes.push(shape);
+    }
+
+    return shapes;
+  }
+
+  function floodFillMark(mask, visited, startX, startY, w, h, target) {
+    const stack = [[startX, startY]];
+    while (stack.length) {
+      const [x, y] = stack.pop();
+      if (x < 0 || x >= w || y < 0 || y >= h) continue;
+      const i = y * w + x;
+      if (visited[i]) continue;
+      if (mask[i] !== target) continue;
+      visited[i] = 1;
+      stack.push([x+1,y],[x-1,y],[x,y+1],[x,y-1]);
+    }
+  }
+
+  // Simple Moore-neighborhood tracing starting from the first boundary pixel
+  // encountered in scan order.
+  function traceContour(mask, w, h, startX, startY, simplify) {
+    // Find actual starting boundary pixel in this region (top-left-most foreground).
+    // Scan from (startX, startY) downward within the region – but easier:
+    // starting pixel passed in is from scan, so it IS a boundary pixel.
+    let sx = startX, sy = startY;
+
+    // Moore neighborhood directions (clockwise), starting with the previous
+    // direction's "left turn" seed.
+    const dirs = [
+      [1, 0],   // 0 E
+      [1, 1],   // 1 SE
+      [0, 1],   // 2 S
+      [-1, 1],  // 3 SW
+      [-1, 0],  // 4 W
+      [-1, -1], // 5 NW
+      [0, -1],  // 6 N
+      [1, -1]   // 7 NE
+    ];
+    const points = [];
+    let x = sx, y = sy;
+    let dir = 6; // start looking "backward" N — we came from above (background)
+    const maxSteps = w * h * 4;
+    let steps = 0;
+    let firstSecond = null;
+    while (steps++ < maxSteps) {
+      points.push({ x, y });
+      // Starting from dir+6 (counterclockwise 2), rotate clockwise 8 times
+      // to find next boundary pixel.
+      let found = false;
+      let startDir = (dir + 6) % 8;
+      for (let i = 0; i < 8; i++) {
+        const d = (startDir + i) % 8;
+        const nx = x + dirs[d][0];
+        const ny = y + dirs[d][1];
+        if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+        if (mask[ny * w + nx]) {
+          x = nx; y = ny; dir = d;
+          found = true;
+          break;
+        }
+      }
+      if (!found) break;
+      if (points.length === 2) firstSecond = { x, y, dir };
+      // Jacob's stopping criterion: back at start with same next direction
+      if (points.length > 2 && x === sx && y === sy && firstSecond) {
+        // Try one more step; if it would be the second point, stop.
+        let nextStartDir = (dir + 6) % 8;
+        for (let i = 0; i < 8; i++) {
+          const d = (nextStartDir + i) % 8;
+          const nx = x + dirs[d][0];
+          const ny = y + dirs[d][1];
+          if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+          if (mask[ny * w + nx]) {
+            if (nx === firstSecond.x && ny === firstSecond.y) {
+              // completed loop
+              points.pop(); // remove duplicate start
+              return simplify ? simplifyPoints(points, 1.0) : points;
+            }
+            break;
+          }
+        }
+      }
+    }
+    return simplify ? simplifyPoints(points, 1.0) : points;
+  }
+
+  // Ramer–Douglas–Peucker simplification
+  function simplifyPoints(points, tolerance) {
+    if (points.length < 3) return points;
+    function perpDist(p, a, b) {
+      const dx = b.x - a.x, dy = b.y - a.y;
+      if (dx === 0 && dy === 0) return Math.hypot(p.x - a.x, p.y - a.y);
+      const t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy);
+      const projX = a.x + t * dx, projY = a.y + t * dy;
+      return Math.hypot(p.x - projX, p.y - projY);
+    }
+    function rdp(pts, eps) {
+      if (pts.length < 3) return pts;
+      let maxDist = 0, index = 0;
+      for (let i = 1; i < pts.length - 1; i++) {
+        const d = perpDist(pts[i], pts[0], pts[pts.length - 1]);
+        if (d > maxDist) { maxDist = d; index = i; }
+      }
+      if (maxDist > eps) {
+        const left = rdp(pts.slice(0, index + 1), eps);
+        const right = rdp(pts.slice(index), eps);
+        return left.slice(0, -1).concat(right);
+      }
+      return [pts[0], pts[pts.length - 1]];
+    }
+    return rdp(points, tolerance);
+  }
+
+  function polyArea(pts) {
+    let a = 0;
+    for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+      a += (pts[j].x + pts[i].x) * (pts[j].y - pts[i].y);
+    }
+    return a / 2;
+  }
+
+  function pointInPolygon(p, poly) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const xi = poly[i].x, yi = poly[i].y;
+      const xj = poly[j].x, yj = poly[j].y;
+      const intersect = ((yi > p.y) !== (yj > p.y)) &&
+        (p.x < (xj - xi) * (p.y - yi) / (yj - yi + 1e-12) + xi);
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  }
+
+  // ====================== File loading ======================
+  function handleFile(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    const name = file.name;
+    if (file.type === 'image/svg+xml' || /\.svg$/i.test(name)) {
+      reader.onload = e => loadSVG(e.target.result, name);
+      reader.readAsText(file);
+    } else if (/^image\//.test(file.type) || /\.(png|jpe?g)$/i.test(name)) {
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => loadRasterImage(img, name);
+        img.onerror = () => showToast('Could not load image', 'error');
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      showToast('Unsupported file. Use SVG, PNG, or JPG.', 'error');
+    }
+  }
+
+  // ====================== UI wiring ======================
+  function updateFilename() {
+    document.getElementById('filename').textContent = currentLogoName;
+  }
+
+  function updatePreview() {
+    const el = document.getElementById('preview-img');
+    el.classList.remove('empty');
+    if (currentLogoDataURL) {
+      el.innerHTML = `<img src="${currentLogoDataURL}" alt="logo preview">`;
+    } else {
+      el.innerHTML = 'drop logo';
+      el.classList.add('empty');
+    }
+  }
+
+  function updateInvertButton() {
+    const btn = document.getElementById('invert-btn');
+    btn.hidden = (currentSourceType !== 'raster');
+    btn.classList.toggle('active', !!params.invert);
+    btn.textContent = params.invert ? 'Inverted' : 'Invert';
+    // Re-insert icon (textContent clobbered it)
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 14 14');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '1.5');
+    svg.innerHTML = '<path d="M2 5l3-3 3 3M5 2v10M12 9l-3 3-3-3M9 12V2"/>';
+    btn.insertBefore(svg, btn.firstChild);
+  }
+
+  function updateValueLabel(param) {
+    const el = document.getElementById('val-' + param);
+    if (!el) return;
+    const v = params[param];
+    let display;
+    if (['opacity', 'textureStrength', 'roughness', 'metallic',
+         'clearcoat', 'iridescence'].includes(param)) {
+      display = Math.round(v * 100);
+    } else if (param === 'depth') {
+      display = Math.round(v);
+    } else {
+      display = (Math.round(v * 10) / 10).toFixed(1);
+    }
+    el.textContent = display;
+  }
+
+  function setupSlider(el) {
+    const param = el.dataset.param;
+    const min = parseFloat(el.dataset.min);
+    const max = parseFloat(el.dataset.max);
+    const step = parseFloat(el.dataset.step || '1');
+    const fill = el.querySelector('.fill');
+
+    function render() {
+      const v = params[param];
+      const pct = ((v - min) / (max - min)) * 100;
+      el.style.setProperty('--pct', pct + '%');
+      updateValueLabel(param);
+    }
+
+    function fromPointer(clientX) {
+      const rect = el.getBoundingClientRect();
+      const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      let v = min + pct * (max - min);
+      if (step) v = Math.round(v / step) * step;
+      v = Math.max(min, Math.min(max, v));
+      params[param] = v;
+      render();
+      onParamChange(param);
+    }
+
+    let dragging = false;
+    el.addEventListener('pointerdown', e => {
+      dragging = true;
+      el.classList.add('dragging');
+      el.setPointerCapture(e.pointerId);
+      fromPointer(e.clientX);
+    });
+    el.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      fromPointer(e.clientX);
+    });
+    el.addEventListener('pointerup', e => {
+      dragging = false;
+      el.classList.remove('dragging');
+    });
+    el.addEventListener('pointercancel', () => {
+      dragging = false;
+      el.classList.remove('dragging');
+    });
+
+    render();
+  }
+
+  function onParamChange(param) {
+    if (['depth', 'bevelSize', 'bevelThickness'].includes(param)) {
+      scheduleRebuild();
+    } else if (['color', 'opacity', 'roughness', 'metallic', 'clearcoat', 'iridescence',
+                'textureStrength', 'textureScale', 'textureType', 'materialType'].includes(param)) {
+      updateMaterial();
+    } else if (param === 'zoom' || param === 'rotationPreset') {
+      applyRotation();
+    }
+  }
+
+  function scheduleRebuild() {
+    if (rebuildTimer) cancelAnimationFrame(rebuildTimer);
+    rebuildTimer = requestAnimationFrame(() => {
+      rebuildMesh();
+      rebuildTimer = null;
+    });
+  }
+
+  function setupSegmented(container) {
+    const param = container.dataset.param;
+    container.querySelectorAll('.seg-opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        container.querySelectorAll('.seg-opt').forEach(o => o.classList.remove('active'));
+        opt.classList.add('active');
+        params[param] = opt.dataset.value;
+        onParamChange(param);
+      });
+    });
+  }
+
+  // Init sliders & segmented
+  document.querySelectorAll('.slider').forEach(setupSlider);
+  document.querySelectorAll('.seg').forEach(setupSegmented);
+
+  // Color
+  const colorInput = document.getElementById('color-input');
+  const colorSwatch = document.getElementById('color-swatch');
+  colorInput.addEventListener('input', e => {
+    params.color = e.target.value;
+    colorSwatch.style.background = e.target.value;
+    onParamChange('color');
+  });
+
+  // Texture type dropdown
+  const textureTypes = [
+    { v: 'none', label: 'None' },
+    { v: 'metal', label: 'Metal' },
+    { v: 'plastic', label: 'Plastic' },
+    { v: 'wood', label: 'Wood' },
+    { v: 'marble', label: 'Marble' },
+    { v: 'concrete', label: 'Concrete' }
+  ];
+  setupPopover('texture-type-btn', textureTypes, (opt) => {
+    params.textureType = opt.v;
+    document.getElementById('texture-type-label').textContent = opt.label;
+    onParamChange('textureType');
+  });
+
+  // Rotation presets
+  const rotations = [
+    { v: 'front', label: 'Front' },
+    { v: 'iso', label: 'Isometric' },
+    { v: 'perspective', label: 'Perspective' },
+    { v: 'three_quarter', label: 'Three quarter' },
+    { v: 'side', label: 'Side' },
+    { v: 'top', label: 'Top' }
+  ];
+  setupPopover('rotation-btn', rotations, (opt) => {
+    params.rotationPreset = opt.v;
+    document.getElementById('rotation-label').textContent = opt.label;
+    onParamChange('rotationPreset');
+  });
+
+  function setupPopover(btnId, options, onPick) {
+    const btn = document.getElementById(btnId);
+    let open = null;
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (open) { open.remove(); open = null; return; }
+      const menu = document.createElement('div');
+      menu.className = 'menu';
+      menu.style.position = 'absolute';
+      options.forEach(opt => {
+        const b = document.createElement('button');
+        b.textContent = opt.label;
+        b.addEventListener('click', () => {
+          onPick(opt);
+          menu.remove();
+          open = null;
+        });
+        menu.appendChild(b);
+      });
+      // Position
+      document.body.appendChild(menu);
+      const rect = btn.getBoundingClientRect();
+      menu.style.right = (window.innerWidth - rect.right) + 'px';
+      menu.style.top = (rect.bottom + 6) + 'px';
+      menu.style.minWidth = '140px';
+      open = menu;
+      setTimeout(() => {
+        const closer = (ev) => {
+          if (!menu.contains(ev.target)) {
+            menu.remove();
+            open = null;
+            document.removeEventListener('click', closer);
+          }
+        };
+        document.addEventListener('click', closer);
+      }, 0);
+    });
+  }
+
+  // Invert button (raster only)
+  document.getElementById('invert-btn').addEventListener('click', () => {
+    if (currentSourceType !== 'raster') return;
+    params.invert = !params.invert;
+    updateInvertButton();
+    processRasterImage();
+  });
+
+  // Center buttons
+  document.getElementById('center-h-btn').addEventListener('click', () => {
+    controls.target.x = 0;
+    camera.position.x = 0;
+    controls.update();
+  });
+  document.getElementById('center-v-btn').addEventListener('click', () => {
+    controls.target.y = 0;
+    camera.position.y = 0;
+    controls.update();
+  });
+
+  // Reset view
+  document.getElementById('reset-view-btn').addEventListener('click', () => {
+    if (currentMesh) fitCameraToGeometry(currentMesh.geometry);
+  });
+
+  // Canvas dims
+  document.getElementById('canvas-w').addEventListener('input', e => {
+    const v = Math.max(256, Math.min(4096, parseInt(e.target.value) || 1080));
+    params.canvasW = v;
+    layoutCanvas();
+    updateViewInfo();
+  });
+  document.getElementById('canvas-h').addEventListener('input', e => {
+    const v = Math.max(256, Math.min(4096, parseInt(e.target.value) || 1080));
+    params.canvasH = v;
+    layoutCanvas();
+    updateViewInfo();
+  });
+
+  // Upload button and file input
+  document.getElementById('upload-btn').addEventListener('click', () => {
+    document.getElementById('file-input').click();
+  });
+  document.getElementById('file-input').addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+    e.target.value = '';
+  });
+
+  // Drag and drop over whole page
+  const dropOverlay = document.getElementById('drop-overlay');
+  let dragCounter = 0;
+  window.addEventListener('dragenter', e => {
+    e.preventDefault();
+    dragCounter++;
+    dropOverlay.classList.add('show');
+  });
+  window.addEventListener('dragover', e => { e.preventDefault(); });
+  window.addEventListener('dragleave', e => {
+    dragCounter--;
+    if (dragCounter <= 0) {
+      dragCounter = 0;
+      dropOverlay.classList.remove('show');
+    }
+  });
+  window.addEventListener('drop', e => {
+    e.preventDefault();
+    dragCounter = 0;
+    dropOverlay.classList.remove('show');
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  });
+
+  // Export menu
+  const exportBtn = document.getElementById('export-btn');
+  const exportMenu = document.getElementById('export-menu');
+  exportBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    exportMenu.hidden = !exportMenu.hidden;
+  });
+  document.addEventListener('click', (e) => {
+    if (!exportMenu.contains(e.target) && e.target !== exportBtn) {
+      exportMenu.hidden = true;
+    }
+  });
+  exportMenu.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      exportMenu.hidden = true;
+      const fmt = btn.dataset.format;
+      const scale = parseFloat(btn.dataset.scale || '1');
+      if (fmt === 'png') exportPNG(scale);
+      else if (fmt === 'stl') exportSTL();
+      else if (fmt === 'glb') exportGLB();
+    });
+  });
+
+  // Reload button — fast way to reset the whole page
+  document.getElementById('reload-btn').addEventListener('click', () => {
+    window.location.reload();
+  });
+
+  // ====================== Export ======================
+  // Downloads capability — resolved once at load.
+  let downloadsNS = null;
+  (async () => {
+    if (window.claude && claude.use) {
+      try { downloadsNS = await claude.use('downloads'); }
+      catch (_) { downloadsNS = null; }
+      if (!downloadsNS) {
+        showToast('Downloads not available in this view', 'error');
+      }
+    }
+  })();
+
+  async function saveFile(filename, data) {
+    if (!downloadsNS) {
+      // Fallback: plain anchor download (may be inert in sandboxed viewers)
+      const blob = data instanceof Blob ? data : new Blob([data]);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      return { status: 'saved' };
+    }
+    try {
+      const res = await downloadsNS.save({ filename, data });
+      return res;
+    } catch (err) {
+      if (err && err.code === 'declined') {
+        showToast('Download declined', '');
+      } else {
+        showToast('Save failed: ' + (err && err.message || 'unknown'), 'error');
+      }
+      throw err;
+    }
+  }
+
+  function baseFilename() {
+    return currentLogoName.replace(/\.(svg|png|jpe?g)$/i, '') || 'logo3d';
+  }
+
+  function exportPNG(scale) {
+    scale = scale || 1;
+    if (!currentMesh) { showToast('Load a logo first', 'error'); return; }
+    showLoading(true);
+    const exportW = Math.round(params.canvasW * scale);
+    const exportH = Math.round(params.canvasH * scale);
+
+    renderer.setPixelRatio(1);
+    renderer.setSize(exportW, exportH, false);
+    camera.aspect = exportW / exportH;
+    camera.updateProjectionMatrix();
+
+    renderer.render(scene, camera);
+
+    const scaleSuffix = scale !== 1 ? '@' + scale + 'x' : '';
+    renderer.domElement.toBlob(async (blob) => {
+      try {
+        if (blob) {
+          await saveFile(baseFilename() + scaleSuffix + '.png', blob);
+          showToast('PNG saved (' + exportW + '×' + exportH + ')', 'success');
+        } else {
+          showToast('Export failed', 'error');
+        }
+      } catch (_) { /* already toasted */ }
+      // Restore viewport
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      layoutCanvas();
+      showLoading(false);
+    }, 'image/png');
+  }
+
+  async function wrapInZip(innerFilename, data) {
+    // Blob/ArrayBuffer -> single-file zip Blob
+    const zip = new JSZip();
+    zip.file(innerFilename, data);
+    return await zip.generateAsync({
+      type: 'blob',
+      compression: 'DEFLATE',
+      compressionOptions: { level: 6 }
+    });
+  }
+
+  async function exportSTL() {
+    if (!currentMesh) { showToast('Load a logo first', 'error'); return; }
+    showLoading(true);
+    try {
+      // Make sure matrixWorld is current (STLExporter transforms by it)
+      currentMesh.updateMatrixWorld(true);
+
+      const exporter = new THREE.STLExporter();
+      let result = exporter.parse(currentMesh, { binary: true });
+
+      // STLExporter can return DataView, ArrayBuffer, Uint8Array or string
+      // depending on version. JSZip accepts Uint8Array / ArrayBuffer / string
+      // reliably — normalize here.
+      let data;
+      if (typeof result === 'string') {
+        data = result;
+      } else if (result instanceof DataView) {
+        data = new Uint8Array(result.buffer, result.byteOffset, result.byteLength);
+      } else if (result instanceof ArrayBuffer) {
+        data = new Uint8Array(result);
+      } else if (result && result.buffer instanceof ArrayBuffer) {
+        data = new Uint8Array(result.buffer, result.byteOffset || 0, result.byteLength);
+      } else {
+        throw new Error('Unexpected STL exporter output: ' + Object.prototype.toString.call(result));
+      }
+
+      const innerName = baseFilename() + '.stl';
+      const zipBlob = await wrapInZip(innerName, data);
+      await saveFile(baseFilename() + '-stl.zip', zipBlob);
+      showToast('STL saved (inside zip)', 'success');
+    } catch (e) {
+      if (!e || e.code !== 'declined') {
+        console.error('STL export error:', e);
+        showToast('STL export failed: ' + (e && e.message || 'unknown'), 'error');
+      }
+    } finally {
+      showLoading(false);
+    }
+  }
+
+  async function exportGLB() {
+    if (!currentMesh) { showToast('Load a logo first', 'error'); return; }
+    showLoading(true);
+    try {
+      currentMesh.updateMatrixWorld(true);
+      const exporter = new THREE.GLTFExporter();
+      const result = await new Promise((resolve, reject) => {
+        exporter.parse(currentMesh, resolve, reject, { binary: true });
+      });
+      // Normalize to Uint8Array for JSZip
+      let data;
+      if (result instanceof ArrayBuffer) data = new Uint8Array(result);
+      else if (result instanceof Uint8Array) data = result;
+      else if (result && result.buffer) data = new Uint8Array(result.buffer, result.byteOffset || 0, result.byteLength);
+      else throw new Error('Unexpected GLB exporter output');
+
+      const innerName = baseFilename() + '.glb';
+      const zipBlob = await wrapInZip(innerName, data);
+      await saveFile(baseFilename() + '-glb.zip', zipBlob);
+      showToast('GLB saved (inside zip)', 'success');
+    } catch (e) {
+      if (!e || e.code !== 'declined') {
+        console.error('GLB export error:', e);
+        showToast('GLB export failed: ' + (e && e.message || 'unknown'), 'error');
+      }
+    } finally {
+      showLoading(false);
+    }
+  }
+
+  // ====================== Toast ======================
+  let toastTimer = null;
+  function showToast(msg, kind) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (kind ? ' ' + kind : '');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  function showLoading(show) {
+    document.getElementById('loading').classList.toggle('show', show);
+  }
+
+  // ====================== Layout / resize ======================
+  function layoutCanvas() {
+    const rect = canvasArea.getBoundingClientRect();
+    const aspect = params.canvasW / params.canvasH;
+    let w = rect.width;
+    let h = rect.height;
+    // Letterbox to canvas aspect
+    let viewW, viewH;
+    if (w / h > aspect) {
+      viewH = h;
+      viewW = h * aspect;
+    } else {
+      viewW = w;
+      viewH = w / aspect;
+    }
+    // Keep some padding
+    viewW *= 0.9;
+    viewH *= 0.9;
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+
+    // Position frame guide
+    const guide = document.getElementById('frame-guide-inner');
+    guide.style.width = viewW + 'px';
+    guide.style.height = viewH + 'px';
+  }
+
+  function updateViewInfo() {
+    document.getElementById('view-info-text').textContent =
+      params.canvasW + ' × ' + params.canvasH + ' · drag to orbit';
+  }
+
+  window.addEventListener('resize', layoutCanvas);
+  layoutCanvas();
+  updateViewInfo();
+
+  // ====================== Animate ======================
+  function animate() {
+    requestAnimationFrame(animate);
+    try {
+      controls.update();
+      renderer.render(scene, camera);
+    } catch (e) {
+      console.error('Render error:', e);
+    }
+  }
+  animate();
+
+  // ====================== Load sample ======================
+  loadSVG(SAMPLE_SVG, 'sample.svg');
+  // Overwrite "loaded" toast fired by loadSVG with a welcome hint
+  setTimeout(() => showToast('Drop an SVG, PNG, or JPG to begin', ''), 800);
+})();
+</script>
+
+</body></html>

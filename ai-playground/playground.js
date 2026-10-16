@@ -1,5 +1,5 @@
 const stage = document.querySelector(".playground-stage");
-const items = [...document.querySelectorAll(".playground-folder")];
+const items = [...document.querySelectorAll(".playground-item")];
 const folderColors = ["#064dff", "#d7263d", "#6c2bd9", "#00875a", "#f05a28", "#111111"];
 const positions = items.map((item) => ({
   item,
@@ -7,6 +7,7 @@ const positions = items.map((item) => ({
   y: Number(item.dataset.y),
   vx: Number(item.dataset.vx),
   vy: Number(item.dataset.vy),
+  changeColor: item.dataset.changeColor !== "false",
   paused: false,
 }));
 
@@ -88,7 +89,7 @@ if (stage) {
     position.y = Math.min(Math.max(stageBounds.height * position.y, 19), maxY);
     item.style.left = `${position.x}px`;
     item.style.top = `${position.y}px`;
-    item.dataset.currentColor = folderColors[0];
+    if (position.changeColor) item.dataset.currentColor = folderColors[0];
 
     item.addEventListener("pointerenter", () => {
       position.paused = true;
@@ -116,7 +117,7 @@ if (stage) {
     position.x = Math.min(Math.max(position.x, 0), maxX);
     position.y = Math.min(Math.max(position.y, 19), maxY);
 
-    if (hitWall) {
+    if (hitWall && position.changeColor) {
       const availableColors = folderColors.filter((color) => color !== item.dataset.currentColor);
       const color = availableColors[Math.floor(Math.random() * availableColors.length)];
       item.dataset.currentColor = color;

@@ -117,6 +117,18 @@ body {
   content: "";
 }
 
+.playground-tool {
+  display: block;
+  width: 180px;
+  cursor: pointer;
+}
+
+.playground-tool img {
+  display: block;
+  width: 160px;
+  height: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .playground-item {
     will-change: auto;
