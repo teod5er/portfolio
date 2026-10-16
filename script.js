@@ -29,7 +29,7 @@ function colorPair(category) {
 const portfolio = {
   name: "Teo Peter",
   intro:
-    "Teo Peter is a multidisciplinary designer with experience in digital products, branding & publishing. ",
+    "Hey, I am Teo Peter. I am graphic engineer crafting digital products, brandings & visual assets.",
   introSecond:
     "",
   email: "teo_peter@outlook.com",
@@ -123,6 +123,27 @@ const portfolio = {
 };
 
 const works = [
+  {
+    slug: "frankie",
+    title: "Frankie",
+    description: "UX/UI design and visual direction for an AI-powered student app.",
+    client: "AI powered student app",
+    year: "2026",
+    category: "App",
+    services: ["UX/UI design", "Visual direction"],
+    galleryLayout: [2, 2, 1, 1, 2],
+    images: [
+      "app_frankie/0_hero.jpg",
+      "app_frankie/1a.jpg",
+      "app_frankie/1b.jpg",
+      "app_frankie/2a.jpg",
+      "app_frankie/2b.jpg",
+      "app_frankie/3a.jpg",
+      "app_frankie/3b.jpg",
+      "app_frankie/4a.jpg",
+      "app_frankie/4b.jpg",
+    ],
+  },
   {
     slug: "skola-grada",
     title: "Škola grada",
@@ -301,7 +322,8 @@ function updateCategoryCounts() {
 
 function updateSwitch(projectTitle = null) {
   const isProjectDetail = state.view === "project";
-  const activeView = isProjectDetail ? "projects" : state.view;
+  const activeView =
+    isProjectDetail ? "projects" : state.view === "ai-playground" ? "cv" : state.view;
   const wordmark = document.querySelector('.wordmark');
 
   if (wordmark) {
@@ -374,40 +396,6 @@ function removeProjectDescription() {
   document.querySelector(".project-description")?.remove();
 }
 
-function introWordsMarkup(text) {
-  return text
-    .split(/(\s+)/)
-    .map((part) => {
-      if (/\s+/.test(part)) return part;
-      return `<span class="intro-word" style="--intro-weight: 400">${part}</span>`;
-    })
-    .join("");
-}
-
-function initIntroWeightInteraction() {
-  const intro = document.querySelector("#cv-title");
-  const words = [...document.querySelectorAll(".intro-word")];
-
-  if (!intro || !words.length) return;
-
-  intro.addEventListener("pointermove", (event) => {
-    words.forEach((word) => {
-      const bounds = word.getBoundingClientRect();
-      const centerX = bounds.left + bounds.width / 2;
-      const centerY = bounds.top + bounds.height / 2;
-      const distance = Math.hypot(event.clientX - centerX, event.clientY - centerY);
-      const influence = Math.max(0, 1 - distance / 280);
-      const weight = Math.round(400 + influence * 300);
-
-      word.style.setProperty("--intro-weight", weight);
-    });
-  });
-
-  intro.addEventListener("pointerleave", () => {
-    words.forEach((word) => word.style.setProperty("--intro-weight", 400));
-  });
-}
-
 function initCopyButtons() {
   document.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-copy]");
@@ -436,12 +424,15 @@ function renderCv() {
   app.innerHTML = `
     <article class="view cv-view fade-in-section" aria-labelledby="cv-title">
       <section class="cv-hero">
-        <h1 id="cv-title" class="intro-reveal">${introWordsMarkup(portfolio.intro)}</h1>
+        <h1 id="cv-title" class="intro-reveal">${portfolio.intro}</h1>
         <p class="lead">${portfolio.introSecond}</p>
         <div class="summary-actions">
           <a class="summary-link" href="https://chatgpt.com/?q=Give+me+a+concise%2C+well-sourced+summary+of+Teo+Peter%2C+a+graphic+designer+from+Zagreb.+Cover+his+projects%2C+put+focus+on+UX%2FUI+solution+and+branding+work%2C+previous+experience%2C+education%2C+and+notable+design+projects+as+well+as+published+research+articles+in+Acta+Graphica.+Make+it+short+and+helpful.&utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">
             <img src="ai-icon.svg" alt="" />
             <span>Get a summary</span>
+          </a>
+          <a class="summary-link" href="./ai-playground/index.html">
+            <span>My AI Playground</span>
           </a>
           <button class="summary-link copy-email-link" type="button" data-copy="teo_peter@outlook.com">
             <span>Copy e-mail</span>
@@ -522,7 +513,6 @@ function renderCv() {
 
   const bottomSwitch = document.querySelector(".bottom-switch");
   if (bottomSwitch) bottomSwitch.classList.add("is-loaded");
-  initIntroWeightInteraction();
 }
 
 function renderProjects() {
@@ -570,6 +560,27 @@ function renderProject(slug) {
   }
 
   const img = project.images || [];
+  const galleryLayout = project.galleryLayout || [2, 2, 1, 1, 1, 2, 1];
+  let nextImageIndex = 1;
+  const galleryMarkup = galleryLayout
+    .map((groupSize) => {
+      const startIndex = nextImageIndex;
+      const group = img.slice(startIndex, startIndex + groupSize);
+      nextImageIndex += groupSize;
+
+      const media = group
+        .map((src, index) =>
+          renderMedia(
+            src,
+            groupSize === 1 ? "gallery-main" : "",
+            `${project.title} detail ${startIndex + index}`
+          )
+        )
+        .join("");
+
+      return groupSize === 1 ? media : `<div class="gallery-row">${media}</div>`;
+    })
+    .join("");
 
   app.innerHTML = `
     <article class="view project-view fade-in-section" aria-labelledby="project-title">
@@ -600,35 +611,7 @@ function renderProject(slug) {
             <p>${project.description || ""}</p>
           </div>
 
-          <!-- RED S 2 FOTKE (2. i 3.) -->
-          <div class="gallery-row">
-            ${renderMedia(img[1], "", `${project.title} detail 1`)}
-            ${renderMedia(img[2], "", `${project.title} detail 2`)}
-          </div>
-
-          <!-- RED S 2 FOTKE (4. i 5.) -->
-          <div class="gallery-row">
-            ${renderMedia(img[3], "", `${project.title} detail 3`)}
-            ${renderMedia(img[4], "", `${project.title} detail 4`)}
-          </div>
-
-          <!-- 2. HERO -->
-          ${renderMedia(img[5], "gallery-main", `${project.title} detail 5`)}
-
-          <!-- 2. HERO -->
-          ${renderMedia(img[6], "gallery-main", `${project.title} detail 6`)}
-
-          <!-- 2. HERO -->
-          ${renderMedia(img[7], "gallery-main", `${project.title} detail 7`)}
-
-          <!-- RED S 2 FOTKE -->
-          <div class="gallery-row">
-            ${renderMedia(img[8], "", `${project.title} detail 8`)}
-            ${renderMedia(img[9], "", `${project.title} detail 9`)}
-          </div>
-
-          <!-- 2. HERO -->
-          ${renderMedia(img[10], "gallery-main", `${project.title} detail 10`)}
+          ${galleryMarkup}
         </div>
       </section>
 
@@ -645,7 +628,6 @@ function renderProject(slug) {
 
 function route() {
   const hash = window.location.hash.replace("#", "");
-
   if (hash.startsWith("work/")) {
     renderProject(hash.split("/")[1]);
   } else if (hash === "projects") {

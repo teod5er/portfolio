@@ -13,6 +13,7 @@
   
   --font-weight: 400;
   --font-color: var(--ink);
+  --work-grid-gap: clamp(8px, 1.2vw, 16px);
   color-scheme: light;
 }
 
@@ -36,6 +37,44 @@ body {
   background-color: rgb(243 243 243);
   overflow-x: hidden;
   overflow-y: scroll;
+}
+
+.splash-screen {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(243 243 243);
+  animation: splashOut 500ms ease 900ms forwards;
+}
+
+.splash-mark {
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  animation: splashPulse 800ms ease-in-out infinite;
+}
+
+@keyframes splashPulse {
+  50% {
+    transform: scale(1.45);
+    opacity: 0.65;
+  }
+}
+
+@keyframes splashOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-screen {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
 }
 
 a,
@@ -70,10 +109,10 @@ button {
 
 .site-shell {
   width: 100%;
-  max-width: 1536px;
+  max-width: none;
   min-height: 100vh;
-  margin: 0 auto;
-  padding: clamp(30px, 4vw, 80px);
+  margin: 0;
+  padding: calc(var(--work-grid-gap) * 5);
 }
 
 .site-header {
@@ -122,7 +161,7 @@ main {
   min-height: clamp(260px, 35vh, 560px);
   align-content: start;
   border-bottom: 0;
-  font-size: clamp(36px, 5vw, 72px);
+  font-size: clamp(34px, 4.5vw, 64px);
   width: 100%;
   max-width: 900px;
   margin-bottom: 20px; 
@@ -146,12 +185,7 @@ h3 {
 
 #cv-title {
   display: block;
-}
-
-.intro-word {
-  font-weight: var(--intro-weight, 400);
-  font-variation-settings: "wght" var(--intro-weight, 400);
-  transition: font-weight 120ms ease, font-variation-settings 120ms ease;
+  line-height: 1.08;
 }
 
 .lead {
@@ -269,8 +303,8 @@ h3 {
 
 .works-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(16px, 2.4vw, 32px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--work-grid-gap);
 }
 
 .cv-section:last-of-type .works-grid {
@@ -659,7 +693,7 @@ text-wrap: balance;
   }
 
   .site-shell {
-    padding: 0.5em;
+    padding: 1em;
   }
 
   .gallery-row {
@@ -780,5 +814,3 @@ text-wrap: balance;
     visibility: visible;
   }
 }
-
-
