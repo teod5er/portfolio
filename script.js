@@ -29,7 +29,7 @@ function colorPair(category) {
 const portfolio = {
   name: "Teo Peter",
   intro:
-    "Hey, I am Teo Peter. I am graphic engineer crafting digital products, brandings & visual assets.",
+    "Hey, I am Teo Peter. I am a graphic engineer crafting digital products, brandings & visual assets.",
   introSecond:
     "",
   email: "teo_peter@outlook.com",
