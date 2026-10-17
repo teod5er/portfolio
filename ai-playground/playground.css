@@ -91,6 +91,7 @@ body {
   z-index: 1;
   box-sizing: border-box;
   user-select: none;
+  touch-action: none;
   will-change: left, top;
 }
 
@@ -100,7 +101,7 @@ body {
   padding: 54px 11px 10px;
   background: #064dff;
   color: #fff;
-  cursor: pointer;
+  cursor: grab;
   font-size: 16px;
   font-weight: 700;
   line-height: 1.05;
@@ -120,7 +121,7 @@ body {
 .playground-tool {
   display: block;
   width: 180px;
-  cursor: pointer;
+  cursor: grab;
 }
 
 .playground-tool img {

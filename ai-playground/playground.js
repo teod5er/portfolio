@@ -9,6 +9,9 @@ const positions = items.map((item) => ({
   vy: Number(item.dataset.vy),
   changeColor: item.dataset.changeColor !== "false",
   paused: false,
+  dragging: false,
+  dragged: false,
+  suppressClick: false,
   render: null,
 }));
 
@@ -179,10 +182,67 @@ if (stage) {
     if (position.changeColor) item.dataset.currentColor = folderColors[0];
 
     item.addEventListener("pointerenter", () => {
-      position.paused = true;
+      if (!position.dragging) position.paused = true;
     });
     item.addEventListener("pointerleave", () => {
+      if (!position.dragging) position.paused = false;
+    });
+    item.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+
+      const bounds = stage.getBoundingClientRect();
+      position.suppressClick = false;
+      position.dragging = true;
+      position.dragged = false;
+      position.paused = true;
+      position.pointerId = event.pointerId;
+      position.pointerStartX = event.clientX;
+      position.pointerStartY = event.clientY;
+      position.dragOffsetX = event.clientX - bounds.left - position.x;
+      position.dragOffsetY = event.clientY - bounds.top - position.y;
+      item.style.zIndex = "2";
+      item.style.cursor = "grabbing";
+      item.setPointerCapture(event.pointerId);
+    });
+    item.addEventListener("pointermove", (event) => {
+      if (!position.dragging || event.pointerId !== position.pointerId) return;
+
+      const deltaX = event.clientX - position.pointerStartX;
+      const deltaY = event.clientY - position.pointerStartY;
+      if (!position.dragged && Math.hypot(deltaX, deltaY) < 4) return;
+      position.dragged = true;
+
+      const bounds = stage.getBoundingClientRect();
+      const maxX = Math.max(0, bounds.width - item.offsetWidth);
+      const maxY = Math.max(19, bounds.height - item.offsetHeight);
+      position.x = Math.min(Math.max(event.clientX - bounds.left - position.dragOffsetX, 0), maxX);
+      position.y = Math.min(
+        Math.max(event.clientY - bounds.top - position.dragOffsetY, 19),
+        maxY,
+      );
+      item.style.left = `${position.x}px`;
+      item.style.top = `${position.y}px`;
+    });
+
+    const finishDrag = (event) => {
+      if (!position.dragging || event.pointerId !== position.pointerId) return;
+
+      if (position.dragged) {
+        position.suppressClick = true;
+      }
+      position.dragging = false;
       position.paused = false;
+      item.style.zIndex = "";
+      item.style.cursor = "";
+    };
+
+    item.addEventListener("pointerup", finishDrag);
+    item.addEventListener("pointercancel", finishDrag);
+    item.addEventListener("click", (event) => {
+      if (!position.suppressClick) return;
+      event.preventDefault();
+      event.stopPropagation();
+      position.suppressClick = false;
     });
   });
 
