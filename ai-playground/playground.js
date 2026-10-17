@@ -9,7 +9,90 @@ const positions = items.map((item) => ({
   vy: Number(item.dataset.vy),
   changeColor: item.dataset.changeColor !== "false",
   paused: false,
+  render: null,
 }));
+
+function createModelRenderer(item) {
+  if (!window.THREE?.STLLoader) {
+    console.error("Could not load the 3D model: Three.js or STLLoader is unavailable.");
+    return null;
+  }
+
+  const canvas = item.querySelector("canvas");
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+  camera.position.z = 4.2;
+  scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+
+  const keyLight = new THREE.DirectionalLight(0xffffff, 1.1);
+  keyLight.position.set(2, 3, 4);
+  scene.add(keyLight);
+
+  const fillLight = new THREE.DirectionalLight(0x9bb8ff, 0.35);
+  fillLight.position.set(-3, -1, 2);
+  scene.add(fillLight);
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  } catch (error) {
+    console.error("Could not create the 3D model renderer.", error);
+    return null;
+  }
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(item.clientWidth, item.clientHeight, false);
+
+  let mesh = null;
+  const render = (delta = 0, paused = false) => {
+    if (mesh && !paused) mesh.rotation.y += delta * 0.8;
+    renderer.render(scene, camera);
+  };
+
+  const compressedModel = window.playgroundModelData;
+  if (!compressedModel) {
+    console.error("Could not load the 3D model: bundled model data is unavailable.");
+    return render;
+  }
+
+  const compressedBytes = Uint8Array.from(atob(compressedModel), (character) =>
+    character.charCodeAt(0),
+  );
+  const decompressedStream = new Blob([compressedBytes])
+    .stream()
+    .pipeThrough(new DecompressionStream("gzip"));
+  new Response(decompressedStream)
+    .arrayBuffer()
+    .then((buffer) => new THREE.STLLoader().parse(buffer))
+    .then((geometry) => {
+      geometry.computeBoundingBox();
+      geometry.center();
+      geometry.computeBoundingSphere();
+      const radius = geometry.boundingSphere.radius;
+
+      if (!Number.isFinite(radius) || radius <= 0) {
+        console.error("Could not render the 3D model: the STL has invalid geometry bounds.");
+        return;
+      }
+
+      const scale = 0.9 / radius;
+      geometry.scale(scale, scale, scale);
+      geometry.computeVertexNormals();
+      mesh = new THREE.Mesh(
+        geometry,
+        new THREE.MeshStandardMaterial({
+          color: 0x2f35bb,
+          metalness: 0.18,
+          roughness: 0.36,
+        }),
+      );
+      scene.add(mesh);
+      render();
+    })
+    .catch((error) => console.error("Could not load the bundled 3D model with STLLoader.", error));
+
+  return render;
+}
 
 function animateTitle() {
   const title = document.querySelector("#playground-title");
@@ -83,6 +166,10 @@ if (stage) {
 
   positions.forEach((position) => {
     const { item } = position;
+    if (item.classList.contains("playground-model")) {
+      position.render = createModelRenderer(item);
+    }
+
     const maxX = Math.max(0, stageBounds.width - item.offsetWidth);
     const maxY = Math.max(19, stageBounds.height - item.offsetHeight);
     position.x = Math.min(Math.max(stageBounds.width * position.x, 0), maxX);
@@ -190,10 +277,12 @@ if (stage) {
       const bounds = stage.getBoundingClientRect();
 
       positions.forEach((position) => {
-        if (position.paused) return;
-        position.x += position.vx * delta;
-        position.y += position.vy * delta;
-        bounceOffWall(position, bounds);
+        if (!position.paused) {
+          position.x += position.vx * delta;
+          position.y += position.vy * delta;
+          bounceOffWall(position, bounds);
+        }
+        position.render?.(delta, position.paused);
       });
 
       resolveCollisions(bounds);

@@ -16,7 +16,7 @@
       aria-label="A virtual playground for digital projects exploring AI"
     >
       <header class="playground-header">
-        <h1 id="playground-title">This is my virtual playground for all digital projects that I am currently doing to learn and integrate AI in my workflow. Intentionally unpolished to spark creativity.</h1>
+        <h1 id="playground-title">This is my virtual playground for all digital projects that I am currently doing to learn and integrate AI in my workflow.</h1>
       </header>
       <div class="playground-item playground-folder" data-x="0.14" data-y="0.52" data-vx="54" data-vy="42">
         Project 1 is<br />Coming soon™
@@ -38,7 +38,22 @@
       >
         <img src="2dto3d.png" alt="2D to 3D tool" />
       </a>
+      <div
+        class="playground-item playground-model"
+        role="img"
+        aria-label="Rotating 3D model"
+        data-x="0.47"
+        data-y="0.55"
+        data-vx="62"
+        data-vy="-38"
+        data-change-color="false"
+      >
+        <canvas aria-hidden="true"></canvas>
+      </div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/STLLoader.js"></script>
+    <script src="3d-model-data.js"></script>
     <script src="playground.js"></script>
   </body>
 </html>
