@@ -213,7 +213,7 @@ h3 {
 .summary-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--work-grid-gap);
   animation: contentReveal 900ms cubic-bezier(0.22, 1, 0.36, 1) 650ms both;
 }
 
