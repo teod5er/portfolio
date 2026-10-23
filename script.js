@@ -127,6 +127,10 @@ const works = [
     slug: "frankie",
     title: "Frankie",
     description: "UX/UI design and visual direction for an AI-powered student app.",
+    note: [
+      "Frankie is an AI-powered student app. The project focuses on shaping its user experience and interface, alongside a visual direction for the product.",
+      "The gallery shows selected screens and visual explorations from the app.",
+    ],
     client: "AI powered student app",
     year: "2026",
     category: "App",
@@ -148,6 +152,10 @@ const works = [
     slug: "skola-grada",
     title: "Škola grada",
     description: "Škola Grada (School of the City) is a multi-month interdisciplinary educational program organized by the Tomislav Gotovac Institute. Its visual identity is playful and dynamic, easily adaptable for online communication and promotion.",
+    note: [
+      "Škola Grada is a multi-month interdisciplinary educational program organized by the Tomislav Gotovac Institute. Its visual identity uses a playful, dynamic language that can adapt across communication and promotional materials.",
+      "The project brings graphic design and animation together to support the program's varied formats.",
+    ],
     client: "Tomislav Gotovac Institute",
     year: "2026",
     category: "Publishing",
@@ -166,6 +174,10 @@ const works = [
     slug: "diskrepancija-journal",
     title: "Diskrepancija Journal",
     description: "Student Journal for Social Sciences and Humanities",
+    note: [
+      "Diskrepancija is a student journal for social sciences and humanities. This project focuses on the journal's visual direction and layout.",
+      "The gallery presents selected pages and spreads from the publication.",
+    ],
     client: "Sociology Students Association",
     year: "2022",
     category: "Publishing",
@@ -186,6 +198,10 @@ const works = [
     slug: "look-the-doors-are-open",
     title: "Look, the doors are open",
     description: "The poster promotes Marko Tadić's temporary memorial art intervention at the Rakov Potok park. The scattered layout of the text is designed to resemble the floor plan of a room which he constructed in the park. The rotated words purposely make viewers tilt their heads, mimicking the surprise of discovering a hidden space. ",
+    note: [
+      "This poster promotes Marko Tadić's temporary memorial art intervention at Rakov Potok park. Its scattered text follows the floor plan of a room he constructed in the park.",
+      "Rotated words invite viewers to tilt their heads, echoing the surprise of discovering a hidden space.",
+    ],
     client: "Documenta",
     year: "2026",
     category: "Publishing",
@@ -204,6 +220,10 @@ const works = [
     slug: "split-payments",
     title: "Split payments integration",
     description: "The goal was to build a checkout process that allows buyers to combine different payment methods for one order without disrupting the existing website.",
+    note: [
+      "This checkout concept lets buyers combine different payment methods for a single order while preserving the existing website experience.",
+      "The project focuses on research and product design for a split-payments flow.",
+    ],
     client: "E-commerce Retailer",
     year: "2022",
     category: "Web",
@@ -224,6 +244,10 @@ const works = [
     slug: "who-is-otti-berger",
     title: "Who is Otti Berger?",
     description: "An exhibition shaped through fragments of life and work of Otti Berger",
+    note: [
+      "This exhibition is shaped through fragments of Otti Berger's life and work.",
+      "Art direction and graphic design bring those fragments together across the exhibition materials.",
+    ],
     client: "Tomislav Gotovac Institute",
     year: "2022",
     category: "Publishing",
@@ -247,6 +271,10 @@ const works = [
     title: "Jadrolinija's new digital experience",
     client: "Jadrolinija",
     description: "Island hopping easier than ever before.",
+    note: [
+      "Jadrolinija's digital experience is centered on making island hopping easier.",
+      "The project includes UX research, UI design, and prototyping.",
+    ],
     year: "2026",
     category: "App",
     services: ["UX research", "UI design", "Prototyping"],
@@ -264,6 +292,10 @@ const works = [
     slug: "studenac",
     title: "Loyalty app for the biggest Croatian retailer",
     description: "Swipe the way to weekly coupons and deals: finding savings has never been easier or more fun.",
+    note: [
+      "The Studenac loyalty app makes weekly coupons and deals easy to browse with a swipe.",
+      "Research, product design, and prototyping shape the app experience.",
+    ],
     client: "Studenac",
     year: "2022",
     category: "App",
@@ -294,6 +326,10 @@ const switchButtons = [...document.querySelectorAll(".switch-button")];
 const categoryButtons = [...document.querySelectorAll(".category-bar button")];
 const projectsButton = document.querySelector('[data-view="projects"]');
 const projectInfoButton = document.querySelector("[data-project-info]");
+
+function projectHref(slug) {
+  return `project.html?slug=${encodeURIComponent(slug)}`;
+}
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -383,7 +419,7 @@ function renderWorkCards(items) {
       }
 
       return `
-        <a class="work-card" href="#work/${work.slug}" aria-label="${work.title}, ${work.client}">
+        <a class="work-card" href="${projectHref(work.slug)}" aria-label="${work.title}, ${work.client}">
           ${mediaHtml}
           <div>
             <div class="work-title-row">
@@ -429,6 +465,18 @@ function initProjectInfoButton() {
   });
 
   app.addEventListener("click", (event) => {
+    const blogPostLink = event.target.closest("[data-blog-post]");
+    if (blogPostLink) {
+      event.preventDefault();
+      const project = works.find((work) => work.slug === blogPostLink.dataset.blogPost);
+      const dialog = document.querySelector("#blog-post-modal");
+      if (project && dialog) {
+        dialog.innerHTML = renderBlogPostModal(project);
+        dialog.showModal();
+      }
+      return;
+    }
+
     const closeButton = event.target.closest("[data-close-project-info]");
     if (closeButton) {
       closeButton.closest("dialog")?.close();
@@ -530,20 +578,35 @@ function renderProjectInfoModal(project) {
         .join("")}</ul>`
     : `<p class="project-info-empty">No external links have been added.</p>`;
 
+  const gallery = project.images?.length
+    ? `
+      <div class="project-info-gallery" aria-label="${project.title} project images">
+        ${project.images
+          .map((src, index) =>
+            src.endsWith(".mp4")
+              ? `<video src="${src}" muted autoplay loop playsinline preload="metadata" aria-label="${project.title} video ${index + 1}"></video>`
+              : `<img src="${src}" alt="${project.title} project image ${index + 1}" loading="lazy" />`
+          )
+          .join("")}
+      </div>
+    `
+    : "";
+
   return `
     <dialog class="project-info-modal" id="project-info-modal" aria-labelledby="project-info-title">
+      <div class="project-info-toolbar">
+        <button class="project-info-close" type="button" aria-label="Close project details" data-close-project-info>×</button>
+      </div>
+      <div class="project-info-content">
       <div class="project-info-header">
         <div>
           <p class="eyebrow">Project details</p>
           <h2 id="project-info-title">${project.title}</h2>
+          <p class="project-info-overview">${project.description || "No project description has been added."}</p>
         </div>
-        <button class="project-info-close" type="button" aria-label="Close project details" data-close-project-info>×</button>
       </div>
+      ${gallery}
       <div class="project-info-grid">
-        <section>
-          <h3>Overview</h3>
-          <p>${project.description || "No project description has been added."}</p>
-        </section>
         <section>
           <h3>Details</h3>
           <dl>
@@ -566,34 +629,83 @@ function renderProjectInfoModal(project) {
           ${links}
         </section>
       </div>
+      </div>
     </dialog>
+  `;
+}
+
+function renderBlogPostModal(project) {
+  const gallery = project.images?.length
+    ? `
+      <div class="project-info-gallery" aria-label="${project.title} project images">
+        ${project.images
+          .map((src, index) =>
+            src.endsWith(".mp4")
+              ? `<video src="${src}" muted autoplay loop playsinline preload="metadata" aria-label="${project.title} video ${index + 1}"></video>`
+              : `<img src="${src}" alt="${project.title} project image ${index + 1}" loading="lazy" />`
+          )
+          .join("")}
+      </div>
+    `
+    : "";
+
+  return `
+    <div class="project-info-toolbar">
+      <button class="project-info-close" type="button" aria-label="Close note" data-close-project-info>×</button>
+    </div>
+    <div class="project-info-content">
+      <header class="project-info-header">
+        <p class="eyebrow">Note · ${project.category} · ${project.year}</p>
+        <h2 id="blog-post-title">${project.title}</h2>
+        <div class="project-info-overview blog-post-copy">
+          ${(project.note || [project.description || "No post text has been added."])
+            .map((paragraph) => `<p>${paragraph}</p>`)
+            .join("")}
+        </div>
+      </header>
+      ${gallery}
+      <div class="project-info-grid">
+        <section>
+          <h3>Client</h3>
+          <p>${project.client || "Not specified"}</p>
+        </section>
+        <section>
+          <h3>Services</h3>
+          <p>${project.services?.join(", ") || "Not specified"}</p>
+        </section>
+      </div>
+      <a class="blog-modal-project-link" href="${projectHref(project.slug)}">
+        View full project <span aria-hidden="true">→</span>
+      </a>
+    </div>
   `;
 }
 
 function renderCv() {
   removeProjectDescription();
   state.view = "cv";
+  document.title = "Teo Peter · Work";
 
   app.innerHTML = `
     <article class="view cv-view fade-in-section" aria-labelledby="cv-title">
       <section class="cv-hero">
         <h1 id="cv-title">
-          <span class="hero-intro-prefix">Hey, I am Teo Peter. I am a </span>Graphic engineer crafting
-          <a class="cv-title-thumb" data-title-group="digital-products" href="#work/frankie" aria-label="View Frankie project">
+          Hi, I am Teo. Graphic engineer crafting
+          <a class="cv-title-thumb" data-title-group="digital-products" href="${projectHref("frankie")}" aria-label="View Frankie project">
             <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
               <source src="./cv-digital-products.mp4" type="video/mp4" />
             </video>
           </a>
-          <a class="title-hover-group" data-title-group="digital-products" href="#work/frankie">digital products,</a>
-          <a class="cv-title-thumb" data-title-group="brandings" href="#work/diskrepancija-journal" aria-label="View Diskrepancija Journal project">
+          <a class="title-hover-group" data-title-group="digital-products" href="${projectHref("frankie")}">digital products,</a>
+          <a class="cv-title-thumb" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}" aria-label="View Diskrepancija Journal project">
             <img src="publishing_diskrepancija/0_hero.jpg" alt="" />
           </a>
-          <a class="title-hover-group" data-title-group="brandings" href="#work/diskrepancija-journal">brandings</a>
+          <a class="title-hover-group" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}">brandings</a>
           &
-          <a class="cv-title-thumb" data-title-group="visual-assets" href="#work/skola-grada" aria-label="View Škola grada project">
+          <a class="cv-title-thumb" data-title-group="visual-assets" href="${projectHref("skola-grada")}" aria-label="View Škola grada project">
             <img src="publishing_skola-grada/skola-grada-hero.jpg" alt="" />
           </a>
-          <a class="title-hover-group" data-title-group="visual-assets" href="#work/skola-grada">visual assets.</a>
+          <a class="title-hover-group" data-title-group="visual-assets" href="${projectHref("skola-grada")}">visual assets.</a>
         </h1>
         <p class="lead">${portfolio.introSecond}</p>
         <div class="summary-actions">
@@ -604,7 +716,7 @@ function renderCv() {
           <a class="summary-link" href="./ai-playground/index.html">
             <span>AI Playground</span>
           </a>
-          <a class="summary-link" href="./Teo_Peter_CV_26.pdf" target="_blank" rel="noopener noreferrer" download>
+          <a class="summary-link" href="./Teo_Peter_CV_26.pdf" download>
             <span>Get CV</span>
           </a>
           <button class="summary-link copy-email-link" type="button" data-copy="teo_peter@outlook.com">
@@ -693,6 +805,7 @@ function renderCv() {
 function renderProjects() {
   removeProjectDescription();
   state.view = "projects";
+  document.title = "Teo Peter · Work";
 
   if (!state.category || !["All", "Web", "App", "Publishing"].includes(state.category)) {
     state.category = "All";
@@ -714,11 +827,53 @@ function renderProjects() {
   updateSwitch();
 }
 
+function renderBlog() {
+  removeProjectDescription();
+  state.view = "blog";
+  document.title = "Notes · Teo Peter";
+
+  app.innerHTML = `
+    <section class="view blog-view fade-in-section" aria-labelledby="blog-title">
+      <header class="blog-header">
+        <h1 id="blog-title">Notes</h1>
+      </header>
+      <div class="blog-list">
+        ${works
+          .map((work) => {
+            const image = work.images.find((src) => !src.endsWith(".mp4"));
+            return `
+              <article class="blog-card">
+                <a class="blog-card-image" href="${projectHref(work.slug)}" data-blog-post="${work.slug}" aria-label="Read ${work.title}">
+                  <img src="${image}" alt="" loading="lazy" />
+                </a>
+                <div class="blog-card-content">
+                  <p class="blog-card-meta">${work.category} · ${work.year}</p>
+                  <h2><a href="${projectHref(work.slug)}" data-blog-post="${work.slug}">${work.title}</a></h2>
+                  <p>${work.description || ""}</p>
+                  <a class="blog-read-link" href="${projectHref(work.slug)}" data-blog-post="${work.slug}">Read article <span aria-hidden="true">→</span></a>
+                </div>
+              </article>
+            `;
+          })
+          .join("")}
+      </div>
+    </section>
+    <dialog class="project-info-modal blog-post-modal" id="blog-post-modal" aria-labelledby="blog-post-title"></dialog>
+  `;
+
+  updateSwitch();
+}
+
 function renderProject(slug) {
   const projectIndex = works.findIndex((work) => work.slug === slug);
-  const project = works[projectIndex] || works[0];
+  const project = works[projectIndex];
+  if (!project) {
+    window.location.replace("index.html#projects");
+    return;
+  }
   const nextProject = works[(projectIndex + 1 + works.length) % works.length];
   state.view = "project";
+  document.title = `${project.title} · Teo Peter`;
   removeProjectDescription();
 
   function renderMedia(src, altClass, altText) {
@@ -792,7 +947,7 @@ function renderProject(slug) {
 
       ${renderProjectInfoModal(project)}
 
-      <a class="next-project" href="#work/${nextProject.slug}">
+      <a class="next-project" href="${projectHref(nextProject.slug)}">
         <span>
           <span class="next-kicker">Next project</span>
           <strong id="next-project-title">${nextProject.title}</strong>
@@ -805,10 +960,17 @@ function renderProject(slug) {
 
 function route() {
   const hash = window.location.hash.replace("#", "");
+  const projectSlug = new URLSearchParams(window.location.search).get("slug");
   if (hash.startsWith("work/")) {
     renderProject(hash.split("/")[1]);
   } else if (hash === "projects") {
     renderProjects();
+  } else if (hash === "blog") {
+    renderBlog();
+  } else if (hash === "cv") {
+    renderCv();
+  } else if (projectSlug) {
+    renderProject(projectSlug);
   } else {
     renderCv();
   }
@@ -824,6 +986,11 @@ switchButtons.forEach((button) => {
     const nextView = button.dataset.view;
 
     if (nextView === "projects") {
+      if (state.view === "project") {
+        window.location.href = "index.html#projects";
+        return;
+      }
+
       state.view = "projects";
       state.category = "All";
       window.location.hash = "projects";
@@ -833,6 +1000,11 @@ switchButtons.forEach((button) => {
     if (nextView === "cv") {
       state.view = "cv";
       window.location.hash = "cv";
+    }
+
+    if (nextView === "blog") {
+      state.view = "blog";
+      window.location.hash = "blog";
     }
   });
 });
