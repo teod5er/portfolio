@@ -6,7 +6,7 @@ function makeProjectImage(label, primary, secondary) {
       <rect x="120" y="220" width="520" height="340" rx="30" fill="${primary}" opacity="0.92" />
       <rect x="120" y="620" width="660" height="160" rx="24" fill="#ffffff" opacity="0.92" />
       <rect x="120" y="840" width="420" height="120" rx="24" fill="${secondary}" opacity="0.88" />
-      <text x="120" y="1030" font-family="Inter, Arial, sans-serif" font-size="56" font-weight="500" fill="${secondary}">${label}</text>
+      <text x="120" y="1030" font-family="ABC Monument Grotesk Trial, Arial, sans-serif" font-size="56" font-weight="400" fill="${secondary}">${label}</text>
     </svg>
   `;
 
@@ -432,7 +432,7 @@ function renderCv() {
             <span>Get a summary</span>
           </a>
           <a class="summary-link" href="./ai-playground/index.html">
-            <span>My AI Playground</span>
+            <span>AI Playground</span>
           </a>
           <button class="summary-link copy-email-link" type="button" data-copy="teo_peter@outlook.com">
             <span>Copy e-mail</span>
