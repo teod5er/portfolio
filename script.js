@@ -293,6 +293,7 @@ const bottomSwitchMain = document.querySelector(".bottom-switch");
 const switchButtons = [...document.querySelectorAll(".switch-button")];
 const categoryButtons = [...document.querySelectorAll(".category-bar button")];
 const projectsButton = document.querySelector('[data-view="projects"]');
+const projectInfoButton = document.querySelector("[data-project-info]");
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -357,6 +358,11 @@ function updateSwitch(projectTitle = null) {
   if (projectsButton) {
     projectsButton.textContent = isProjectDetail ? "Back to Works" : "Work";
   }
+
+  if (projectInfoButton) {
+    projectInfoButton.hidden = !isProjectDetail;
+    bottomSwitchMain?.classList.toggle("has-project-info", isProjectDetail);
+  }
 }
 
 function renderWorkCards(items) {
@@ -417,11 +423,72 @@ function initCopyButtons() {
   });
 }
 
-function animateHeroTitle() {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+function initProjectInfoButton() {
+  projectInfoButton?.addEventListener("click", () => {
+    document.querySelector("#project-info-modal")?.showModal();
+  });
 
+  app.addEventListener("click", (event) => {
+    const closeButton = event.target.closest("[data-close-project-info]");
+    if (closeButton) {
+      closeButton.closest("dialog")?.close();
+      return;
+    }
+
+    if (event.target instanceof HTMLDialogElement && event.target.open) {
+      event.target.close();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+
+    const dialog = document.querySelector("#project-info-modal");
+    if (!dialog?.open) return;
+
+    event.preventDefault();
+    dialog.close();
+  }, true);
+}
+
+function animateHeroTitle() {
   const title = document.querySelector("#cv-title");
   if (!title) return;
+
+  const setActiveGroup = (target) => {
+    const group = target instanceof Element
+      ? target.closest("[data-title-group]")?.dataset.titleGroup
+      : undefined;
+    if (group) title.dataset.activeTitleGroup = group;
+    else delete title.dataset.activeTitleGroup;
+  };
+
+  title.addEventListener("pointerover", (event) => setActiveGroup(event.target));
+  title.addEventListener("pointerout", (event) => {
+    if (event.relatedTarget instanceof Element && title.contains(event.relatedTarget)) {
+      setActiveGroup(event.relatedTarget);
+    } else {
+      setActiveGroup(null);
+    }
+  });
+  title.addEventListener("focusin", (event) => setActiveGroup(event.target));
+  title.addEventListener("focusout", (event) => {
+    if (event.relatedTarget instanceof Element && title.contains(event.relatedTarget)) {
+      setActiveGroup(event.relatedTarget);
+    } else {
+      setActiveGroup(null);
+    }
+  });
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const splashScreen = document.querySelector(".splash-screen");
+  const initialDelay =
+    !hasAnimatedIntro && splashScreen && getComputedStyle(splashScreen).visibility !== "hidden"
+      ? 700
+      : 0;
+  title.style.setProperty("--hero-initial-delay", `${initialDelay}ms`);
+  hasAnimatedIntro = true;
 
   const walker = document.createTreeWalker(title, NodeFilter.SHOW_TEXT);
   const textNodes = [];
@@ -429,6 +496,7 @@ function animateHeroTitle() {
 
   let wordIndex = 0;
   textNodes.forEach((textNode) => {
+    const group = textNode.parentElement.closest("[data-title-group]")?.dataset.titleGroup;
     const fragment = document.createDocumentFragment();
     textNode.textContent.split(/(\s+)/).forEach((part) => {
       if (!part.trim()) {
@@ -438,12 +506,68 @@ function animateHeroTitle() {
 
       const word = document.createElement("span");
       word.className = "hero-word";
+      if (group) word.dataset.titleGroup = group;
       word.style.setProperty("--word-index", wordIndex++);
       word.textContent = part;
       fragment.append(word);
     });
     textNode.replaceWith(fragment);
   });
+}
+
+function renderProjectInfoModal(project) {
+  const renderList = (items) =>
+    items?.length
+      ? `<ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>`
+      : `<p class="project-info-empty">Not provided for this project.</p>`;
+
+  const links = project.links?.length
+    ? `<ul>${project.links
+        .map(
+          (link) =>
+            `<li><a href="${link.url}" target="_blank" rel="noopener noreferrer">${link.label}</a></li>`
+        )
+        .join("")}</ul>`
+    : `<p class="project-info-empty">No external links have been added.</p>`;
+
+  return `
+    <dialog class="project-info-modal" id="project-info-modal" aria-labelledby="project-info-title">
+      <div class="project-info-header">
+        <div>
+          <p class="eyebrow">Project details</p>
+          <h2 id="project-info-title">${project.title}</h2>
+        </div>
+        <button class="project-info-close" type="button" aria-label="Close project details" data-close-project-info>×</button>
+      </div>
+      <div class="project-info-grid">
+        <section>
+          <h3>Overview</h3>
+          <p>${project.description || "No project description has been added."}</p>
+        </section>
+        <section>
+          <h3>Details</h3>
+          <dl>
+            <div><dt>Client</dt><dd>${project.client || "Not specified"}</dd></div>
+            <div><dt>Year</dt><dd>${project.year || "Not specified"}</dd></div>
+            <div><dt>Type</dt><dd>${project.category || "Not specified"}</dd></div>
+            <div><dt>Services</dt><dd>${project.services?.join(", ") || "Not specified"}</dd></div>
+          </dl>
+        </section>
+        <section>
+          <h3>Achievements</h3>
+          ${renderList(project.achievements)}
+        </section>
+        <section>
+          <h3>Metrics</h3>
+          ${renderList(project.metrics)}
+        </section>
+        <section>
+          <h3>Links</h3>
+          ${links}
+        </section>
+      </div>
+    </dialog>
+  `;
 }
 
 function renderCv() {
@@ -454,19 +578,22 @@ function renderCv() {
     <article class="view cv-view fade-in-section" aria-labelledby="cv-title">
       <section class="cv-hero">
         <h1 id="cv-title">
-          Hey, I am Teo Peter. I am a graphic engineer crafting
-          <a class="cv-title-thumb" href="#work/frankie" aria-label="View Frankie project">
-            <img src="app_frankie/0_hero.jpg" alt="" />
+          <span class="hero-intro-prefix">Hey, I am Teo Peter. I am a </span>Graphic engineer crafting
+          <a class="cv-title-thumb" data-title-group="digital-products" href="#work/frankie" aria-label="View Frankie project">
+            <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
+              <source src="./cv-digital-products.mp4" type="video/mp4" />
+            </video>
           </a>
-          digital products, brandings
-          <a class="cv-title-thumb" href="#work/diskrepancija-journal" aria-label="View Diskrepancija Journal project">
+          <a class="title-hover-group" data-title-group="digital-products" href="#work/frankie">digital products,</a>
+          <a class="cv-title-thumb" data-title-group="brandings" href="#work/diskrepancija-journal" aria-label="View Diskrepancija Journal project">
             <img src="publishing_diskrepancija/0_hero.jpg" alt="" />
           </a>
+          <a class="title-hover-group" data-title-group="brandings" href="#work/diskrepancija-journal">brandings</a>
           &
-          <a class="cv-title-thumb" href="#work/skola-grada" aria-label="View Škola grada project">
+          <a class="cv-title-thumb" data-title-group="visual-assets" href="#work/skola-grada" aria-label="View Škola grada project">
             <img src="publishing_skola-grada/skola-grada-hero.jpg" alt="" />
           </a>
-          visual assets.
+          <a class="title-hover-group" data-title-group="visual-assets" href="#work/skola-grada">visual assets.</a>
         </h1>
         <p class="lead">${portfolio.introSecond}</p>
         <div class="summary-actions">
@@ -663,6 +790,8 @@ function renderProject(slug) {
         </div>
       </section>
 
+      ${renderProjectInfoModal(project)}
+
       <a class="next-project" href="#work/${nextProject.slug}">
         <span>
           <span class="next-kicker">Next project</span>
@@ -723,6 +852,7 @@ window.addEventListener("hashchange", route);
 setProfileLinks();
 updateCategoryCounts();
 initCopyButtons();
+initProjectInfoButton();
 route();
 initMultilingualGreeting();
 
