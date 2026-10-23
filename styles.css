@@ -281,7 +281,12 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   gap: var(--work-grid-gap);
+  margin-top: clamp(32px, 5vw, 56px);
   animation: contentReveal 900ms cubic-bezier(0.22, 1, 0.36, 1) 650ms both;
+}
+
+.summary-actions .summary-link {
+  margin-top: 0;
 }
 
 .copy-email-link {
@@ -942,7 +947,7 @@ h3 {
   }
 
   .cv-hero {
-    font-size: clamp(38px, 10vw, 52px);
+    font-size: clamp(46px, 12vw, 64px);
     width: 100%;
     min-height: auto;
   }
