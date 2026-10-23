@@ -417,6 +417,35 @@ function initCopyButtons() {
   });
 }
 
+function animateHeroTitle() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const title = document.querySelector("#cv-title");
+  if (!title) return;
+
+  const walker = document.createTreeWalker(title, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+  let wordIndex = 0;
+  textNodes.forEach((textNode) => {
+    const fragment = document.createDocumentFragment();
+    textNode.textContent.split(/(\s+)/).forEach((part) => {
+      if (!part.trim()) {
+        fragment.append(part);
+        return;
+      }
+
+      const word = document.createElement("span");
+      word.className = "hero-word";
+      word.style.setProperty("--word-index", wordIndex++);
+      word.textContent = part;
+      fragment.append(word);
+    });
+    textNode.replaceWith(fragment);
+  });
+}
+
 function renderCv() {
   removeProjectDescription();
   state.view = "cv";
@@ -424,7 +453,21 @@ function renderCv() {
   app.innerHTML = `
     <article class="view cv-view fade-in-section" aria-labelledby="cv-title">
       <section class="cv-hero">
-        <h1 id="cv-title" class="intro-reveal">${portfolio.intro}</h1>
+        <h1 id="cv-title">
+          Hey, I am Teo Peter. I am a graphic engineer crafting
+          <a class="cv-title-thumb" href="#work/frankie" aria-label="View Frankie project">
+            <img src="app_frankie/0_hero.jpg" alt="" />
+          </a>
+          digital products, brandings
+          <a class="cv-title-thumb" href="#work/diskrepancija-journal" aria-label="View Diskrepancija Journal project">
+            <img src="publishing_diskrepancija/0_hero.jpg" alt="" />
+          </a>
+          &
+          <a class="cv-title-thumb" href="#work/skola-grada" aria-label="View Škola grada project">
+            <img src="publishing_skola-grada/skola-grada-hero.jpg" alt="" />
+          </a>
+          visual assets.
+        </h1>
         <p class="lead">${portfolio.introSecond}</p>
         <div class="summary-actions">
           <a class="summary-link" href="https://chatgpt.com/?q=Give+me+a+concise%2C+well-sourced+summary+of+Teo+Peter%2C+a+graphic+designer+from+Zagreb.+Cover+his+projects%2C+put+focus+on+UX%2FUI+solution+and+branding+work%2C+previous+experience%2C+education%2C+and+notable+design+projects+as+well+as+published+research+articles+in+Acta+Graphica.+Make+it+short+and+helpful.&utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">
@@ -433,6 +476,9 @@ function renderCv() {
           </a>
           <a class="summary-link" href="./ai-playground/index.html">
             <span>AI Playground</span>
+          </a>
+          <a class="summary-link" href="./Teo_Peter_CV_26.pdf" target="_blank" rel="noopener noreferrer" download>
+            <span>Get CV</span>
           </a>
           <button class="summary-link copy-email-link" type="button" data-copy="teo_peter@outlook.com">
             <span>Copy e-mail</span>
@@ -510,6 +556,8 @@ function renderCv() {
       </div>
     </article>
   `;
+
+  animateHeroTitle();
 
   const bottomSwitch = document.querySelector(".bottom-switch");
   if (bottomSwitch) bottomSwitch.classList.add("is-loaded");
