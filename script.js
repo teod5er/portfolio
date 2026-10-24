@@ -6,7 +6,7 @@ function makeProjectImage(label, primary, secondary) {
       <rect x="120" y="220" width="520" height="340" rx="30" fill="${primary}" opacity="0.92" />
       <rect x="120" y="620" width="660" height="160" rx="24" fill="#ffffff" opacity="0.92" />
       <rect x="120" y="840" width="420" height="120" rx="24" fill="${secondary}" opacity="0.88" />
-      <text x="120" y="1030" font-family="ABC Monument Grotesk Trial, Arial, sans-serif" font-size="56" font-weight="400" fill="${secondary}">${label}</text>
+      <text x="120" y="1030" font-family="Moderat Medium, Arial, sans-serif" font-size="56" font-weight="400" fill="${secondary}">${label}</text>
     </svg>
   `;
 
@@ -341,21 +341,6 @@ function setProfileLinks() {
   if (threads) threads.href = portfolio.links.threads;
 }
 
-function updateCategoryCounts() {
-  categoryButtons.forEach((button) => {
-    const category = button.dataset.category;
-    let count = 0;
-
-    if (category === "All") {
-      count = works.length;
-    } else {
-      count = works.filter((work) => work.category === category).length;
-    }
-
-    button.innerHTML = `${category} <sup>(${count})</sup>`;
-  });
-}
-
 function updateSwitch(projectTitle = null) {
   const isProjectDetail = state.view === "project";
   const activeView =
@@ -451,6 +436,35 @@ function initCopyButtons() {
       window.prompt("Copy e-mail:", value);
     }
   });
+}
+
+function initCustomCursor() {
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+  const cursor = document.createElement("span");
+  cursor.className = "custom-cursor";
+  cursor.setAttribute("aria-hidden", "true");
+  document.body.append(cursor);
+
+  document.addEventListener("pointermove", (event) => {
+    if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
+
+    cursor.style.left = `${event.clientX}px`;
+    cursor.style.top = `${event.clientY}px`;
+    cursor.classList.add("is-visible");
+    document.documentElement.classList.add("has-custom-cursor");
+  });
+
+  document.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse" || event.pointerType === "pen") {
+      cursor.classList.add("is-pressed");
+    }
+  });
+
+  document.addEventListener("pointerup", () => cursor.classList.remove("is-pressed"));
+  document.addEventListener("pointercancel", () => cursor.classList.remove("is-pressed"));
+  document.addEventListener("pointerleave", () => cursor.classList.remove("is-visible"));
+  document.addEventListener("pointerenter", () => cursor.classList.add("is-visible"));
 }
 
 function initBlogPostModalHandlers() {
@@ -600,21 +614,27 @@ function renderCv() {
       <section class="cv-hero">
         <h1 id="cv-title">
           Hi, I am Teo. Graphic engineer crafting
-          <a class="cv-title-thumb" data-title-group="digital-products" href="${projectHref("frankie")}" aria-label="View Frankie project">
-            <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
-              <source src="./cv-digital-products.mp4" type="video/mp4" />
-            </video>
-          </a>
-          <a class="title-hover-group" data-title-group="digital-products" href="${projectHref("frankie")}">digital products,</a>
-          <a class="cv-title-thumb" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}" aria-label="View Diskrepancija Journal project">
-            <img src="publishing_diskrepancija/0_hero.jpg" alt="" />
-          </a>
-          <a class="title-hover-group" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}">brandings</a>
-          &
-          <a class="cv-title-thumb" data-title-group="visual-assets" href="${projectHref("skola-grada")}" aria-label="View Škola grada project">
-            <img src="publishing_skola-grada/skola-grada-hero.jpg" alt="" />
-          </a>
-          <a class="title-hover-group" data-title-group="visual-assets" href="${projectHref("skola-grada")}">visual assets.</a>
+          <span class="hero-inline-group" data-title-group="digital-products">
+            <a class="cv-title-thumb" data-title-group="digital-products" href="${projectHref("frankie")}" aria-label="View Frankie project">
+              <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
+                <source src="./cv-digital-products.mp4" type="video/mp4" />
+              </video>
+            </a>
+            <a class="title-hover-group" data-title-group="digital-products" href="${projectHref("frankie")}">digital products,</a>
+          </span>
+          <span class="hero-inline-group" data-title-group="brandings">
+            <a class="cv-title-thumb" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}" aria-label="View Diskrepancija Journal project">
+              <img src="publishing_diskrepancija/0_hero.jpg" alt="" />
+            </a>
+            <a class="title-hover-group" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}">brandings</a>
+            &
+          </span>
+          <span class="hero-inline-group" data-title-group="visual-assets">
+            <a class="cv-title-thumb" data-title-group="visual-assets" href="${projectHref("skola-grada")}" aria-label="View Škola grada project">
+              <img src="publishing_skola-grada/skola-grada-hero.jpg" alt="" />
+            </a>
+            <a class="title-hover-group" data-title-group="visual-assets" href="${projectHref("skola-grada")}">visual assets.</a>
+          </span>
         </h1>
         <p class="lead">${portfolio.introSecond}</p>
         <div class="summary-actions">
@@ -936,8 +956,8 @@ window.addEventListener("scroll", () => {
 }, { passive: true });
 
 setProfileLinks();
-updateCategoryCounts();
 initCopyButtons();
+initCustomCursor();
 initBlogPostModalHandlers();
 route();
 initMultilingualGreeting();

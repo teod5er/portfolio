@@ -1,15 +1,7 @@
 @font-face {
-  font-family: "ABC Monument Grotesk Trial";
-  src: url("../fonts/ABCMonumentGrotesk-Regular-Trial.otf") format("opentype");
+  font-family: "Moderat Medium";
+  src: url("../fonts/Moderat-Medium.ttf") format("truetype");
   font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "ABC Monument Grotesk Trial";
-  src: url("../fonts/ABCMonumentGrotesk-Bold-Trial.otf") format("opentype");
-  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -30,7 +22,7 @@ body {
   overflow: hidden;
   background: #fff;
   color: #111;
-  font-family: "ABC Monument Grotesk Trial", "Segoe UI", sans-serif;
+  font-family: "Moderat Medium", "Segoe UI", sans-serif;
 }
 
 .playground-stage {
