@@ -421,7 +421,7 @@ function renderWorkCards(items) {
       return `
         <a class="work-card" href="${projectHref(work.slug)}" aria-label="${work.title}, ${work.client}">
           ${mediaHtml}
-          <div>
+          <div class="work-card-copy">
             <div class="work-title-row">
               <h2>${work.title}</h2>
               <span class="project-year">${work.year}</span>
@@ -564,71 +564,13 @@ function animateHeroTitle() {
 }
 
 function renderProjectInfoModal(project) {
-  const renderList = (items) =>
-    items?.length
-      ? `<ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>`
-      : `<p class="project-info-empty">Not provided for this project.</p>`;
-
-  const links = project.links?.length
-    ? `<ul>${project.links
-        .map(
-          (link) =>
-            `<li><a href="${link.url}" target="_blank" rel="noopener noreferrer">${link.label}</a></li>`
-        )
-        .join("")}</ul>`
-    : `<p class="project-info-empty">No external links have been added.</p>`;
-
-  const gallery = project.images?.length
-    ? `
-      <div class="project-info-gallery" aria-label="${project.title} project images">
-        ${project.images
-          .map((src, index) =>
-            src.endsWith(".mp4")
-              ? `<video src="${src}" muted autoplay loop playsinline preload="metadata" aria-label="${project.title} video ${index + 1}"></video>`
-              : `<img src="${src}" alt="${project.title} project image ${index + 1}" loading="lazy" />`
-          )
-          .join("")}
-      </div>
-    `
-    : "";
-
   return `
-    <dialog class="project-info-modal" id="project-info-modal" aria-labelledby="project-info-title">
+    <dialog class="project-info-modal" id="project-info-modal" aria-label="Project details for ${project.title}">
       <div class="project-info-toolbar">
         <button class="project-info-close" type="button" aria-label="Close project details" data-close-project-info>×</button>
       </div>
       <div class="project-info-content">
-      <div class="project-info-header">
-        <div>
-          <p class="eyebrow">Project details</p>
-          <h2 id="project-info-title">${project.title}</h2>
-          <p class="project-info-overview">${project.description || "No project description has been added."}</p>
-        </div>
-      </div>
-      ${gallery}
-      <div class="project-info-grid">
-        <section>
-          <h3>Details</h3>
-          <dl>
-            <div><dt>Client</dt><dd>${project.client || "Not specified"}</dd></div>
-            <div><dt>Year</dt><dd>${project.year || "Not specified"}</dd></div>
-            <div><dt>Type</dt><dd>${project.category || "Not specified"}</dd></div>
-            <div><dt>Services</dt><dd>${project.services?.join(", ") || "Not specified"}</dd></div>
-          </dl>
-        </section>
-        <section>
-          <h3>Achievements</h3>
-          ${renderList(project.achievements)}
-        </section>
-        <section>
-          <h3>Metrics</h3>
-          ${renderList(project.metrics)}
-        </section>
-        <section>
-          <h3>Links</h3>
-          ${links}
-        </section>
-      </div>
+        <p class="project-info-overview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
       </div>
     </dialog>
   `;
@@ -838,27 +780,15 @@ function renderBlog() {
         <h1 id="blog-title">Notes</h1>
       </header>
       <div class="blog-list">
-        ${works
-          .map((work) => {
-            const image = work.images.find((src) => !src.endsWith(".mp4"));
-            return `
-              <article class="blog-card">
-                <a class="blog-card-image" href="${projectHref(work.slug)}" data-blog-post="${work.slug}" aria-label="Read ${work.title}">
-                  <img src="${image}" alt="" loading="lazy" />
-                </a>
-                <div class="blog-card-content">
-                  <p class="blog-card-meta">${work.category} · ${work.year}</p>
-                  <h2><a href="${projectHref(work.slug)}" data-blog-post="${work.slug}">${work.title}</a></h2>
-                  <p>${work.description || ""}</p>
-                  <a class="blog-read-link" href="${projectHref(work.slug)}" data-blog-post="${work.slug}">Read article <span aria-hidden="true">→</span></a>
-                </div>
-              </article>
-            `;
-          })
-          .join("")}
+        <article class="blog-card blog-card-welcome">
+          <div class="blog-card-content">
+            <p class="blog-card-meta">First note</p>
+            <h2>Welcome to Notes</h2>
+            <p>My place to share project updates, creative ideas, and my thoughts on branding, creativity, AI.</p>
+          </div>
+        </article>
       </div>
     </section>
-    <dialog class="project-info-modal blog-post-modal" id="blog-post-modal" aria-labelledby="blog-post-title"></dialog>
   `;
 
   updateSwitch();
@@ -1021,6 +951,25 @@ categoryButtons.forEach((button) => {
 });
 
 window.addEventListener("hashchange", route);
+let lastSwitchScrollY = window.scrollY;
+
+window.addEventListener("scroll", () => {
+  const currentScrollY = window.scrollY;
+  const scrollDifference = currentScrollY - lastSwitchScrollY;
+  const bottomSwitch = document.querySelector(".bottom-switch");
+
+  if (currentScrollY <= 0) {
+    bottomSwitch?.classList.remove("is-scrolling-down");
+    lastSwitchScrollY = currentScrollY;
+    return;
+  }
+
+  if (Math.abs(scrollDifference) < 8) return;
+
+  bottomSwitch?.classList.toggle("is-scrolling-down", scrollDifference > 0);
+  lastSwitchScrollY = currentScrollY;
+}, { passive: true });
+
 setProfileLinks();
 updateCategoryCounts();
 initCopyButtons();
