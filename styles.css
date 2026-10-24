@@ -194,13 +194,15 @@ main {
 
 .cv-hero {
   display: grid;
-  min-height: clamp(200px, 24vh, 360px);
-  align-content: start;
+  min-height: clamp(280px, 40vh, 540px);
+  align-content: center;
+  justify-items: start;
   padding-bottom: 0.85em;
-  font-size: clamp(48px, 5.8vw, 108px);
+  font-size: clamp(58px, 7vw, 128px);
   width: 100%;
   max-width: none;
   margin-bottom: 0.7em;
+  text-align: left;
 }
 
 h1,
@@ -242,6 +244,7 @@ h3 {
   display: block;
   line-height: 1.1;
   letter-spacing: 0;
+  text-wrap: pretty;
 }
 
 .hero-inline-group {
@@ -317,6 +320,7 @@ h3 {
 .summary-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--work-grid-gap);
   margin-top: clamp(32px, 5vw, 56px);
   animation: contentReveal 900ms cubic-bezier(0.22, 1, 0.36, 1) 650ms both;
@@ -785,19 +789,19 @@ h3 {
   --switch-scale: 1.2;
   position: fixed;
   z-index: 10;
-  left: max(18px, env(safe-area-inset-left));
+  left: 50%;
   bottom: max(18px, env(safe-area-inset-bottom));
-  transform: translateY(100px) scale(var(--switch-scale));
+  transform: translateX(-50%) translateY(100px) scale(var(--switch-scale));
   opacity: 0;
-  transform-origin: bottom left;
+  transform-origin: bottom center;
   display: inline-flex;
   align-items: center;
   border: 0;
   border-radius: 12px;
-  padding: 0.45em;
+  padding: 0.3em;
   background: #000;
   color: #fff;
-  gap: 8px;
+  gap: 5px;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   max-width: var(--initial-width, 145px);
@@ -810,7 +814,7 @@ h3 {
 }
 
 .bottom-switch.is-loaded {
-  transform: translateY(0) scale(var(--switch-scale));
+  transform: translateX(-50%) translateY(0) scale(var(--switch-scale));
   opacity: 1;
 }
 
@@ -867,9 +871,9 @@ h3 {
 .switch-button,
 .category-bar button {
   min-width: auto;
-  min-height: 48px;
+  min-height: 40px;
   border-radius: 4px;
-  padding: 12px 18px;
+  padding: 9px 13px;
   background: transparent;
   color: #fff;
   cursor: pointer;
@@ -880,7 +884,7 @@ h3 {
 }
 
 .category-bar button {
-  padding: 10px 12px;
+  padding: 8px 10px;
   border-radius: 100px;
 }
 
@@ -897,8 +901,8 @@ h3 {
 
 .category-bar button.is-active {
   border-radius: 100px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .switch-button.is-active {
@@ -1129,7 +1133,7 @@ h3 {
   .project-info-modal {
     width: calc(100vw - 24px);
     max-height: calc(100dvh - 24px);
-    padding: 6px;
+    padding: 5px;
     border-radius: 12px;
   }
 
@@ -1168,10 +1172,10 @@ h3 {
   }
 
   .cv-hero {
-    font-size: clamp(50px, 13vw, 72px);
+    font-size: clamp(52px, 12.5vw, 80px);
     width: 100%;
     max-width: none;
-    min-height: auto;
+    min-height: clamp(320px, 55vh, 480px);
   }
 
   #project-title {
@@ -1196,8 +1200,8 @@ h3 {
   }
 
   .bottom-switch {
-    left: max(12px, env(safe-area-inset-left));
-    transform: scale(var(--switch-scale)) !important;
+    left: 50%;
+    transform: translateX(-50%) scale(var(--switch-scale)) !important;
     border-radius: 12px;
     display: inline-flex;
     justify-content: center;
@@ -1207,7 +1211,7 @@ h3 {
   }
 
   .bottom-switch.is-loaded:hover {
-    transform: scale(var(--switch-scale)) !important;
+    transform: translateX(-50%) scale(var(--switch-scale)) !important;
   }
 
   .switch-core {
@@ -1219,8 +1223,8 @@ h3 {
   .switch-button {
     flex: 1;
     text-align: center;
-    min-height: 48px;
-    padding: 10px 12px;
+    min-height: 40px;
+    padding: 8px 10px;
   }
 
   .category-bar {
