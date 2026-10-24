@@ -771,22 +771,6 @@ h3 {
   overflow: hidden;
 }
 
-.progressive-blur {
-  position: fixed;
-  z-index: 5;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: calc(100px + env(safe-area-inset-bottom, 0px));
-  content: "";
-  pointer-events: none;
-  background: linear-gradient(to bottom, transparent 0%, rgb(243 243 243 / 0.2) 55%, rgb(243 243 243 / 0.72) 100%);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 55%, black 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 55%, black 100%);
-}
-
 .bottom-switch.is-loaded {
   transform: translateX(50%) translateY(0) scale(var(--switch-scale));
   opacity: 1;
