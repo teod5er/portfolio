@@ -792,10 +792,6 @@ h3 {
   max-width: 1000px;
 }
 
-.bottom-switch.has-project-info {
-  max-width: min(420px, calc(100vw - 24px));
-}
-
 .switch-core {
   display: flex;
   align-items: center;
@@ -831,8 +827,7 @@ h3 {
 }
 
 .switch-button,
-.category-bar button,
-.project-info-button {
+.category-bar button {
   min-width: auto;
   min-height: 48px;
   border-radius: 4px;
@@ -844,23 +839,6 @@ h3 {
   line-height: 1.1;
   white-space: nowrap;
   transition: background-color 140ms ease, color 140ms ease, opacity 140ms ease, transform 140ms ease, min-width 180ms ease, padding 180ms ease;
-}
-
-.project-info-button {
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  color: var(--ink);
-  flex-shrink: 0;
-}
-
-.project-info-button:hover,
-.project-info-button:focus-visible {
-  background: var(--ink);
-  color: #fff;
-}
-
-.project-info-button[hidden] {
-  display: none;
 }
 
 .category-bar button {

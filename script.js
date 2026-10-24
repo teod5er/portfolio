@@ -325,7 +325,6 @@ const bottomSwitchMain = document.querySelector(".bottom-switch");
 const switchButtons = [...document.querySelectorAll(".switch-button")];
 const categoryButtons = [...document.querySelectorAll(".category-bar button")];
 const projectsButton = document.querySelector('[data-view="projects"]');
-const projectInfoButton = document.querySelector("[data-project-info]");
 
 function projectHref(slug) {
   return `project.html?slug=${encodeURIComponent(slug)}`;
@@ -394,11 +393,6 @@ function updateSwitch(projectTitle = null) {
   if (projectsButton) {
     projectsButton.textContent = isProjectDetail ? "Back to Works" : "Work";
   }
-
-  if (projectInfoButton) {
-    projectInfoButton.hidden = !isProjectDetail;
-    bottomSwitchMain?.classList.toggle("has-project-info", isProjectDetail);
-  }
 }
 
 function renderWorkCards(items) {
@@ -459,11 +453,7 @@ function initCopyButtons() {
   });
 }
 
-function initProjectInfoButton() {
-  projectInfoButton?.addEventListener("click", () => {
-    document.querySelector("#project-info-modal")?.showModal();
-  });
-
+function initBlogPostModalHandlers() {
   app.addEventListener("click", (event) => {
     const blogPostLink = event.target.closest("[data-blog-post]");
     if (blogPostLink) {
@@ -487,16 +477,6 @@ function initProjectInfoButton() {
       event.target.close();
     }
   });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-
-    const dialog = document.querySelector("#project-info-modal");
-    if (!dialog?.open) return;
-
-    event.preventDefault();
-    dialog.close();
-  }, true);
 }
 
 function animateHeroTitle() {
@@ -561,19 +541,6 @@ function animateHeroTitle() {
     });
     textNode.replaceWith(fragment);
   });
-}
-
-function renderProjectInfoModal(project) {
-  return `
-    <dialog class="project-info-modal" id="project-info-modal" aria-label="Project details for ${project.title}">
-      <div class="project-info-toolbar">
-        <button class="project-info-close" type="button" aria-label="Close project details" data-close-project-info>×</button>
-      </div>
-      <div class="project-info-content">
-        <p class="project-info-overview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      </div>
-    </dialog>
-  `;
 }
 
 function renderBlogPostModal(project) {
@@ -875,8 +842,6 @@ function renderProject(slug) {
         </div>
       </section>
 
-      ${renderProjectInfoModal(project)}
-
       <a class="next-project" href="${projectHref(nextProject.slug)}">
         <span>
           <span class="next-kicker">Next project</span>
@@ -973,7 +938,7 @@ window.addEventListener("scroll", () => {
 setProfileLinks();
 updateCategoryCounts();
 initCopyButtons();
-initProjectInfoButton();
+initBlogPostModalHandlers();
 route();
 initMultilingualGreeting();
 
