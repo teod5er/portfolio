@@ -74,36 +74,7 @@ button {
   color: inherit;
   background: transparent;
   padding: 0;
-  cursor: pointer;
-}
-
-.custom-cursor {
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  left: 0;
-  width: 14px;
-  height: 14px;
-  background: var(--accent);
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(1);
-  transition: transform 140ms ease, opacity 120ms ease;
-}
-
-.custom-cursor.is-visible {
-  opacity: 1;
-}
-
-.custom-cursor.is-pressed {
-  transform: translate(-50%, -50%) scale(2.2);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  html.has-custom-cursor,
-  html.has-custom-cursor * {
-    cursor: none !important;
-  }
+  cursor: url("./pointinghand.svg") 17 2, pointer;
 }
 
 .site-shell {
@@ -342,7 +313,7 @@ h3 {
 
 .copy-email-link {
   display: none;
-  cursor: pointer;
+  cursor: url("./pointinghand.svg") 17 2, pointer;
 }
 
 .summary-link img {
@@ -637,7 +608,7 @@ h3 {
   justify-content: space-between;
   padding: clamp(16px, 2.5vw, 32px) 0;
   list-style: none;
-  cursor: pointer;
+  cursor: url("./pointinghand.svg") 17 2, pointer;
 }
 
 .note-summary::-webkit-details-marker {
@@ -1086,7 +1057,7 @@ h3 {
   padding: 8px 12px;
   background: transparent;
   color: #fff;
-  cursor: pointer;
+  cursor: url("./pointinghand.svg") 17 2, pointer;
   font-size: var(--font-size);
   line-height: 1.1;
   white-space: nowrap;
@@ -1240,7 +1211,7 @@ h3 {
   color: #fff;
   font-size: 25px;
   line-height: 1;
-  cursor: pointer;
+  cursor: url("./pointinghand.svg") 17 2, pointer;
 }
 
 .project-info-gallery {
@@ -1600,4 +1571,22 @@ h3 {
     animation: none;
     transition: none;
   }
+}
+
+html,
+body {
+  cursor: url("./default.svg") 1 1, auto;
+}
+
+a,
+button,
+[role="button"],
+label,
+summary,
+select,
+input[type="submit"],
+input[type="button"],
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: url("./pointinghand.svg") 17 2, pointer;
 }

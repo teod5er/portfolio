@@ -538,35 +538,6 @@ function initCopyButtons() {
   });
 }
 
-function initCustomCursor() {
-  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-
-  const cursor = document.createElement("span");
-  cursor.className = "custom-cursor";
-  cursor.setAttribute("aria-hidden", "true");
-  document.body.append(cursor);
-
-  document.addEventListener("pointermove", (event) => {
-    if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
-
-    cursor.style.left = `${event.clientX}px`;
-    cursor.style.top = `${event.clientY}px`;
-    cursor.classList.add("is-visible");
-    document.documentElement.classList.add("has-custom-cursor");
-  });
-
-  document.addEventListener("pointerdown", (event) => {
-    if (event.pointerType === "mouse" || event.pointerType === "pen") {
-      cursor.classList.add("is-pressed");
-    }
-  });
-
-  document.addEventListener("pointerup", () => cursor.classList.remove("is-pressed"));
-  document.addEventListener("pointercancel", () => cursor.classList.remove("is-pressed"));
-  document.addEventListener("pointerleave", () => cursor.classList.remove("is-visible"));
-  document.addEventListener("pointerenter", () => cursor.classList.add("is-visible"));
-}
-
 function initBlogPostModalHandlers() {
   app.addEventListener("click", (event) => {
     const blogPostLink = event.target.closest("[data-blog-post]");
@@ -1145,7 +1116,6 @@ window.addEventListener(
 
 setProfileLinks();
 initCopyButtons();
-initCustomCursor();
 initBlogPostModalHandlers();
 route();
 initMultilingualGreeting();
