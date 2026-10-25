@@ -408,6 +408,37 @@ function setProfileLinks() {
   if (threads) threads.href = portfolio.links.threads;
 }
 
+function createNavIndicator(container) {
+  if (!container) return;
+  const indicator = document.createElement("span");
+  indicator.className = "nav-indicator";
+  indicator.setAttribute("aria-hidden", "true");
+  container.prepend(indicator);
+}
+
+function moveNavIndicator(container, activeButton) {
+  const indicator = container?.querySelector(".nav-indicator");
+  if (!indicator) return;
+
+  const isVisible = Boolean(activeButton) && !activeButton.classList.contains("is-back");
+  indicator.classList.toggle("is-visible", isVisible);
+  if (!isVisible) return;
+
+  indicator.style.width = `${activeButton.offsetWidth}px`;
+  indicator.style.height = `${activeButton.offsetHeight}px`;
+  indicator.style.transform = `translate(${activeButton.offsetLeft}px, ${activeButton.offsetTop}px)`;
+
+  // Place the indicator instantly on first render, then let later changes slide.
+  if (!indicator.classList.contains("is-ready")) {
+    requestAnimationFrame(() => indicator.classList.add("is-ready"));
+  }
+}
+
+function updateNavIndicators() {
+  moveNavIndicator(bottomSwitch, switchButtons.find((button) => button.classList.contains("is-active")));
+  moveNavIndicator(categoryBar, categoryButtons.find((button) => button.classList.contains("is-active")));
+}
+
 function updateSwitch() {
   const isProjectDetail = state.view === "project";
   const activeView =
@@ -445,6 +476,8 @@ function updateSwitch() {
   if (projectsButton) {
     projectsButton.textContent = isProjectDetail ? "Back to Works" : "Work";
   }
+
+  updateNavIndicators();
 }
 
 function renderWorkCards(items) {
@@ -870,17 +903,56 @@ function renderBlog() {
         <h1 id="blog-title">Notes</h1>
       </header>
       <div class="blog-list">
-        <article class="blog-card blog-card-welcome">
-          <div class="blog-card-content">
-            <h2>Welcome to Notes</h2>
-            <p>My place to share project updates, creative ideas, and my thoughts on branding, creativity, AI.</p>
-          </div>
-        </article>
+        <div class="notes-list" aria-live="polite"></div>
       </div>
     </section>
   `;
 
   updateSwitch();
+  renderNotes();
+}
+
+let notesRequest;
+
+function loadNotes() {
+  notesRequest ??= fetch("notes.json")
+    .then((response) => (response.ok ? response.json() : []))
+    .catch(() => []);
+  return notesRequest;
+}
+
+function formatNoteDate(value) {
+  return new Date(value).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+async function renderNotes() {
+  const notes = await loadNotes();
+  const list = app.querySelector(".notes-list");
+  if (state.view !== "blog" || !list) return;
+
+  list.innerHTML = notes
+    .map(
+      (note) => `
+        <details class="note">
+          <summary class="note-summary">
+            <span class="note-heading">
+              <span class="blog-card-meta">${formatNoteDate(note.date)}</span>
+              <h2>${note.title}</h2>
+              ${note.subtitle ? `<span class="note-subtitle">${note.subtitle}</span>` : ""}
+            </span>
+            <span class="note-toggle" aria-hidden="true">+</span>
+          </summary>
+          <div class="note-body">
+            ${note.html}
+          </div>
+        </details>
+      `
+    )
+    .join("");
 }
 
 function renderProject(slug) {
@@ -1036,6 +1108,10 @@ categoryBar?.addEventListener("click", (event) => {
 });
 
 window.addEventListener("hashchange", route);
+window.addEventListener("resize", updateNavIndicators);
+document.fonts?.ready.then(updateNavIndicators);
+createNavIndicator(bottomSwitch);
+createNavIndicator(categoryBar);
 let lastSwitchScrollY = window.scrollY;
 let scrollFrame = 0;
 
