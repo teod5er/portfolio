@@ -12,36 +12,36 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
   </head>
   <body>
-    <div class="splash-screen" aria-hidden="true">
-      <span class="splash-mark"></span>
-    </div>
-
     <div class="site-shell">
       <header class="site-header" aria-label="Glavno zaglavlje"></header>
       <main id="app" tabindex="-1"></main>
       <footer class="site-footer" id="contact">
-        <button class="email-copy" type="button" data-copy="teo_peter@outlook.com">
-          <span>Teo Peter © 2026</span>
-        </button>
         <nav class="social-links" aria-label="Drustvene mreze">
+          <a href="https://chatgpt.com/?q=Give+me+a+concise%2C+well-sourced+summary+of+Teo+Peter%2C+a+graphic+designer+from+Zagreb.+Cover+his+projects%2C+put+focus+on+UX%2FUI+solution+and+branding+work%2C+previous+experience%2C+education%2C+and+notable+design+projects+as+well+as+published+research+articles+in+Acta+Graphica.+Make+it+short+and+helpful.&utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">Get a summary</a>
+          <a href="./ai-playground/index.html" target="_blank" rel="noopener noreferrer">AI Playground</a>
+          <a href="./Teo_Peter_CV_26.pdf" download>Download PDF</a>
           <a href="https://www.linkedin.com/in/teo-peter-4516621a3/" data-profile="linkedin" target="_blank">LinkedIn</a>
           <a href="mailto:teo_peter@outlook.com" data-profile="mail" target="_blank">Mail</a>
         </nav>
       </footer>
     </div>
 
-    <nav class="bottom-switch" aria-label="Navigacija portfolija">
-      <div class="switch-core" role="tablist" aria-label="CV i projekti">
-        <button class="switch-button" type="button" data-view="cv" role="tab">About</button>
-        <button class="switch-button" type="button" data-view="projects" role="tab">Work</button>
-      </div>
-      <div class="category-bar" aria-label="Kategorije radova">
+    <div class="navigation-stack">
+      <nav class="category-bar work-filters" aria-label="Kategorije radova">
         <button type="button" data-category="All">All</button>
         <button type="button" data-category="Web">Web</button>
         <button type="button" data-category="App">App</button>
         <button type="button" data-category="Publishing">Publishing</button>
-      </div>
-    </nav>
+      </nav>
+
+      <nav class="bottom-switch" aria-label="Navigacija portfolija">
+        <div class="switch-core" role="group" aria-label="Portfolio sections">
+          <button class="switch-button" type="button" data-view="cv">About</button>
+          <button class="switch-button" type="button" data-view="projects">Work</button>
+        </div>
+        <button class="switch-button" type="button" data-view="blog">Notes</button>
+      </nav>
+    </div>
 
     <script src="script.js"></script>
   </body>

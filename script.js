@@ -26,6 +26,28 @@ function colorPair(category) {
   }
 }
 
+function makeLogoPlaceholder(label, background = "#f3efe9", accent = "#111111") {
+  const initials = label
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420">
+      <rect width="600" height="420" rx="18" fill="${background}"/>
+      <rect x="18" y="18" width="564" height="384" rx="12" fill="${accent}" opacity="0.04"/>
+      <circle cx="300" cy="165" r="72" fill="${accent}" opacity="0.12"/>
+      <text x="300" y="185" text-anchor="middle" font-size="72" font-family="Moderat Medium, Arial, sans-serif" font-weight="700" fill="${accent}">${initials}</text>
+      <text x="300" y="255" text-anchor="middle" font-size="22" font-family="Moderat Medium, Arial, sans-serif" letter-spacing="3" fill="${accent}" opacity="0.72">${label.toUpperCase().slice(0, 18)}</text>
+    </svg>
+  `;
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
 const portfolio = {
   name: "Teo Peter",
   intro:
@@ -39,8 +61,10 @@ const portfolio = {
   experience: [
     {
       period: "April 2025 — Now",
-      title:
-      "Designer @ Sawraft Studio",
+      title: "Sawraft Studio",
+      url: "https://www.sawraft.com",
+      image: "sawraft.png",
+      clients: ["Frankie", "Nexa", "Studio North"],
       items: [
         "&nbsp; ",
         "User interfaces — from research to prototyping",
@@ -50,7 +74,9 @@ const portfolio = {
     },
     {
       period: "October 2022 — April 2024",
-      title: "Student designer @ Social Wizard",
+      title: "Social Wizard",
+      image: "social-wizard.png",
+      clients: ["Tomislav Gotovac Institute", "Studenac", "Cultural brands"],
       items: [
         "&nbsp; ",
         "Offline and online advertising campaigns",
@@ -61,7 +87,9 @@ const portfolio = {
     },
     {
       period: "",
-      title: "Freelance designer",
+      title: "Freelance",
+      image: "freelance.png",
+      clients: ["Local businesses", "Cultural projects", "Independent brands"],
       items: [
         "&nbsp; ",
         "Brand identities, landing pages, posters, and publishing work",
@@ -76,6 +104,7 @@ const portfolio = {
         "&nbsp; ",
         "UX/UI design (web & mobile)",
         "Research and prototyping",
+        "AI prototyping with Claude",
         "Branding & creative direction",
         "Layout & publishing",
         "Presentation",
@@ -94,7 +123,30 @@ const portfolio = {
       ],
     },
   ],
+  languages: [
+    {
+      language: "Croatian",
+      level: "Native",
+    },
+    {
+      language: "English",
+      level: "Professional",
+    },
+    {
+      language: "German",
+      level: "A1 — In progress",
+    },
+  ],
   education: [
+    {
+      period: "In progress, expected November 2026",
+      title: "<br> Google AI Professional Certificate",
+      items: [
+        `<a href='https://www.coursera.org/professional-certificates/google-ai?action=enroll' target='_blank' class='preview-link'>
+           Coursera — Google AI Professional Certificate
+         </a>`,
+      ],
+    },
     {
       period: "Research paper, 2026",
       title: "<br> The impact of the brutalist approach to web design on user experience in terms of usability and satisfaction",
@@ -105,18 +157,31 @@ const portfolio = {
       ],
     },
     {
-      period: "2022 - 2024",
-      title: "<br> Master of Arts in Graphic Product Design",
-      items: [
-        `Faculty of Graphic Arts, University of Zagreb`,
-      ],
-    },
-     {
-      period: "2019 - 2022",
-      title: "<br> Bachelor of Arts in Graphic Design and Engineering",
+      period: "2019 - 2024",
+      title: "<br> B.A. + M.A. of Graphic Product Design & Engineering",
       items: [
         "Faculty of Graphic Arts, University of Zagreb",
         "On Dean’s list",
+      ],
+    },
+  ],
+  volunteering: [
+    {
+      period: "2022 — 2024",
+      title: "1postozagrad — Zagreb civic engagement",
+      image: "1posto.png",
+      clients: ["Zagreb", "Culture", "Public initiatives"],
+      items: [
+        "Posters and digital campaigns",
+      ],
+    },
+    {
+      period: "2023 — 2024",
+      title: "Sindikat biciklista — Croatian cyclist advocacy",
+      image: "sindikat.png",
+      clients: ["Cycling community", "Advocacy", "Urban mobility"],
+      items: [
+        "Design support",
       ],
     },
   ],
@@ -321,10 +386,12 @@ const state = {
 let hasAnimatedIntro = false;
 
 const app = document.querySelector("#app");
-const bottomSwitchMain = document.querySelector(".bottom-switch"); 
+const navigationStack = document.querySelector(".navigation-stack");
+const bottomSwitch = document.querySelector(".bottom-switch");
 const switchButtons = [...document.querySelectorAll(".switch-button")];
 const categoryButtons = [...document.querySelectorAll(".category-bar button")];
 const projectsButton = document.querySelector('[data-view="projects"]');
+const categoryBar = document.querySelector(".category-bar");
 
 function projectHref(slug) {
   return `project.html?slug=${encodeURIComponent(slug)}`;
@@ -341,26 +408,16 @@ function setProfileLinks() {
   if (threads) threads.href = portfolio.links.threads;
 }
 
-function updateSwitch(projectTitle = null) {
+function updateSwitch() {
   const isProjectDetail = state.view === "project";
   const activeView =
     isProjectDetail ? "projects" : state.view === "ai-playground" ? "cv" : state.view;
-  const wordmark = document.querySelector('.wordmark');
-
-  if (wordmark) {
-    if (isProjectDetail && projectTitle) {
-      wordmark.textContent = projectTitle; 
-    } else if (state.view === "projects") {
-      wordmark.textContent = "Teo Peter";
-    } else {
-      wordmark.textContent = "Teo Peter";
-    }
-  }
 
   switchButtons.forEach((button) => {
     const isProjectsButton = button.dataset.view === "projects";
     const isSelected = isProjectDetail ? isProjectsButton : button.dataset.view === activeView;
-    button.setAttribute("aria-selected", String(isSelected));
+    if (isSelected) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
     button.classList.toggle("is-active", isSelected);
     button.classList.toggle("is-hidden", isProjectDetail && !isProjectsButton);
     button.classList.toggle("is-back", isProjectDetail && isProjectsButton);
@@ -370,9 +427,19 @@ function updateSwitch(projectTitle = null) {
     button.classList.toggle("is-active", button.dataset.category === state.category);
   });
 
-  if (bottomSwitchMain) {
-    bottomSwitchMain.classList.toggle("is-projects", state.view === "projects");
-    bottomSwitchMain.classList.toggle("is-hidden", false);
+  if (bottomSwitch) {
+    bottomSwitch.classList.remove("is-hidden");
+  }
+
+  if (navigationStack) {
+    navigationStack.classList.add("is-loaded");
+  }
+
+  if (categoryBar) {
+    const filtersHidden = state.view !== "projects";
+    categoryBar.classList.toggle("is-visible", !filtersHidden);
+    categoryBar.inert = filtersHidden;
+    categoryBar.setAttribute("aria-hidden", String(filtersHidden));
   }
 
   if (projectsButton) {
@@ -613,45 +680,33 @@ function renderCv() {
     <article class="view cv-view fade-in-section" aria-labelledby="cv-title">
       <section class="cv-hero">
         <h1 id="cv-title">
-          Hi, I am Teo. Graphic engineer crafting
-          <span class="hero-inline-group" data-title-group="digital-products">
-            <a class="cv-title-thumb" data-title-group="digital-products" href="${projectHref("frankie")}" aria-label="View Frankie project">
-              <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
-                <source src="./cv-digital-products.mp4" type="video/mp4" />
-              </video>
-            </a>
-            <a class="title-hover-group" data-title-group="digital-products" href="${projectHref("frankie")}">digital products,</a>
-          </span>
-          <span class="hero-inline-group" data-title-group="brandings">
-            <a class="cv-title-thumb" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}" aria-label="View Diskrepancija Journal project">
-              <img src="publishing_diskrepancija/0_hero.jpg" alt="" />
-            </a>
-            <a class="title-hover-group" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}">brandings</a>
-            &
-          </span>
-          <span class="hero-inline-group" data-title-group="visual-assets">
-            <a class="cv-title-thumb" data-title-group="visual-assets" href="${projectHref("skola-grada")}" aria-label="View Škola grada project">
-              <img src="publishing_skola-grada/skola-grada-hero.jpg" alt="" />
-            </a>
-            <a class="title-hover-group" data-title-group="visual-assets" href="${projectHref("skola-grada")}">visual assets.</a>
+          <span class="hero-intro-line">Hi, I am Teo.</span>
+          <span class="hero-main-line">
+            Graphic engineer crafting
+            <span class="hero-inline-group" data-title-group="digital-products">
+              <a class="cv-title-thumb" data-title-group="digital-products" href="${projectHref("frankie")}" aria-label="View Frankie project">
+                <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
+                  <source src="./cv-digital-products.mp4" type="video/mp4" />
+                </video>
+              </a>
+              <a class="title-hover-group" data-title-group="digital-products" href="${projectHref("frankie")}">digital products,</a>
+            </span>
+            <span class="hero-inline-group" data-title-group="brandings">
+              <a class="cv-title-thumb" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}" aria-label="View Diskrepancija Journal project">
+                <img src="publishing_diskrepancija/0_hero.jpg" alt="" />
+              </a>
+              <a class="title-hover-group" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}">brandings</a>
+              &
+            </span>
+            <span class="hero-inline-group" data-title-group="visual-assets">
+              <a class="cv-title-thumb" data-title-group="visual-assets" href="${projectHref("skola-grada")}" aria-label="View Škola grada project">
+                <img src="publishing_skola-grada/skola-grada-hero.jpg" alt="" />
+              </a>
+              <a class="title-hover-group" data-title-group="visual-assets" href="${projectHref("skola-grada")}">visual assets.</a>
+            </span>
           </span>
         </h1>
         <p class="lead">${portfolio.introSecond}</p>
-        <div class="summary-actions">
-          <a class="summary-link" href="https://chatgpt.com/?q=Give+me+a+concise%2C+well-sourced+summary+of+Teo+Peter%2C+a+graphic+designer+from+Zagreb.+Cover+his+projects%2C+put+focus+on+UX%2FUI+solution+and+branding+work%2C+previous+experience%2C+education%2C+and+notable+design+projects+as+well+as+published+research+articles+in+Acta+Graphica.+Make+it+short+and+helpful.&utm_source=chatgpt.com" target="_blank" rel="noopener noreferrer">
-            <img src="ai-icon.svg" alt="" />
-            <span>Get a summary</span>
-          </a>
-          <a class="summary-link" href="./ai-playground/index.html">
-            <span>AI Playground</span>
-          </a>
-          <a class="summary-link" href="./Teo_Peter_CV_26.pdf" download>
-            <span>Get CV</span>
-          </a>
-          <button class="summary-link copy-email-link" type="button" data-copy="teo_peter@outlook.com">
-            <span>Copy e-mail</span>
-          </button>
-        </div>
       </section>
 
       <div class="rest-of-content content-reveal">
@@ -679,9 +734,15 @@ function renderCv() {
             ${portfolio.experience
               .map(
                 (item) => `
-                  <article class="cv-item">
-                    <div>
-                      <h3>${item.title}</h3>
+                  <article class="cv-item experience-item">
+                    <div class="experience-visual">
+                      <img src="${item.image}" alt="${item.title}" loading="lazy" />
+                    </div>
+                    <div class="experience-copy">
+                      <div class="experience-title-row">
+                        <h3>${item.title}</h3>
+                        ${item.url ? `<a class="organization-link" href="${item.url}" target="_blank" rel="noopener noreferrer" aria-label="Visit ${item.title} website">↗</a>` : ""}
+                      </div>
                       <span class="cv-period">${item.period}</span>
                       <ul>
                         ${item.items.map((line) => `<li>${line}</li>`).join("")}
@@ -715,6 +776,51 @@ function renderCv() {
           </div>
         </section>
 
+        <section class="cv-section" aria-labelledby="languages-title">
+          <h2 id="languages-title">Languages</h2>
+          <div class="cv-list">
+            ${portfolio.languages
+              .map(
+                (item) => `
+                  <article class="cv-item">
+                    <div>
+                      <h3>${item.language}</h3>
+                      <span class="cv-period">${item.level}</span>
+                    </div>
+                  </article>
+                `
+              )
+              .join("")}
+          </div>
+        </section>
+
+        <section class="cv-section" aria-labelledby="volunteering-title">
+          <h2 id="volunteering-title">Volunteering</h2>
+          <div class="cv-list">
+            ${portfolio.volunteering
+              .map(
+                (item) => `
+                  <article class="cv-item experience-item">
+                    <div class="experience-visual">
+                      <img src="${item.image}" alt="${item.title}" loading="lazy" />
+                    </div>
+                    <div class="experience-copy">
+                      <div class="experience-title-row">
+                        <h3>${item.title}</h3>
+                        ${item.url ? `<a class="organization-link" href="${item.url}" target="_blank" rel="noopener noreferrer" aria-label="Visit ${item.title} website">↗</a>` : ""}
+                      </div>
+                      <span class="cv-period">${item.period}</span>
+                      <ul>
+                        ${item.items.map((line) => `<li>${line}</li>`).join("")}
+                      </ul>
+                    </div>
+                  </article>
+                `
+              )
+              .join("")}
+          </div>
+        </section>
+
         <section class="cv-section" aria-labelledby="latest-projects-title">
           <h2 id="latest-projects-title">Latest work</h2>
           <div class="works-grid">
@@ -726,9 +832,6 @@ function renderCv() {
   `;
 
   animateHeroTitle();
-
-  const bottomSwitch = document.querySelector(".bottom-switch");
-  if (bottomSwitch) bottomSwitch.classList.add("is-loaded");
 }
 
 function renderProjects() {
@@ -746,7 +849,7 @@ function renderProjects() {
   });
 
   app.innerHTML = `
-    <section class="view fade-in-section" aria-labelledby="projects-title">
+    <section class="view" aria-labelledby="projects-title">
       <div class="works-grid">
         ${renderWorkCards(filtered)}
       </div>
@@ -891,69 +994,79 @@ function route() {
   }
 
   updateSwitch();
-  setInitialSwitchWidth(); 
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({ top: 0, behavior: "instant" });
   app.focus({ preventScroll: true });
 }
 
-switchButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const nextView = button.dataset.view;
+bottomSwitch?.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return;
 
-    if (nextView === "projects") {
-      if (state.view === "project") {
-        window.location.href = "index.html#projects";
-        return;
-      }
+  const viewButton = event.target.closest("[data-view]");
+  if (!(viewButton instanceof HTMLButtonElement)) return;
 
-      state.view = "projects";
-      state.category = "All";
-      window.location.hash = "projects";
+  const nextView = viewButton.dataset.view;
+  if (nextView === "projects") {
+    if (state.view === "project") {
+      window.location.href = "index.html#projects";
       return;
     }
 
-    if (nextView === "cv") {
-      state.view = "cv";
-      window.location.hash = "cv";
+    state.category = "All";
+    if (window.location.hash === "#projects") {
+      renderProjects();
+      updateSwitch();
+      return;
     }
-
-    if (nextView === "blog") {
-      state.view = "blog";
-      window.location.hash = "blog";
-    }
-  });
+    window.location.hash = "projects";
+  } else if (nextView === "cv") {
+    window.location.hash = "cv";
+  } else if (nextView === "blog") {
+    window.location.hash = "blog";
+  }
 });
 
-categoryButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    state.category = button.dataset.category;
-    updateSwitch();
+categoryBar?.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return;
 
-    if (state.view === "projects") {
-      renderProjects();
-    }
-  });
+  const categoryButton = event.target.closest("[data-category]");
+  if (!(categoryButton instanceof HTMLButtonElement)) return;
+
+  state.category = categoryButton.dataset.category || "All";
+  renderProjects();
+  updateSwitch();
 });
 
 window.addEventListener("hashchange", route);
 let lastSwitchScrollY = window.scrollY;
+let scrollFrame = 0;
 
-window.addEventListener("scroll", () => {
-  const currentScrollY = window.scrollY;
-  const scrollDifference = currentScrollY - lastSwitchScrollY;
-  const bottomSwitch = document.querySelector(".bottom-switch");
+window.addEventListener(
+  "scroll",
+  () => {
+    if (scrollFrame) return;
 
-  if (currentScrollY <= 0) {
-    bottomSwitch?.classList.remove("is-scrolling-down");
-    lastSwitchScrollY = currentScrollY;
-    return;
-  }
+    scrollFrame = window.requestAnimationFrame(() => {
+      const currentScrollY = window.scrollY;
+      const scrollDifference = currentScrollY - lastSwitchScrollY;
 
-  if (Math.abs(scrollDifference) < 8) return;
+      if (currentScrollY <= 0) {
+        navigationStack?.classList.remove("is-scrolling-down");
+        lastSwitchScrollY = currentScrollY;
+        scrollFrame = 0;
+        return;
+      }
 
-  bottomSwitch?.classList.toggle("is-scrolling-down", scrollDifference > 0);
-  lastSwitchScrollY = currentScrollY;
-}, { passive: true });
+      if (Math.abs(scrollDifference) >= 8) {
+        const scrollingDown = scrollDifference > 0;
+        navigationStack?.classList.toggle("is-scrolling-down", scrollingDown);
+        lastSwitchScrollY = currentScrollY;
+      }
+
+      scrollFrame = 0;
+    });
+  },
+  { passive: true }
+);
 
 setProfileLinks();
 initCopyButtons();
@@ -961,33 +1074,6 @@ initCustomCursor();
 initBlogPostModalHandlers();
 route();
 initMultilingualGreeting();
-
-function setInitialSwitchWidth() {
-  const bottomSwitch = document.querySelector('.bottom-switch');
-  const switchCore = document.querySelector('.switch-core');
-
-  if (!bottomSwitch || !switchCore) return;
-
-  document.fonts.ready.then(() => {
-    const coreWidth = switchCore.getBoundingClientRect().width;
-    const styles = window.getComputedStyle(bottomSwitch);
-    const padding = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
-    const totalWidth = Math.ceil(coreWidth + padding) + 2;
-
-    bottomSwitch.style.setProperty('--initial-width', `${totalWidth}px`);
-  });
-}
-
-setInitialSwitchWidth();
-
-window.addEventListener("load", () => {
-  window.setTimeout(() => {
-    const bottomSwitch = document.querySelector(".bottom-switch");
-    if (bottomSwitch) {
-      bottomSwitch.classList.add("is-loaded");
-    }
-  }, 100); 
-});
 
 function initMultilingualGreeting() {
   const wordmark = document.querySelector('.wordmark');
