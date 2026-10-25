@@ -872,7 +872,6 @@ function renderBlog() {
       <div class="blog-list">
         <article class="blog-card blog-card-welcome">
           <div class="blog-card-content">
-            <p class="blog-card-meta">First note</p>
             <h2>Welcome to Notes</h2>
             <p>My place to share project updates, creative ideas, and my thoughts on branding, creativity, AI.</p>
           </div>
