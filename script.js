@@ -51,9 +51,17 @@ function makeLogoPlaceholder(label, background = "#f3efe9", accent = "#111111") 
 const portfolio = {
   name: "Teo Peter",
   intro:
-    "Hey, I am Teo Peter. I am a graphic engineer crafting digital products, brandings & visual assets.",
+    "Hey, I am Teo Peter. Graphic engineer moving between screens, paper, code, and socials.",
   introSecond:
     "",
+  // Logotipi u hero sekciji; logo je SVG u mapi logos/, url vodi na web stranicu projekta
+  clientLogos: [
+    { name: "INmusic festival", url: "https://www.inmusicfestival.com", logo: "logos/inmusic festival.svg" },
+    { name: "Kotsovolos", url: "https://www.kotsovolos.gr", logo: "logos/kotsovolos.svg" },
+    { name: "LeaseUp", url: "https://leaseup.co", logo: "logos/leaseup.svg" },
+    { name: "Sindikat biciklista", url: "https://www.sindikatbiciklista.hr", logo: "logos/sindikat-biciklista 1.svg" },
+    { name: "Studenac", url: "https://www.studenac.hr", logo: "logos/studenac 1.svg" },
+  ],
   email: "teo_peter@outlook.com",
   links: {
     linkedin: "https://www.linkedin.com/in/teo-peter-4516621a3/",
@@ -193,8 +201,8 @@ const works = [
     title: "Frankie",
     description: "UX/UI design and visual direction for an AI-powered student app.",
     note: [
-      "Frankie is an AI-powered student app. The project focuses on shaping its user experience and interface, alongside a visual direction for the product.",
-      "The gallery shows selected screens and visual explorations from the app.",
+      "Frankie gathers a student's day into a single feed: lectures, messages, events and campus life, surfaced by AI at the moment they matter.",
+      "The visual direction keeps it calm. Soft greys, generous spacing and a clear hierarchy let the assistant feel helpful rather than loud.",
     ],
     client: "AI powered student app",
     year: "2026",
@@ -218,8 +226,8 @@ const works = [
     title: "Škola grada",
     description: "Škola Grada (School of the City) is a multi-month interdisciplinary educational program organized by the Tomislav Gotovac Institute. Its visual identity is playful and dynamic, easily adaptable for online communication and promotion.",
     note: [
-      "Škola Grada is a multi-month interdisciplinary educational program organized by the Tomislav Gotovac Institute. Its visual identity uses a playful, dynamic language that can adapt across communication and promotional materials.",
-      "The project brings graphic design and animation together to support the program's varied formats.",
+      "The identity had to carry a programme that unfolds over months, with every lecture and event about Zagreb's architecture and urbanism needing its own announcement.",
+      "Bold letterforms and bright colour fields shift and rearrange in animation, keeping the system playful while staying instantly recognisable online.",
     ],
     client: "Tomislav Gotovac Institute",
     year: "2026",
@@ -240,8 +248,8 @@ const works = [
     title: "Diskrepancija Journal",
     description: "Student Journal for Social Sciences and Humanities",
     note: [
-      "Diskrepancija is a student journal for social sciences and humanities. This project focuses on the journal's visual direction and layout.",
-      "The gallery presents selected pages and spreads from the publication.",
+      "Diskrepancija gives students of the social sciences and humanities a place to publish their research, in print and with the care of a real journal.",
+      "The layout gives long academic texts room to breathe, while the cover, a grainy sculptural form on black, signals that the journal is anything but dry.",
     ],
     client: "Sociology Students Association",
     year: "2022",
@@ -264,8 +272,8 @@ const works = [
     title: "Look, the doors are open",
     description: "The poster promotes Marko Tadić's temporary memorial art intervention at the Rakov Potok park. The scattered layout of the text is designed to resemble the floor plan of a room which he constructed in the park. The rotated words purposely make viewers tilt their heads, mimicking the surprise of discovering a hidden space. ",
     note: [
-      "This poster promotes Marko Tadić's temporary memorial art intervention at Rakov Potok park. Its scattered text follows the floor plan of a room he constructed in the park.",
-      "Rotated words invite viewers to tilt their heads, echoing the surprise of discovering a hidden space.",
+      "Marko Tadić's temporary memorial intervention placed a room in the middle of Rakov Potok park, a space you could stumble upon and step into.",
+      "The poster borrows that room's floor plan. Words are scattered and rotated along its walls, so reading it means tilting your head, the same small surprise as discovering the room itself.",
     ],
     client: "Documenta",
     year: "2026",
@@ -286,8 +294,8 @@ const works = [
     title: "Split payments integration",
     description: "The goal was to build a checkout process that allows buyers to combine different payment methods for one order without disrupting the existing website.",
     note: [
-      "This checkout concept lets buyers combine different payment methods for a single order while preserving the existing website experience.",
-      "The project focuses on research and product design for a split-payments flow.",
+      "Buyers wanted to pay for a single order with more than one payment method, but the checkout only let them choose one.",
+      "Research and product design shaped a flow that slots into the existing website, so combining methods feels like a natural step rather than a new checkout.",
     ],
     client: "E-commerce Retailer",
     year: "2022",
@@ -310,8 +318,8 @@ const works = [
     title: "Who is Otti Berger?",
     description: "An exhibition shaped through fragments of life and work of Otti Berger",
     note: [
-      "This exhibition is shaped through fragments of Otti Berger's life and work.",
-      "Art direction and graphic design bring those fragments together across the exhibition materials.",
+      "Otti Berger, a textile artist trained at the Bauhaus, left behind a life and a body of work that survive only in fragments.",
+      "The art direction follows the same logic. Pieces are set side by side, leaving visitors to assemble her story for themselves.",
     ],
     client: "Tomislav Gotovac Institute",
     year: "2022",
@@ -337,8 +345,8 @@ const works = [
     client: "Jadrolinija",
     description: "Island hopping easier than ever before.",
     note: [
-      "Jadrolinija's digital experience is centered on making island hopping easier.",
-      "The project includes UX research, UI design, and prototyping.",
+      "Jadrolinija connects the Croatian mainland with its islands, and for most travellers the journey now starts on a phone: finding a line, buying a ticket, checking a departure.",
+      "UX research guided the new experience, and prototyping let ideas be tried before they were built, all to make island hopping feel effortless.",
     ],
     year: "2026",
     category: "App",
@@ -358,8 +366,8 @@ const works = [
     title: "Loyalty app for the biggest Croatian retailer",
     description: "Swipe the way to weekly coupons and deals: finding savings has never been easier or more fun.",
     note: [
-      "The Studenac loyalty app makes weekly coupons and deals easy to browse with a swipe.",
-      "Research, product design, and prototyping shape the app experience.",
+      "Studenac's loyalty app turns weekly coupons and deals into something closer to a game: swipe through the offers and keep the ones you want.",
+      "Research and prototyping shaped a flow quick enough for a store aisle and simple enough for every customer of the biggest Croatian retailer.",
     ],
     client: "Studenac",
     year: "2022",
@@ -480,22 +488,30 @@ function updateSwitch() {
   updateNavIndicators();
 }
 
+function renderWorkThumb(src, className, alt) {
+  if (!src) return "";
+  if (src.endsWith(".mp4")) {
+    return `
+      <video class="${className}" autoplay loop muted playsinline preload="metadata">
+        <source src="${src}" type="video/mp4">
+        Vaš pretraživač ne podržava video.
+      </video>
+    `;
+  }
+  return `<img class="${className}" src="${src}" alt="${alt}" aria-hidden="true">`;
+}
+
 function renderWorkCards(items) {
   return items
     .map((work) => {
-      const firstMedia = work.images[0];
-      let mediaHtml = "";
-
-      if (firstMedia && firstMedia.endsWith(".mp4")) {
-        mediaHtml = `
-          <video class="thumb" autoplay loop muted playsinline preload="metadata">
-            <source src="${firstMedia}" type="video/mp4">
-            Vaš pretraživač ne podržava video.
-          </video>
-        `;
-      } else {
-        mediaHtml = `<img class="thumb" src="${firstMedia}" alt="${work.title}" aria-hidden="true">`;
-      }
+      // Hover thumbnail je hero_B.png iz mape projekta; ako ga još nema, img se sam ukloni
+      const folder = work.images[0].slice(0, work.images[0].lastIndexOf("/"));
+      const mediaHtml = `
+        <div class="work-thumbs">
+          ${renderWorkThumb(work.images[0], "thumb", work.title)}
+          <img class="thumb thumb-hover" src="${folder}/hero_B.png" alt="" aria-hidden="true" onerror="this.remove()">
+        </div>
+      `;
 
       return `
         <a class="work-card" href="${projectHref(work.slug)}" aria-label="${work.title}, ${work.client}">
@@ -505,7 +521,7 @@ function renderWorkCards(items) {
               <h2>${work.title}</h2>
               <span class="project-year">${work.year}</span>
             </div>
-            <p class="client-line">${work.client}</p>
+            <p class="services-line">${work.services.join(", ")}</p>
           </div>
         </a>
       `;
@@ -684,33 +700,46 @@ function renderCv() {
     <article class="view cv-view fade-in-section" aria-labelledby="cv-title">
       <section class="cv-hero">
         <h1 id="cv-title">
-          <span class="hero-intro-line">Hi, I am Teo.</span>
+          <span class="hero-intro-line">Hey, I am Teo Peter.</span>
           <span class="hero-main-line">
-            Graphic engineer crafting
-            <span class="hero-inline-group" data-title-group="digital-products">
-              <a class="cv-title-thumb" data-title-group="digital-products" href="${projectHref("frankie")}" aria-label="View Frankie project">
+            Graphic engineer moving between
+            <span class="hero-inline-group" data-title-group="screens">
+              <a class="cv-title-thumb" data-title-group="screens" href="${projectHref("frankie")}" aria-label="View Frankie project">
                 <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
                   <source src="./cv-digital-products.mp4" type="video/mp4" />
                 </video>
               </a>
-              <a class="title-hover-group" data-title-group="digital-products" href="${projectHref("frankie")}">digital products,</a>
+              <a class="title-hover-group" data-title-group="screens" href="${projectHref("frankie")}">screens,</a>
             </span>
-            <span class="hero-inline-group" data-title-group="brandings">
-              <a class="cv-title-thumb" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}" aria-label="View Diskrepancija Journal project">
+            <span class="hero-inline-group" data-title-group="paper">
+              <a class="cv-title-thumb" data-title-group="paper" href="${projectHref("diskrepancija-journal")}" aria-label="View Diskrepancija Journal project">
                 <img src="publishing_diskrepancija/0_hero.jpg" alt="" />
               </a>
-              <a class="title-hover-group" data-title-group="brandings" href="${projectHref("diskrepancija-journal")}">brandings</a>
-              &
+              <a class="title-hover-group" data-title-group="paper" href="${projectHref("diskrepancija-journal")}">paper,</a>
             </span>
-            <span class="hero-inline-group" data-title-group="visual-assets">
-              <a class="cv-title-thumb" data-title-group="visual-assets" href="${projectHref("skola-grada")}" aria-label="View Škola grada project">
-                <img src="publishing_skola-grada/skola-grada-hero.jpg" alt="" />
+            <span class="hero-inline-group" data-title-group="code">
+              <a class="cv-title-thumb" data-title-group="code" href="${projectHref("split-payments")}" aria-label="View Split payments integration project">
+                <img src="web_split-payments/0_hero.jpg" alt="" />
               </a>
-              <a class="title-hover-group" data-title-group="visual-assets" href="${projectHref("skola-grada")}">visual assets.</a>
+              <a class="title-hover-group" data-title-group="code" href="${projectHref("split-payments")}">code,</a>
+              and socials.
             </span>
           </span>
         </h1>
-        <p class="lead">${portfolio.introSecond}</p>
+        <p class="hero-clients">
+          I worked on projects like
+          <span class="client-logo-slot">
+            ${portfolio.clientLogos
+              .map(
+                (client, index) => `
+                  <a class="client-logo${index === 0 ? " is-active" : ""}" ${client.url ? `href="${client.url}" target="_blank" rel="noopener noreferrer"` : ""}>
+                    <img src="${encodeURI(client.logo)}" alt="${client.name}" />
+                  </a>
+                `
+              )
+              .join("")}
+          </span>
+        </p>
       </section>
 
       <div class="rest-of-content content-reveal">
@@ -836,6 +865,26 @@ function renderCv() {
   `;
 
   animateHeroTitle();
+  startClientLogoRotation();
+}
+
+let clientLogoTimer = 0;
+
+function startClientLogoRotation() {
+  window.clearInterval(clientLogoTimer);
+  const logos = [...document.querySelectorAll(".client-logo")];
+  if (logos.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  let current = 0;
+  clientLogoTimer = window.setInterval(() => {
+    if (!logos[0].isConnected) {
+      window.clearInterval(clientLogoTimer);
+      return;
+    }
+    logos[current].classList.remove("is-active");
+    current = (current + 1) % logos.length;
+    logos[current].classList.add("is-active");
+  }, 2400);
 }
 
 function renderProjects() {
@@ -854,7 +903,7 @@ function renderProjects() {
 
   app.innerHTML = `
     <section class="view" aria-labelledby="projects-title">
-      <div class="works-grid">
+      <div class="works-grid works-grid--two">
         ${renderWorkCards(filtered)}
       </div>
     </section>
@@ -933,7 +982,8 @@ function renderProject(slug) {
     window.location.replace("index.html#projects");
     return;
   }
-  const nextProject = works[(projectIndex + 1 + works.length) % works.length];
+  // See more: sljedeća tri projekta po redu, kružno
+  const moreProjects = [1, 2, 3].map((offset) => works[(projectIndex + offset) % works.length]);
   state.view = "project";
   document.title = `${project.title} · Teo Peter`;
   removeProjectDescription();
@@ -954,68 +1004,107 @@ function renderProject(slug) {
   const img = project.images || [];
   const galleryLayout = project.galleryLayout || [2, 2, 1, 1, 1, 2, 1];
   let nextImageIndex = 1;
-  const galleryMarkup = galleryLayout
+  const galleryGroups = galleryLayout
     .map((groupSize) => {
-      const startIndex = nextImageIndex;
-      const group = img.slice(startIndex, startIndex + groupSize);
-      nextImageIndex += groupSize;
+    const startIndex = nextImageIndex;
+    const group = img.slice(startIndex, startIndex + groupSize);
+    nextImageIndex += groupSize;
 
-      const media = group
-        .map((src, index) =>
-          renderMedia(
-            src,
-            groupSize === 1 ? "gallery-main" : "",
-            `${project.title} detail ${startIndex + index}`
-          )
+    const media = group
+      .map((src, index) =>
+        renderMedia(
+          src,
+          groupSize === 1 ? "gallery-main" : "",
+          `${project.title} detail ${startIndex + index}`
         )
-        .join("");
+      )
+      .join("");
 
+      if (!media) return "";
       return groupSize === 1 ? media : `<div class="gallery-row">${media}</div>`;
     })
-    .join("");
+    .filter(Boolean);
+
+  // Tekstualne sekcije: prva ide odmah ispod hero slike, druga prije zadnje grupe galerije
+  const [firstStory, secondStory] = project.note || [];
+  if (secondStory && galleryGroups.length > 1) {
+    galleryGroups.splice(galleryGroups.length - 1, 0, renderProjectStory(secondStory));
+  }
 
   app.innerHTML = `
     <article class="view project-view fade-in-section" aria-labelledby="project-title">
       <section class="project-hero">
-        <h1 id="project-title">${project.title}</h1>
-        
-        <div class="project-gallery">
-          <dl class="project-meta-row" aria-label="Project details">
-            <div>
-              <dt>Client</dt>
-              <dd>${project.client}</dd>
-            </div>
-            <div>
-              <dt>Year</dt>
-              <dd>${project.year}</dd>
-            </div>
-            <div>
-              <dt>Services</dt>
-              <dd>${project.services.join(", ")}</dd>
-            </div>
-          </dl>
+        <header class="project-heading">
+          <h1 id="project-title">${project.title}</h1>
+          ${project.description ? `<p class="project-lede">${project.description}</p>` : ""}
+        </header>
 
-          <!-- 1. HERO -->
-          ${renderMedia(img[0], "gallery-main", `${project.title} hero 1`)}
-
-          <!-- Sivi kontejner s opisom točno ispod hero sekcije -->
-          <div class="project-description-box">
-            <p>${project.description || ""}</p>
+        <dl class="project-meta-row" aria-label="Project details">
+          <div>
+            <dt>Client</dt>
+            <dd>${project.client}</dd>
           </div>
+          <div>
+            <dt>Year</dt>
+            <dd>${project.year}</dd>
+          </div>
+          <div>
+            <dt>Services</dt>
+            <dd>${project.services.join(", ")}</dd>
+          </div>
+        </dl>
 
-          ${galleryMarkup}
+        <div class="project-gallery">
+          ${renderMedia(img[0], "gallery-main", `${project.title} hero 1`)}
+          ${firstStory ? renderProjectStory(firstStory) : ""}
+          ${galleryGroups.join("")}
         </div>
       </section>
 
-      <a class="next-project" href="${projectHref(nextProject.slug)}">
-        <span>
-          <span class="next-kicker">Next project</span>
-          <strong id="next-project-title">${nextProject.title}</strong>
-        </span>
-        <span class="arrow" aria-hidden="true">→</span>
-      </a>
+      <section class="project-more" aria-labelledby="project-more-title">
+        <h2 id="project-more-title">See more</h2>
+        <div class="works-grid">
+          ${renderWorkCards(moreProjects)}
+        </div>
+      </section>
     </article>
   `;
+
+  updateProjectStories();
+}
+
+function renderProjectStory(text) {
+  const words = text
+    .trim()
+    .split(/\s+/)
+    .map((word) => `<span class="story-word">${word}</span>`)
+    .join(" ");
+
+  return `
+    <section class="project-story">
+      <div class="project-story-pin">
+        <p class="project-story-text">${words}</p>
+      </div>
+    </section>
+  `;
+}
+
+// Dok je sekcija zakačena, riječi se redom pune crnom bojom prema napretku scrolla
+function updateProjectStories() {
+  const viewportHeight = window.innerHeight;
+
+  document.querySelectorAll(".project-story").forEach((story) => {
+    const words = story.querySelectorAll(".story-word");
+    const scrollable = story.offsetHeight - viewportHeight;
+    const progress =
+      scrollable > 0 ? Math.min(Math.max(-story.getBoundingClientRect().top / scrollable, 0), 1) : 1;
+    // Ispuna završava malo prije kraja da tekst ostane potpuno crn prije odlaska
+    const filledCount = Math.round(Math.min(progress / 0.8, 1) * words.length);
+
+    words.forEach((word, index) => {
+      word.classList.toggle("is-filled", index < filledCount);
+    });
+  });
 }
 
 function route() {
@@ -1070,6 +1159,7 @@ bottomSwitch?.addEventListener("click", (event) => {
 categoryBar?.addEventListener("click", (event) => {
   if (!(event.target instanceof Element)) return;
 
+
   const categoryButton = event.target.closest("[data-category]");
   if (!(categoryButton instanceof HTMLButtonElement)) return;
 
@@ -1080,6 +1170,8 @@ categoryBar?.addEventListener("click", (event) => {
 
 window.addEventListener("hashchange", route);
 window.addEventListener("resize", updateNavIndicators);
+window.addEventListener("resize", updateProjectStories);
+window.addEventListener("scroll", updateProjectStories, { passive: true });
 document.fonts?.ready.then(updateNavIndicators);
 createNavIndicator(bottomSwitch);
 createNavIndicator(categoryBar);
