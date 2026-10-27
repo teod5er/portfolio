@@ -197,6 +197,17 @@ const portfolio = {
 
 const works = [
   {
+    slug: "vlado-marek",
+    title: "Website for the biggest Croatian artist Vlado Marek",
+    // comingSoon: prikazuje se samo na popisu radova, bez stranice projekta i bez linka
+    comingSoon: true,
+    client: "Vlado Marek",
+    year: "2026",
+    category: "Web",
+    services: ["Coming soon"],
+    images: ["web_vlado-marek/hero_0.png"],
+  },
+  {
     slug: "frankie",
     title: "Frankie",
     description: "UX/UI design and visual direction for an AI-powered student app.",
@@ -249,7 +260,7 @@ const works = [
     description: "Student Journal for Social Sciences and Humanities",
     note: [
       "Diskrepancija gives students of the social sciences and humanities a place to publish their research, in print and with the care of a real journal.",
-      "The layout gives long academic texts room to breathe, while the cover, a grainy sculptural form on black, signals that the journal is anything but dry.",
+      "The cover, a grainy roll of toilet paper on black, nods to 2020 and the pandemic rush on paper, a symbol of that strange time.",
     ],
     client: "Sociology Students Association",
     year: "2022",
@@ -501,9 +512,33 @@ function renderWorkThumb(src, className, alt) {
   return `<img class="${className}" src="${src}" alt="${alt}" aria-hidden="true">`;
 }
 
+// Radovi koji imaju svoju stranicu (bez onih koji tek dolaze)
+const publishedWorks = works.filter((work) => !work.comingSoon);
+
 function renderWorkCards(items) {
   return items
     .map((work) => {
+      if (work.comingSoon) {
+        // Ako thumbnail nedostaje, ostaje prazna ploha s natpisom; hero_B se prikazuje na hover kao kod ostalih
+        const folder = work.images[0].slice(0, work.images[0].lastIndexOf("/"));
+        return `
+          <div class="work-card is-coming-soon">
+            <div class="work-thumbs">
+              <span class="coming-soon-label">Coming soon</span>
+              <img class="thumb" src="${work.images[0]}" alt="" aria-hidden="true" onerror="this.remove()">
+              <img class="thumb thumb-hover" src="${folder}/hero_B.png" alt="" aria-hidden="true" onerror="this.remove()">
+            </div>
+            <div class="work-card-copy">
+              <div class="work-title-row">
+                <h2>${work.title}</h2>
+                <span class="project-year">${work.year}</span>
+              </div>
+              <p class="services-line">${work.services.join(", ")}</p>
+            </div>
+          </div>
+        `;
+      }
+
       // Hover thumbnail je hero_B.png iz mape projekta; ako ga još nema, img se sam ukloni
       const folder = work.images[0].slice(0, work.images[0].lastIndexOf("/"));
       const mediaHtml = `
@@ -722,12 +757,12 @@ function renderCv() {
                 <img src="web_split-payments/0_hero.jpg" alt="" />
               </a>
               <a class="title-hover-group" data-title-group="code" href="${projectHref("split-payments")}">code,</a>
-              and socials.
             </span>
+            <span class="hero-nowrap">and socials.</span>
           </span>
         </h1>
         <p class="hero-clients">
-          I worked on projects like
+          I worked on projects for clients like
           <span class="client-logo-slot">
             ${portfolio.clientLogos
               .map(
@@ -857,7 +892,7 @@ function renderCv() {
         <section class="cv-section" aria-labelledby="latest-projects-title">
           <h2 id="latest-projects-title">Latest work</h2>
           <div class="works-grid">
-            ${renderWorkCards(works.slice(0, 2))}
+            ${renderWorkCards(publishedWorks.slice(0, 2))}
           </div>
         </section>
       </div>
@@ -976,14 +1011,16 @@ async function renderNotes() {
 }
 
 function renderProject(slug) {
-  const projectIndex = works.findIndex((work) => work.slug === slug);
-  const project = works[projectIndex];
+  const projectIndex = publishedWorks.findIndex((work) => work.slug === slug);
+  const project = publishedWorks[projectIndex];
   if (!project) {
     window.location.replace("index.html#projects");
     return;
   }
   // See more: sljedeća tri projekta po redu, kružno
-  const moreProjects = [1, 2, 3].map((offset) => works[(projectIndex + offset) % works.length]);
+  const moreProjects = [1, 2, 3].map(
+    (offset) => publishedWorks[(projectIndex + offset) % publishedWorks.length]
+  );
   state.view = "project";
   document.title = `${project.title} · Teo Peter`;
   removeProjectDescription();

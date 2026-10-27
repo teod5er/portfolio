@@ -17,6 +17,8 @@
   --page-bg: #e2e2e2;
   --container-bg: rgb(243 243 243);
   --frame: 7.5vw;
+  /* Zajednička veličina velikih naslova: About hero, naslov projekta, Notes */
+  --title-size: clamp(40px, 5.2vw, 90px);
   --muted-soft: #a6a6a6;
   --font-family: "Moderat Medium", "Segoe UI", sans-serif;
   --font-size: clamp(17px, 1.35vw, 24px);
@@ -139,6 +141,8 @@ main {
 
 .cv-view {
   display: grid;
+  /* minmax(0, 1fr) da dugi sadržaj ne proširi stupac preko containera */
+  grid-template-columns: minmax(0, 1fr);
   gap: 8vh;
   min-height: 100vh;
 }
@@ -151,7 +155,7 @@ main {
   /* Hero ispunjava vidljivi dio containera, tekst stoji gore lijevo */
   min-height: calc(100vh - var(--frame) * 2 - var(--shell-padding) * 2);
   min-height: calc(100svh - var(--frame) * 2 - var(--shell-padding) * 2);
-  font-size: clamp(40px, 5.2vw, 90px);
+  font-size: var(--title-size);
   width: 100%;
   max-width: none;
   margin-bottom: 0.7em;
@@ -199,6 +203,7 @@ h3 {
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
+  max-width: 80%;
   gap: 0.08em;
   line-height: 0.96;
   letter-spacing: 0;
@@ -209,6 +214,11 @@ h3 {
 .hero-main-line {
   display: block;
   text-align: left;
+}
+
+/* Drži riječi zajedno da zadnja riječ ne ostane sama u retku */
+.hero-nowrap {
+  white-space: nowrap;
 }
 
 .hero-main-line {
@@ -596,8 +606,8 @@ h3 {
 
 .blog-header h1 {
   margin-bottom: 16px;
-  font-size: clamp(48px, 8vw, 112px);
-  line-height: 0.95;
+  font-size: var(--title-size);
+  line-height: 0.96;
 }
 
 .blog-header > p:last-child {
@@ -756,6 +766,25 @@ h3 {
   position: relative;
 }
 
+/* Rad koji tek dolazi: ploha s natpisom dok nema thumbnaila, nije klikabilan */
+.work-card.is-coming-soon .work-thumbs {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  border-radius: 4px;
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.work-card.is-coming-soon .thumb {
+  position: absolute;
+  inset: 0;
+}
+
+.coming-soon-label {
+  color: var(--muted);
+}
+
 .thumb.thumb-hover {
   position: absolute;
   inset: 0;
@@ -820,7 +849,7 @@ h3 {
   display: grid;
   gap: 0;
   padding-bottom: clamp(96px, 16vw, 280px);
-  font-size: clamp(40px, 5.2vw, 90px);
+  font-size: var(--title-size);
   line-height: 0.96;
 }
 
@@ -1199,7 +1228,7 @@ h3 {
   padding-left: 8px;
   padding-right: 8px;
   background: transparent;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .project-info-modal {
@@ -1384,6 +1413,12 @@ h3 {
 }
 
 @media (max-width: 920px) {
+  /* Na tabletu i mobitelu hero ne puni ekran, sadržaj ispod slijedi odmah */
+  .cv-hero {
+    min-height: 0;
+    margin-bottom: 48px;
+  }
+
   .cv-section,
   .project-gallery,
   .skill-columns {
@@ -1406,20 +1441,27 @@ h3 {
 
 @media (max-width: 680px) {
   :root {
-    --frame: 0px;
-    --page-bg: var(--container-bg);
+    --title-size: clamp(32px, 9vw, 56px);
+    --frame: 1em;
   }
 
-  .site-shell {
-    border-radius: 0;
+  /* Na najužim ekranima logo prelazi ispod teksta */
+  .hero-clients {
+    flex-wrap: wrap;
+    gap: 0.4em;
+  }
+
+  .client-logo img {
+    height: 1.3em;
   }
 
   :root {
     --font-size: 20px;
   }
 
+  /* Na mobitelu je unutarnji padding i svi razmaci jednak vanjskoj margini (1em) */
   .site-shell {
-    --shell-padding: 0.6em;
+    --shell-padding: var(--frame);
   }
 
   .project-info-modal {
@@ -1447,9 +1489,14 @@ h3 {
     grid-template-columns: 1fr;
   }
 
+  .project-gallery,
+  .gallery-row {
+    gap: var(--shell-padding);
+  }
+
   .blog-card {
     grid-template-columns: 1fr;
-    gap: 18px;
+    gap: var(--shell-padding);
   }
 
   .blog-card-image {
@@ -1463,14 +1510,11 @@ h3 {
 
   .site-footer {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: var(--shell-padding);
   }
 
-  .cv-hero {
-    font-size: clamp(32px, 9vw, 56px);
-    width: 100%;
+  #cv-title {
     max-width: none;
-    min-height: clamp(320px, 55vh, 480px);
   }
 
   .hero-main-line {
@@ -1480,15 +1524,6 @@ h3 {
 
   .hero-inline-group {
     display: inline-flex;
-  }
-
-  .cv-title-thumb {
-    width: 0.95em;
-    height: 0.62em;
-  }
-
-  .project-heading {
-    font-size: clamp(32px, 9vw, 56px);
   }
 
   .project-story {
@@ -1508,7 +1543,7 @@ h3 {
   }
 
   .works-grid {
-    gap: 36px;
+    gap: var(--shell-padding);
   }
 
   .experience-item {
@@ -1557,7 +1592,7 @@ h3 {
     display: inline-flex;
     justify-content: center;
     width: max-content;
-    max-width: calc(100% - 24px);
+    max-width: 100%;
   }
 
   .switch-core {
@@ -1598,6 +1633,7 @@ h3 {
 
 .preview-link {
   position: relative;
+  overflow-wrap: anywhere;
   text-decoration: none;
   background-image: linear-gradient(currentColor, currentColor);
   background-position: 0 100%;
