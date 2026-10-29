@@ -618,24 +618,21 @@ function animateHeroTitle() {
     !hasAnimatedIntro && splashScreen && getComputedStyle(splashScreen).visibility !== "hidden"
       ? 700
       : 0;
-  title.style.setProperty("--hero-initial-delay", `${initialDelay}ms`);
   hasAnimatedIntro = true;
 
+  // Svaka riječ dobiva hero-word span (za hover), a svako slovo hero-char span koji se otkriva tipkanjem
   const walker = document.createTreeWalker(title, NodeFilter.SHOW_TEXT);
   const textNodes = [];
   while (walker.nextNode()) textNodes.push(walker.currentNode);
 
-  let wordIndex = 0;
+  const chars = [];
   textNodes.forEach((textNode) => {
-    // Riječ koja se tipka animira se kao cjelina, ne dijeli se na hero-word spanove
-    const typed = textNode.parentElement.closest(".hero-typed");
-    if (typed) {
-      typed.classList.add("hero-word");
-      typed.style.setProperty("--word-index", wordIndex++);
-      return;
-    }
+    const parent = textNode.parentElement;
+    const group = parent.closest("[data-title-group]")?.dataset.titleGroup;
+    // "engineer" već ima svoj span (.hero-typed) koji služi kao riječ
+    const typed = parent.closest(".hero-typed");
+    if (typed) typed.classList.add("hero-word");
 
-    const group = textNode.parentElement.closest("[data-title-group]")?.dataset.titleGroup;
     const fragment = document.createDocumentFragment();
     textNode.textContent.split(/(\s+)/).forEach((part) => {
       if (!part.trim()) {
@@ -643,36 +640,82 @@ function animateHeroTitle() {
         return;
       }
 
-      const word = document.createElement("span");
-      word.className = "hero-word";
-      if (group) word.dataset.titleGroup = group;
-      word.style.setProperty("--word-index", wordIndex++);
-      word.textContent = part;
-      fragment.append(word);
+      let word = fragment;
+      if (!typed) {
+        word = document.createElement("span");
+        word.className = "hero-word";
+        if (group) word.dataset.titleGroup = group;
+        fragment.append(word);
+      }
+
+      [...part].forEach((letter) => {
+        const char = document.createElement("span");
+        char.className = "hero-char is-pending";
+        char.textContent = letter;
+        word.append(char);
+        chars.push({ el: char, group, main: Boolean(parent.closest(".hero-main-line")) });
+      });
     });
     textNode.replaceWith(fragment);
   });
 
-  startHeroTyping(title, initialDelay + 1800);
+  title.querySelectorAll(".cv-title-thumb").forEach((thumb) => thumb.classList.add("is-pending"));
+
+  startHeroTyping(title, chars, initialDelay);
 }
 
-// Cursor briše trenutnu riječ i tipka sljedeću (engineer ↔ designer)
-function startHeroTyping(title, startDelay) {
+// Tipka naslov slovo po slovo, a zatim cursor prelazi na "engineer" i izmjenjuje engineer ↔ designer
+function startHeroTyping(title, chars, startDelay) {
   const typed = title.querySelector(".hero-typed");
   const textEl = typed?.querySelector(".hero-typed-text");
-  if (!typed || !textEl) return;
-
-  const words = typed.dataset.typedWords.split(",");
-  let wordIndex = 0;
-  let text = words[0];
+  if (!chars.length) return;
 
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const setTyping = (isTyping) => title.classList.toggle("is-typing", isTyping);
 
-  const run = async () => {
-    await wait(startDelay);
-    while (typed.isConnected) {
-      typed.classList.add("is-typing");
-      while (text.length && typed.isConnected) {
+  const cursor = document.createElement("span");
+  cursor.className = "hero-cursor";
+  cursor.setAttribute("aria-hidden", "true");
+  chars[0].el.before(cursor);
+
+  const typeTitle = async () => {
+    await wait(startDelay + 400);
+    setTyping(true);
+
+    let wasMain = false;
+    for (const { el, group, main } of chars) {
+      if (!title.isConnected) return false;
+      // Kratka pauza između "Hey, I am Teo Peter." i ostatka
+      if (main && !wasMain) {
+        setTyping(false);
+        await wait(600);
+        setTyping(true);
+      }
+      wasMain = main;
+
+      if (group) title.querySelector(`.cv-title-thumb[data-title-group="${group}"]`)?.classList.remove("is-pending");
+      el.classList.remove("is-pending");
+      el.after(cursor);
+      await wait(/[.,]/.test(el.textContent) ? 220 : 35 + Math.random() * 45);
+    }
+
+    setTyping(false);
+    return true;
+  };
+
+  const cycleWord = async () => {
+    if (!typed || !textEl) return;
+    await wait(1400);
+    textEl.after(cursor);
+
+    const words = typed.dataset.typedWords.split(",");
+    let wordIndex = 0;
+    let text = words[0];
+
+    while (title.isConnected) {
+      await wait(1200);
+      setTyping(true);
+      while (text.length && title.isConnected) {
         text = text.slice(0, -1);
         textEl.textContent = text;
         await wait(70);
@@ -680,17 +723,17 @@ function startHeroTyping(title, startDelay) {
       await wait(300);
       wordIndex = (wordIndex + 1) % words.length;
       const next = words[wordIndex];
-      while (text.length < next.length && typed.isConnected) {
+      while (text.length < next.length && title.isConnected) {
         text = next.slice(0, text.length + 1);
         textEl.textContent = text;
         await wait(110);
       }
-      typed.classList.remove("is-typing");
-      await wait(2600);
+      setTyping(false);
+      await wait(1400);
     }
   };
 
-  run();
+  typeTitle().then((finished) => finished && cycleWord());
 }
 
 function renderBlogPostModal(project) {
@@ -751,7 +794,7 @@ function renderCv() {
         <h1 id="cv-title">
           <span class="hero-intro-line">Hey, I am Teo Peter.</span>
           <span class="hero-main-line">
-            Graphic <span class="hero-typed" data-typed-words="engineer,designer"><span class="hero-typed-text">engineer</span><span class="hero-cursor" aria-hidden="true"></span></span> moving between
+            Graphic <span class="hero-typed" data-typed-words="engineer,designer"><span class="hero-typed-text">engineer</span></span> moving between
             <span class="hero-inline-group" data-title-group="screens">
               <a class="cv-title-thumb" data-title-group="screens" href="${projectHref("jadrolinija")}" aria-label="View Jadrolinija project">
                 <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">

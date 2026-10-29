@@ -14,7 +14,7 @@
   --panel: #f4f2ec;
   --accent: #ff3800;
   --stroke: #b3b3b3;
-  --page-bg: #e2e2e2;
+  --page-bg: #ebebeb;
   --frame: 7.5vw;
   /* Zajednička veličina velikih naslova: About hero, naslov projekta, Notes */
   --title-size: clamp(40px, 5.2vw, 90px);
@@ -247,7 +247,11 @@ h3 {
   vertical-align: -0.05em;
   box-shadow: 0 0 0 transparent;
   transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow 220ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 300ms ease;
+}
+
+.cv-title-thumb.is-pending {
+  opacity: 0;
 }
 
 .cv-title-thumb img,
@@ -348,8 +352,6 @@ h3 {
 
 .hero-word {
   display: inline-block;
-  animation: heroWordReveal 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--hero-initial-delay, 0ms) + var(--word-index) * 28ms);
   transition: color 180ms ease;
 }
 
@@ -381,18 +383,32 @@ h3 {
   white-space: nowrap;
 }
 
+.hero-char.is-pending {
+  visibility: hidden;
+}
+
+/* Cursor nema širinu pa pomicanje kroz tekst ne pomiče slova */
 .hero-cursor {
+  position: relative;
   display: inline-block;
-  width: 0.06em;
+  width: 0;
   height: 0.9em;
-  margin-left: 0.04em;
   vertical-align: -0.08em;
+}
+
+.hero-cursor::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0.02em;
+  width: 0.06em;
+  height: 100%;
   background: currentColor;
   animation: heroCursorBlink 1s steps(1) infinite;
 }
 
 /* Dok tipka, cursor ne treperi */
-.hero-typed.is-typing .hero-cursor {
+#cv-title.is-typing .hero-cursor::after {
   animation: none;
 }
 
@@ -1644,19 +1660,6 @@ h3 {
     opacity: 1;
     filter: blur(0);
     visibility: visible;
-  }
-}
-
-@keyframes heroWordReveal {
-  from {
-    opacity: 0;
-    filter: blur(8px);
-    transform: translateY(0.3em);
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-    transform: translateY(0);
   }
 }
 
