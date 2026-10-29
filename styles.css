@@ -271,44 +271,6 @@ h3 {
   outline-offset: 3px;
 }
 
-.hero-clients {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6em;
-  margin: 0;
-  color: var(--muted);
-  font-size: var(--font-size);
-  line-height: 1.2;
-}
-
-/* Svi logotipi leže u istoj ćeliji, vidljiv je samo aktivni */
-.client-logo-slot {
-  display: inline-grid;
-}
-
-.client-logo {
-  grid-area: 1 / 1;
-  display: flex;
-  align-items: center;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(6px);
-  transition: opacity 320ms ease, transform 320ms ease, visibility 0s 320ms;
-}
-
-.client-logo.is-active {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition: opacity 320ms ease, transform 320ms ease;
-}
-
-.client-logo img {
-  display: block;
-  width: auto;
-  height: 1.6em;
-}
-
 .lead {
   max-width: 760px;
   margin-bottom: 0;
@@ -1443,16 +1405,6 @@ h3 {
   :root {
     --title-size: clamp(32px, 9vw, 56px);
     --frame: 1em;
-  }
-
-  /* Na najužim ekranima logo prelazi ispod teksta */
-  .hero-clients {
-    flex-wrap: wrap;
-    gap: 0.4em;
-  }
-
-  .client-logo img {
-    height: 1.3em;
   }
 
   :root {

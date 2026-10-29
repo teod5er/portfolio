@@ -54,14 +54,6 @@ const portfolio = {
     "Hey, I am Teo Peter. Graphic engineer moving between screens, paper, code, and socials.",
   introSecond:
     "",
-  // Logotipi u hero sekciji; logo je SVG u mapi logos/, url vodi na web stranicu projekta
-  clientLogos: [
-    { name: "INmusic festival", url: "https://www.inmusicfestival.com", logo: "logos/inmusic festival.svg" },
-    { name: "Kotsovolos", url: "https://www.kotsovolos.gr", logo: "logos/kotsovolos.svg" },
-    { name: "LeaseUp", url: "https://leaseup.co", logo: "logos/leaseup.svg" },
-    { name: "Sindikat biciklista", url: "https://www.sindikatbiciklista.hr", logo: "logos/sindikat-biciklista 1.svg" },
-    { name: "Studenac", url: "https://www.studenac.hr", logo: "logos/studenac 1.svg" },
-  ],
   email: "teo_peter@outlook.com",
   links: {
     linkedin: "https://www.linkedin.com/in/teo-peter-4516621a3/",
@@ -72,7 +64,7 @@ const portfolio = {
       title: "Sawraft Studio",
       url: "https://www.sawraft.com",
       image: "sawraft.png",
-      clients: ["Frankie", "Nexa", "Studio North"],
+      clients: ["Nexa", "Studio North"],
       items: [
         "&nbsp; ",
         "User interfaces — from research to prototyping",
@@ -206,31 +198,6 @@ const works = [
     category: "Web",
     services: ["Coming soon"],
     images: ["web_vlado-marek/hero_0.png"],
-  },
-  {
-    slug: "frankie",
-    title: "Frankie",
-    description: "UX/UI design and visual direction for an AI-powered student app.",
-    note: [
-      "Frankie gathers a student's day into a single feed: lectures, messages, events and campus life, surfaced by AI at the moment they matter.",
-      "The visual direction keeps it calm. Soft greys, generous spacing and a clear hierarchy let the assistant feel helpful rather than loud.",
-    ],
-    client: "AI powered student app",
-    year: "2026",
-    category: "App",
-    services: ["UX/UI design", "Visual direction"],
-    galleryLayout: [2, 2, 1, 1, 2],
-    images: [
-      "app_frankie/0_hero.jpg",
-      "app_frankie/1a.jpg",
-      "app_frankie/1b.jpg",
-      "app_frankie/2a.jpg",
-      "app_frankie/2b.jpg",
-      "app_frankie/3a.jpg",
-      "app_frankie/3b.jpg",
-      "app_frankie/4a.jpg",
-      "app_frankie/4b.jpg",
-    ],
   },
   {
     slug: "skola-grada",
@@ -739,12 +706,12 @@ function renderCv() {
           <span class="hero-main-line">
             Graphic engineer moving between
             <span class="hero-inline-group" data-title-group="screens">
-              <a class="cv-title-thumb" data-title-group="screens" href="${projectHref("frankie")}" aria-label="View Frankie project">
+              <a class="cv-title-thumb" data-title-group="screens" href="${projectHref("jadrolinija")}" aria-label="View Jadrolinija project">
                 <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
                   <source src="./cv-digital-products.mp4" type="video/mp4" />
                 </video>
               </a>
-              <a class="title-hover-group" data-title-group="screens" href="${projectHref("frankie")}">screens,</a>
+              <a class="title-hover-group" data-title-group="screens" href="${projectHref("jadrolinija")}">screens,</a>
             </span>
             <span class="hero-inline-group" data-title-group="paper">
               <a class="cv-title-thumb" data-title-group="paper" href="${projectHref("diskrepancija-journal")}" aria-label="View Diskrepancija Journal project">
@@ -761,20 +728,6 @@ function renderCv() {
             <span class="hero-nowrap">and socials.</span>
           </span>
         </h1>
-        <p class="hero-clients">
-          I worked on projects for clients like
-          <span class="client-logo-slot">
-            ${portfolio.clientLogos
-              .map(
-                (client, index) => `
-                  <a class="client-logo${index === 0 ? " is-active" : ""}" ${client.url ? `href="${client.url}" target="_blank" rel="noopener noreferrer"` : ""}>
-                    <img src="${encodeURI(client.logo)}" alt="${client.name}" />
-                  </a>
-                `
-              )
-              .join("")}
-          </span>
-        </p>
       </section>
 
       <div class="rest-of-content content-reveal">
@@ -900,26 +853,6 @@ function renderCv() {
   `;
 
   animateHeroTitle();
-  startClientLogoRotation();
-}
-
-let clientLogoTimer = 0;
-
-function startClientLogoRotation() {
-  window.clearInterval(clientLogoTimer);
-  const logos = [...document.querySelectorAll(".client-logo")];
-  if (logos.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-  let current = 0;
-  clientLogoTimer = window.setInterval(() => {
-    if (!logos[0].isConnected) {
-      window.clearInterval(clientLogoTimer);
-      return;
-    }
-    logos[current].classList.remove("is-active");
-    current = (current + 1) % logos.length;
-    logos[current].classList.add("is-active");
-  }, 2400);
 }
 
 function renderProjects() {
