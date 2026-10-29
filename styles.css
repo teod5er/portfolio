@@ -377,6 +377,31 @@ h3 {
   transform: scale(1.18) rotate(-3deg);
 }
 
+.hero-typed {
+  white-space: nowrap;
+}
+
+.hero-cursor {
+  display: inline-block;
+  width: 0.06em;
+  height: 0.9em;
+  margin-left: 0.04em;
+  vertical-align: -0.08em;
+  background: currentColor;
+  animation: heroCursorBlink 1s steps(1) infinite;
+}
+
+/* Dok tipka, cursor ne treperi */
+.hero-typed.is-typing .hero-cursor {
+  animation: none;
+}
+
+@keyframes heroCursorBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
 .content-reveal {
   animation: contentReveal 900ms cubic-bezier(0.22, 1, 0.36, 1) 650ms both;
 }
@@ -1000,6 +1025,9 @@ h3 {
 
 .navigation-stack {
   --switch-scale: 1;
+  /* Zajednički unutarnji razmak za navigacijsku traku i traku za filtriranje */
+  --switch-pad: 8px;
+  --switch-gap: 4px;
   position: fixed;
   z-index: 10;
   left: 50%;
@@ -1039,13 +1067,12 @@ h3 {
   display: inline-flex;
   align-items: center;
   border: 0;
-  --switch-pad: 8px;
   --switch-inner-radius: 8px;
   border-radius: calc(var(--switch-inner-radius) + var(--switch-pad));
   padding: var(--switch-pad);
   background: #000;
   color: #fff;
-  gap: 0;
+  gap: var(--switch-gap);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   width: max-content;
@@ -1064,10 +1091,10 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--switch-gap);
   width: max-content;
   max-width: calc(100vw - 24px);
-  padding: 5px;
+  padding: var(--switch-pad);
   overflow-x: auto;
   border: 0;
   border-radius: 999px;
@@ -1099,14 +1126,14 @@ h3 {
 .switch-core {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--switch-gap);
   flex-shrink: 0;
 }
 
 .category-bar {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--switch-gap);
 }
 
 .category-bar button {
@@ -1528,6 +1555,10 @@ h3 {
     transform: translateX(-50%) scale(var(--switch-scale));
   }
 
+  .navigation-stack {
+    --switch-pad: 6px;
+  }
+
   .navigation-stack.is-loaded:hover {
     --switch-scale: 1;
   }
@@ -1537,7 +1568,6 @@ h3 {
   }
 
   .bottom-switch {
-    --switch-pad: 6px;
     --switch-inner-radius: 8px;
     display: inline-flex;
     justify-content: center;
@@ -1548,7 +1578,6 @@ h3 {
   .switch-core {
     display: flex;
     width: auto;
-    gap: 4px;
   }
 
   .bottom-switch .switch-button {
@@ -1562,7 +1591,6 @@ h3 {
     width: max-content;
     max-width: calc(100vw - 24px);
     justify-content: space-between;
-    gap: 2px;
     scrollbar-width: none;
   }
 
@@ -1633,6 +1661,10 @@ h3 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-cursor {
+    display: none;
+  }
+
   .project-story {
     height: auto;
     padding: clamp(64px, 10vw, 160px) 0;

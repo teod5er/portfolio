@@ -190,7 +190,7 @@ const portfolio = {
 const works = [
   {
     slug: "vlado-marek",
-    title: "Website for the biggest Croatian artist Vlado Marek",
+    title: "Website for Croatian artist Vlado Marek",
     // comingSoon: prikazuje se samo na popisu radova, bez stranice projekta i bez linka
     comingSoon: true,
     client: "Vlado Marek",
@@ -202,10 +202,10 @@ const works = [
   {
     slug: "skola-grada",
     title: "Škola grada",
-    description: "Škola Grada (School of the City) is a multi-month interdisciplinary educational program organized by the Tomislav Gotovac Institute. Its visual identity is playful and dynamic, easily adaptable for online communication and promotion.",
+    description: "Škola Grada (School of the City) is a months-long program about Zagreb, run by the Tomislav Gotovac Institute. Its identity is playful and made to work online.",
     note: [
-      "The identity had to carry a programme that unfolds over months, with every lecture and event about Zagreb's architecture and urbanism needing its own announcement.",
-      "Bold letterforms and bright colour fields shift and rearrange in animation, keeping the system playful while staying instantly recognisable online.",
+      "The program runs for months, and every lecture and event needs its own announcement.",
+      "Bold letters and bright colours move around in animation. Playful, but always easy to recognise.",
     ],
     client: "Tomislav Gotovac Institute",
     year: "2026",
@@ -226,8 +226,8 @@ const works = [
     title: "Diskrepancija Journal",
     description: "Student Journal for Social Sciences and Humanities",
     note: [
-      "Diskrepancija gives students of the social sciences and humanities a place to publish their research, in print and with the care of a real journal.",
-      "The cover, a grainy roll of toilet paper on black, nods to 2020 and the pandemic rush on paper, a symbol of that strange time.",
+      "A printed journal where social science and humanities students publish their research.",
+      "The cover, a roll of toilet paper on black, points to 2020 and the pandemic panic buying.",
     ],
     client: "Sociology Students Association",
     year: "2022",
@@ -248,10 +248,10 @@ const works = [
   {
     slug: "look-the-doors-are-open",
     title: "Look, the doors are open",
-    description: "The poster promotes Marko Tadić's temporary memorial art intervention at the Rakov Potok park. The scattered layout of the text is designed to resemble the floor plan of a room which he constructed in the park. The rotated words purposely make viewers tilt their heads, mimicking the surprise of discovering a hidden space. ",
+    description: "A poster for Marko Tadić's temporary memorial in Rakov Potok park.",
     note: [
-      "Marko Tadić's temporary memorial intervention placed a room in the middle of Rakov Potok park, a space you could stumble upon and step into.",
-      "The poster borrows that room's floor plan. Words are scattered and rotated along its walls, so reading it means tilting your head, the same small surprise as discovering the room itself.",
+      "Marko Tadić built a room in the middle of the park, a space you could stumble upon and walk into.",
+      "The text follows the room's floor plan. To read it, you tilt your head, just like the surprise of finding the room.",
     ],
     client: "Documenta",
     year: "2026",
@@ -270,10 +270,10 @@ const works = [
   {
     slug: "split-payments",
     title: "Split payments integration",
-    description: "The goal was to build a checkout process that allows buyers to combine different payment methods for one order without disrupting the existing website.",
+    description: "A checkout that lets buyers pay for one order with more than one payment method.",
     note: [
-      "Buyers wanted to pay for a single order with more than one payment method, but the checkout only let them choose one.",
-      "Research and product design shaped a flow that slots into the existing website, so combining methods feels like a natural step rather than a new checkout.",
+      "Buyers wanted to split one order between payment methods. The old checkout allowed only one.",
+      "The new flow fits into the existing website, so paying two ways feels like a normal step.",
     ],
     client: "E-commerce Retailer",
     year: "2022",
@@ -294,10 +294,10 @@ const works = [
   {
     slug: "who-is-otti-berger",
     title: "Who is Otti Berger?",
-    description: "An exhibition shaped through fragments of life and work of Otti Berger",
+    description: "An exhibition built from fragments of Otti Berger's life and work.",
     note: [
-      "Otti Berger, a textile artist trained at the Bauhaus, left behind a life and a body of work that survive only in fragments.",
-      "The art direction follows the same logic. Pieces are set side by side, leaving visitors to assemble her story for themselves.",
+      "Otti Berger was a Bauhaus textile artist. Only fragments of her life and work survive.",
+      "The design sets these pieces side by side and lets visitors put her story together.",
     ],
     client: "Tomislav Gotovac Institute",
     year: "2022",
@@ -323,8 +323,8 @@ const works = [
     client: "Jadrolinija",
     description: "Island hopping easier than ever before.",
     note: [
-      "Jadrolinija connects the Croatian mainland with its islands, and for most travellers the journey now starts on a phone: finding a line, buying a ticket, checking a departure.",
-      "UX research guided the new experience, and prototyping let ideas be tried before they were built, all to make island hopping feel effortless.",
+      "Jadrolinija connects Croatia's mainland and islands. Most trips now start on a phone: find a line, buy a ticket, check a departure.",
+      "Research and prototypes tested ideas early, so island hopping feels easy.",
     ],
     year: "2026",
     category: "App",
@@ -341,11 +341,11 @@ const works = [
   },
   {
     slug: "studenac",
-    title: "Loyalty app for the biggest Croatian retailer",
-    description: "Swipe the way to weekly coupons and deals: finding savings has never been easier or more fun.",
+    title: "Loyalty app for Croatia's biggest retailer",
+    description: "Swipe through weekly coupons and deals. Saving made quick and fun.",
     note: [
-      "Studenac's loyalty app turns weekly coupons and deals into something closer to a game: swipe through the offers and keep the ones you want.",
-      "Research and prototyping shaped a flow quick enough for a store aisle and simple enough for every customer of the biggest Croatian retailer.",
+      "The app turns weekly coupons into a small game: swipe through offers and keep the ones you like.",
+      "The flow is quick enough to use in a store aisle and simple enough for every customer.",
     ],
     client: "Studenac",
     year: "2022",
@@ -627,6 +627,14 @@ function animateHeroTitle() {
 
   let wordIndex = 0;
   textNodes.forEach((textNode) => {
+    // Riječ koja se tipka animira se kao cjelina, ne dijeli se na hero-word spanove
+    const typed = textNode.parentElement.closest(".hero-typed");
+    if (typed) {
+      typed.classList.add("hero-word");
+      typed.style.setProperty("--word-index", wordIndex++);
+      return;
+    }
+
     const group = textNode.parentElement.closest("[data-title-group]")?.dataset.titleGroup;
     const fragment = document.createDocumentFragment();
     textNode.textContent.split(/(\s+)/).forEach((part) => {
@@ -644,6 +652,45 @@ function animateHeroTitle() {
     });
     textNode.replaceWith(fragment);
   });
+
+  startHeroTyping(title, initialDelay + 1800);
+}
+
+// Cursor briše trenutnu riječ i tipka sljedeću (engineer ↔ designer)
+function startHeroTyping(title, startDelay) {
+  const typed = title.querySelector(".hero-typed");
+  const textEl = typed?.querySelector(".hero-typed-text");
+  if (!typed || !textEl) return;
+
+  const words = typed.dataset.typedWords.split(",");
+  let wordIndex = 0;
+  let text = words[0];
+
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const run = async () => {
+    await wait(startDelay);
+    while (typed.isConnected) {
+      typed.classList.add("is-typing");
+      while (text.length && typed.isConnected) {
+        text = text.slice(0, -1);
+        textEl.textContent = text;
+        await wait(70);
+      }
+      await wait(300);
+      wordIndex = (wordIndex + 1) % words.length;
+      const next = words[wordIndex];
+      while (text.length < next.length && typed.isConnected) {
+        text = next.slice(0, text.length + 1);
+        textEl.textContent = text;
+        await wait(110);
+      }
+      typed.classList.remove("is-typing");
+      await wait(2600);
+    }
+  };
+
+  run();
 }
 
 function renderBlogPostModal(project) {
@@ -704,7 +751,7 @@ function renderCv() {
         <h1 id="cv-title">
           <span class="hero-intro-line">Hey, I am Teo Peter.</span>
           <span class="hero-main-line">
-            Graphic engineer moving between
+            Graphic <span class="hero-typed" data-typed-words="engineer,designer"><span class="hero-typed-text">engineer</span><span class="hero-cursor" aria-hidden="true"></span></span> moving between
             <span class="hero-inline-group" data-title-group="screens">
               <a class="cv-title-thumb" data-title-group="screens" href="${projectHref("jadrolinija")}" aria-label="View Jadrolinija project">
                 <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">
