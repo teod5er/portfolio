@@ -13,9 +13,8 @@
   --line: #000000;
   --panel: #f4f2ec;
   --accent: #ff3800;
-  --stroke: #d9d9d9;
+  --stroke: #b3b3b3;
   --page-bg: #e2e2e2;
-  --container-bg: rgb(243 243 243);
   --frame: 7.5vw;
   /* Zajednička veličina velikih naslova: About hero, naslov projekta, Notes */
   --title-size: clamp(40px, 5.2vw, 90px);
@@ -96,7 +95,6 @@ button {
   /* Dolje samo onoliko mjesta koliko treba da plutajuća navigacija ne prekrije footer */
   padding: var(--shell-padding) var(--shell-padding) max(var(--shell-padding), calc(110px - var(--frame)));
   border-radius: 8px;
-  background: var(--container-bg);
 }
 
 .site-header {
