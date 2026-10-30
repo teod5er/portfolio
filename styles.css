@@ -15,7 +15,7 @@
   --accent: #ff3800;
   --stroke: #b3b3b3;
   --page-bg: #ebebeb;
-  --frame: 7.5vw;
+  --frame: 5vw;
   /* Zajednička veličina velikih naslova: About hero, naslov projekta, Notes */
   --title-size: clamp(40px, 5.2vw, 90px);
   --muted-soft: #a6a6a6;
@@ -1445,16 +1445,17 @@ h3 {
 @media (max-width: 680px) {
   :root {
     --title-size: clamp(32px, 9vw, 56px);
-    --frame: 1em;
+    /* Na mobitelu nema vanjske margine oko stranice */
+    --frame: 0px;
   }
 
   :root {
     --font-size: 20px;
   }
 
-  /* Na mobitelu je unutarnji padding i svi razmaci jednak vanjskoj margini (1em) */
+  /* Na mobitelu su unutarnji padding i svi razmaci 1em */
   .site-shell {
-    --shell-padding: var(--frame);
+    --shell-padding: 1em;
   }
 
   .project-info-modal {
