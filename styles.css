@@ -1664,6 +1664,43 @@ h3 {
   }
 }
 
+/* Page transition: radi i između stranica (index ↔ project) i kod promjene hasha */
+@view-transition {
+  navigation: auto;
+}
+
+.navigation-stack {
+  view-transition-name: navigation;
+}
+
+::view-transition-old(root) {
+  animation: pageLeave 260ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: pageEnter 520ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+}
+
+::view-transition-group(navigation) {
+  animation-duration: 320ms;
+}
+
+@keyframes pageLeave {
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+    filter: blur(8px);
+  }
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(8px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-cursor {
     display: none;
@@ -1696,6 +1733,12 @@ h3 {
   .hero-word {
     animation: none;
     transition: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
 

@@ -1228,7 +1228,17 @@ categoryBar?.addEventListener("click", (event) => {
   updateSwitch();
 });
 
-window.addEventListener("hashchange", route);
+function routeWithTransition() {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!document.startViewTransition || reduceMotion) {
+    route();
+    return;
+  }
+
+  document.startViewTransition(route);
+}
+
+window.addEventListener("hashchange", routeWithTransition);
 window.addEventListener("resize", updateNavIndicators);
 window.addEventListener("resize", updateProjectStories);
 window.addEventListener("scroll", updateProjectStories, { passive: true });
