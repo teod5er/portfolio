@@ -207,6 +207,26 @@ const works = [
       "The program runs for months, and every lecture and event needs its own announcement.",
       "Bold letters and bright colours move around in animation. Playful, but always easy to recognise.",
     ],
+    challenge: [
+      {
+        title: "The brief",
+        text: "A program that runs for months needs a steady stream of announcements, one for every lecture and event.",
+      },
+      {
+        title: "Constraints",
+        text: "The identity lives mostly online, so it had to work in small formats and in motion, and stay quick to adapt.",
+      },
+    ],
+    result: [
+      {
+        title: "Outcome",
+        text: "A flexible system of bold letters and bright colours that turns each new announcement into a quick variation.",
+      },
+      {
+        title: "Impact",
+        text: "Every post feels fresh, yet the program is recognisable at first glance.",
+      },
+    ],
     client: "Tomislav Gotovac Institute",
     year: "2026",
     category: "Publishing",
@@ -228,6 +248,26 @@ const works = [
     note: [
       "A printed journal where social science and humanities students publish their research.",
       "The cover, a roll of toilet paper on black, points to 2020 and the pandemic panic buying.",
+    ],
+    challenge: [
+      {
+        title: "The brief",
+        text: "Give student research in the social sciences and humanities a printed home that reads well and looks confident.",
+      },
+      {
+        title: "Constraints",
+        text: "Long academic texts, many authors and a student budget all had to fit into one consistent layout.",
+      },
+    ],
+    result: [
+      {
+        title: "Outcome",
+        text: "A calm, readable layout inside, and a cover that comments on 2020 with a single object.",
+      },
+      {
+        title: "Impact",
+        text: "The journal was printed and launched in front of 100+ students and collaborators, with positive reactions.",
+      },
     ],
     client: "Sociology Students Association",
     year: "2022",
@@ -253,6 +293,34 @@ const works = [
       "Marko Tadić built a room in the middle of the park, a space you could stumble upon and walk into.",
       "The text follows the room's floor plan. To read it, you tilt your head, just like the surprise of finding the room.",
     ],
+    challenge: [
+      {
+        title: "The brief",
+        text: "Announce a temporary memorial that is less a monument and more a room you discover by chance.",
+      },
+      {
+        title: "Constraints",
+        text: "The poster had to carry the feeling of surprise from the park, without showing the room itself.",
+      },
+    ],
+    result: [
+      {
+        title: "Outcome",
+        text: "Typography that follows the room's floor plan, so reading the poster becomes a small physical act.",
+      },
+      {
+        title: "Impact",
+        text: "The exhibition took place and received positive reviews, including on <a href='https://vizkultura.hr/svjetlo-u-mraku-zaborava/' target='_blank' rel='noopener noreferrer' class='preview-link'>Vizkultura</a>, the Croatian portal for design and visual culture.",
+      },
+    ],
+    testimonials: [
+      {
+        quote: "This sense of discovery is also suggested by the excellent poster for the event, designed by Teo Peter.",
+        author: "Ljubica Anđelković Džambić",
+        role: "Vizkultura",
+        image: "publishing_look-the-doors-are-open/ljubica.png",
+      },
+    ],
     client: "Documenta",
     year: "2026",
     category: "Publishing",
@@ -274,6 +342,26 @@ const works = [
     note: [
       "Buyers wanted to split one order between payment methods. The old checkout allowed only one.",
       "The new flow fits into the existing website, so paying two ways feels like a normal step.",
+    ],
+    challenge: [
+      {
+        title: "The problem",
+        text: "Buyers wanted to pay for one order with more than one method, but the checkout allowed only one.",
+      },
+      {
+        title: "Constraints",
+        text: "The new option had to fit into the existing checkout without confusing buyers who pay the usual way.",
+      },
+    ],
+    result: [
+      {
+        title: "Outcome",
+        text: "A checkout flow where splitting a payment is just one more clear step.",
+      },
+      {
+        title: "Impact",
+        text: "Successfully integrated into the website of the largest retail chain in Greece.",
+      },
     ],
     client: "E-commerce Retailer",
     year: "2022",
@@ -299,6 +387,26 @@ const works = [
       "Otti Berger was a Bauhaus textile artist. Only fragments of her life and work survive.",
       "The design sets these pieces side by side and lets visitors put her story together.",
     ],
+    challenge: [
+      {
+        title: "The brief",
+        text: "Tell the story of Otti Berger, a Bauhaus textile artist whose life survives only in fragments.",
+      },
+      {
+        title: "Constraints",
+        text: "With so much missing, the design could not pretend to show a complete biography.",
+      },
+    ],
+    result: [
+      {
+        title: "Outcome",
+        text: "An exhibition that places the fragments side by side and leaves the gaps visible.",
+      },
+      {
+        title: "Impact",
+        text: "Visitors piece her story together themselves, which makes her absence part of the experience.",
+      },
+    ],
     client: "Tomislav Gotovac Institute",
     year: "2022",
     category: "Publishing",
@@ -320,8 +428,28 @@ const works = [
   {
     slug: "jadrolinija",
     title: "Jadrolinija's new digital experience",
+    challenge: [
+      {
+        title: "The brief",
+        text: "Propose a new concept for Jadrolinija's digital experience as part of a student UX/UI course.",
+      },
+      {
+        title: "Constraints",
+        text: "The app serves locals, commuters and tourists, often on the move and in a hurry.",
+      },
+    ],
+    result: [
+      {
+        title: "Outcome",
+        text: "A concept for a clearer digital experience, shaped by research and early prototypes.",
+      },
+      {
+        title: "Impact",
+        text: "A proposal for how island hopping could feel easier, from finding a line to buying a ticket.",
+      },
+    ],
     client: "Jadrolinija",
-    description: "Island hopping easier than ever before.",
+    description: "Island hopping imagined easier than ever before.",
     note: [
       "Jadrolinija connects Croatia's mainland and islands. Most trips now start on a phone: find a line, buy a ticket, check a departure.",
       "Research and prototypes tested ideas early, so island hopping feels easy.",
@@ -347,6 +475,26 @@ const works = [
       "The app turns weekly coupons into a small game: swipe through offers and keep the ones you like.",
       "The flow is quick enough to use in a store aisle and simple enough for every customer.",
     ],
+    challenge: [
+      {
+        title: "The problem",
+        text: "Weekly coupons and deals were easy to miss and slow to browse.",
+      },
+      {
+        title: "Constraints",
+        text: "The app had to work for every customer and be quick enough to use in a store aisle.",
+      },
+    ],
+    result: [
+      {
+        title: "Outcome",
+        text: "A swipe-based flow that turns browsing coupons into a small game.",
+      },
+      {
+        title: "Impact",
+        text: "The concept was successfully pitched, and a second phase of the project followed, starting with a new website.",
+      },
+    ],
     client: "Studenac",
     year: "2022",
     category: "App",
@@ -364,6 +512,38 @@ const works = [
   },
 ];
 
+// Privremeni dummy sadržaj za Challenge i Result; projekt ga može pregaziti vlastitim
+// poljima challenge i result. Testimonijali se prikazuju samo ako ih projekt ima
+const defaultProjectSections = {
+  challenge: [
+    {
+      title: "The brief",
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. The client needed a clear, recognisable system that works across every touchpoint, from the first announcement to the final screen.",
+    },
+    {
+      title: "Constraints",
+      text: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. A tight timeline, a small team and content that changes weekly meant the solution had to stay flexible and easy to maintain.",
+    },
+  ],
+  result: [
+    {
+      title: "Outcome",
+      text: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris. The new system launched on time and gave the team a consistent way to communicate without starting from scratch.",
+    },
+    {
+      title: "Impact",
+      text: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore. Engagement grew steadily after launch, and the system is still in everyday use.",
+    },
+  ],
+};
+
+const projectSections = [
+  { id: "overview", label: "Overview" },
+  { id: "challenge", label: "Challenge" },
+  { id: "deliverable", label: "Deliverable" },
+  { id: "result", label: "Result" },
+];
+
 const state = {
   view: "cv",
   category: "All",
@@ -376,7 +556,6 @@ const navigationStack = document.querySelector(".navigation-stack");
 const bottomSwitch = document.querySelector(".bottom-switch");
 const switchButtons = [...document.querySelectorAll(".switch-button")];
 const categoryButtons = [...document.querySelectorAll(".category-bar button")];
-const projectsButton = document.querySelector('[data-view="projects"]');
 const categoryBar = document.querySelector(".category-bar");
 
 function projectHref(slug) {
@@ -406,7 +585,7 @@ function moveNavIndicator(container, activeButton) {
   const indicator = container?.querySelector(".nav-indicator");
   if (!indicator) return;
 
-  const isVisible = Boolean(activeButton) && !activeButton.classList.contains("is-back");
+  const isVisible = Boolean(activeButton);
   indicator.classList.toggle("is-visible", isVisible);
   if (!isVisible) return;
 
@@ -423,6 +602,9 @@ function moveNavIndicator(container, activeButton) {
 function updateNavIndicators() {
   moveNavIndicator(bottomSwitch, switchButtons.find((button) => button.classList.contains("is-active")));
   moveNavIndicator(categoryBar, categoryButtons.find((button) => button.classList.contains("is-active")));
+  if (sectionNav && !sectionNav.classList.contains("is-hidden")) {
+    moveNavIndicator(sectionNav, sectionNav.querySelector(".is-active"));
+  }
 }
 
 function updateSwitch() {
@@ -436,16 +618,20 @@ function updateSwitch() {
     if (isSelected) button.setAttribute("aria-current", "page");
     else button.removeAttribute("aria-current");
     button.classList.toggle("is-active", isSelected);
-    button.classList.toggle("is-hidden", isProjectDetail && !isProjectsButton);
-    button.classList.toggle("is-back", isProjectDetail && isProjectsButton);
   });
 
   categoryButtons.forEach((button) => {
     button.classList.toggle("is-active", button.dataset.category === state.category);
   });
 
+  // Na stranici projekta glavnu navigaciju zamjenjuje traka sa sekcijama
   if (bottomSwitch) {
-    bottomSwitch.classList.remove("is-hidden");
+    bottomSwitch.classList.toggle("is-hidden", isProjectDetail);
+  }
+
+  if (sectionNav) {
+    sectionNav.classList.toggle("is-hidden", !isProjectDetail);
+    if (isProjectDetail) setActiveSection(projectSections[0].id);
   }
 
   if (navigationStack) {
@@ -459,11 +645,80 @@ function updateSwitch() {
     categoryBar.setAttribute("aria-hidden", String(filtersHidden));
   }
 
-  if (projectsButton) {
-    projectsButton.textContent = isProjectDetail ? "Back to Works" : "Work";
-  }
-
   updateNavIndicators();
+}
+
+function createSectionNav() {
+  if (!navigationStack) return null;
+  const nav = document.createElement("nav");
+  nav.className = "category-bar section-nav is-hidden";
+  nav.setAttribute("aria-label", "Sekcije projekta");
+  nav.innerHTML = projectSections
+    .map(
+      (section) =>
+        `<button type="button" data-section="${section.id}">${section.label}</button>`
+    )
+    .join("");
+  navigationStack.append(nav);
+  createNavIndicator(nav);
+
+  nav.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    const button = event.target.closest("[data-section]");
+    const target = button && document.getElementById(button.dataset.section);
+    if (!target) return;
+
+    // Dok traje animirani scroll, indikator ostaje na kliknutoj sekciji
+    lockedSection = button.dataset.section;
+    clearTimeout(sectionLockTimer);
+    sectionLockTimer = setTimeout(releaseSectionLock, 1200);
+    setActiveSection(lockedSection);
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  });
+
+  return nav;
+}
+
+const sectionNav = createSectionNav();
+let lockedSection = null;
+let sectionLockTimer = 0;
+
+function releaseSectionLock() {
+  lockedSection = null;
+  clearTimeout(sectionLockTimer);
+}
+
+function setActiveSection(id) {
+  if (!sectionNav) return;
+  const buttons = [...sectionNav.querySelectorAll("[data-section]")];
+  buttons.forEach((button) => {
+    const isActive = button.dataset.section === id;
+    button.classList.toggle("is-active", isActive);
+    if (isActive) button.setAttribute("aria-current", "true");
+    else button.removeAttribute("aria-current");
+  });
+  moveNavIndicator(sectionNav, buttons.find((button) => button.classList.contains("is-active")));
+}
+
+// Aktivna je zadnja sekcija čiji je vrh prešao gornju trećinu ekrana
+function updateActiveSection() {
+  if (state.view !== "project" || lockedSection) return;
+  const threshold = window.innerHeight * 0.35;
+  let activeId = projectSections[0].id;
+
+  projectSections.forEach((section) => {
+    const element = document.getElementById(section.id);
+    if (element && element.getBoundingClientRect().top <= threshold) activeId = section.id;
+  });
+
+  // Na dnu stranice zadnja sekcija je uvijek aktivna
+  const atBottom =
+    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+  if (atBottom) activeId = projectSections[projectSections.length - 1].id;
+
+  setActiveSection(activeId);
 }
 
 function renderWorkThumb(src, className, alt) {
@@ -1040,10 +1295,15 @@ function renderProject(slug) {
     window.location.replace("index.html#projects");
     return;
   }
-  // See more: sljedeća tri projekta po redu, kružno
-  const moreProjects = [1, 2, 3].map(
-    (offset) => publishedWorks[(projectIndex + offset) % publishedWorks.length]
-  );
+  // See more: dva najnovija rada iz iste kategorije; ako ih nema dovoljno,
+  // dopunjuje se najnovijim radovima iz ostalih kategorija
+  const newestFirst = publishedWorks
+    .filter((work) => work.slug !== project.slug)
+    .sort((a, b) => Number(b.year) - Number(a.year));
+  const moreProjects = [
+    ...newestFirst.filter((work) => work.category === project.category),
+    ...newestFirst.filter((work) => work.category !== project.category),
+  ].slice(0, 2);
   state.view = "project";
   document.title = `${project.title} · Teo Peter`;
   removeProjectDescription();
@@ -1091,15 +1351,20 @@ function renderProject(slug) {
     galleryGroups.splice(galleryGroups.length - 1, 0, renderProjectStory(secondStory));
   }
 
+  const challenge = project.challenge || defaultProjectSections.challenge;
+  const result = project.result || defaultProjectSections.result;
+  const testimonials = project.testimonials;
+
   app.innerHTML = `
     <article class="view project-view fade-in-section" aria-labelledby="project-title">
-      <section class="project-hero">
+      <section class="project-hero project-section" id="overview">
+        <p class="project-section-title content-reveal">Overview</p>
         <header class="project-heading">
           <h1 id="project-title">${project.title}</h1>
-          ${project.description ? `<p class="project-lede">${project.description}</p>` : ""}
+          ${project.description ? `<p class="project-lede content-reveal">${project.description}</p>` : ""}
         </header>
 
-        <dl class="project-meta-row" aria-label="Project details">
+        <dl class="project-meta-row content-reveal" aria-label="Project details">
           <div>
             <dt>Client</dt>
             <dd>${project.client}</dd>
@@ -1114,16 +1379,33 @@ function renderProject(slug) {
           </div>
         </dl>
 
-        <div class="project-gallery">
+        <div class="project-gallery content-reveal">
           ${renderMedia(img[0], "gallery-main", `${project.title} hero 1`)}
           ${firstStory ? renderProjectStory(firstStory) : ""}
+        </div>
+      </section>
+
+      <section class="project-section content-reveal" id="challenge" aria-labelledby="challenge-title">
+        <h2 class="project-section-title" id="challenge-title">Challenge</h2>
+        ${renderProjectColumns(challenge)}
+      </section>
+
+      <section class="project-section content-reveal" id="deliverable" aria-labelledby="deliverable-title">
+        <h2 class="project-section-title" id="deliverable-title">Deliverable</h2>
+        <div class="project-gallery">
           ${galleryGroups.join("")}
         </div>
       </section>
 
-      <section class="project-more" aria-labelledby="project-more-title">
+      <section class="project-section content-reveal" id="result" aria-labelledby="result-title">
+        <h2 class="project-section-title" id="result-title">Result</h2>
+        ${renderProjectColumns(result)}
+        ${renderTestimonials(testimonials)}
+      </section>
+
+      <section class="project-more content-reveal" aria-labelledby="project-more-title">
         <h2 id="project-more-title">See more</h2>
-        <div class="works-grid">
+        <div class="works-grid works-grid--two">
           ${renderWorkCards(moreProjects)}
         </div>
       </section>
@@ -1131,6 +1413,112 @@ function renderProject(slug) {
   `;
 
   updateProjectStories();
+  animateProjectTitle(document.querySelector("#project-title"));
+}
+
+// Naslov projekta tipka se slovo po slovo, kao naslov na početnoj stranici
+function animateProjectTitle(title) {
+  if (!title || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const chars = [];
+  const fragment = document.createDocumentFragment();
+  title.textContent.split(/(\s+)/).forEach((part) => {
+    if (!part.trim()) {
+      fragment.append(part);
+      return;
+    }
+    // Riječ je u jednom spanu da se ne lomi usred tipkanja
+    const word = document.createElement("span");
+    word.className = "typed-word";
+    [...part].forEach((letter) => {
+      const char = document.createElement("span");
+      char.className = "hero-char is-pending";
+      char.textContent = letter;
+      word.append(char);
+      chars.push(char);
+    });
+    fragment.append(word);
+  });
+  title.replaceChildren(fragment);
+  if (!chars.length) return;
+
+  // Ostatak stranice čeka dok se naslov ne ispiše
+  const view = title.closest(".project-view");
+  view?.classList.add("is-typing-title");
+
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const cursor = document.createElement("span");
+  cursor.className = "hero-cursor";
+  cursor.setAttribute("aria-hidden", "true");
+  chars[0].before(cursor);
+
+  (async () => {
+    await wait(400);
+    title.classList.add("is-typing");
+    for (const char of chars) {
+      if (!title.isConnected) return;
+      char.classList.remove("is-pending");
+      char.after(cursor);
+      await wait(/[.,?]/.test(char.textContent) ? 220 : 35 + Math.random() * 45);
+    }
+    title.classList.remove("is-typing");
+    view?.classList.remove("is-typing-title");
+  })();
+}
+
+// Dvije kolone s podnaslovom i tekstom (Challenge, Result)
+function renderProjectColumns(items) {
+  return `
+    <div class="project-columns">
+      ${items
+        .map(
+          (item) => `
+            <div class="project-column">
+              <h3>${item.title}</h3>
+              <p>${item.text}</p>
+            </div>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderTestimonials(items) {
+  if (!items?.length) return "";
+  return `
+    <div class="project-testimonials" aria-label="Testimonials">
+      ${items
+        .map(
+          (item) => `
+            <figure class="project-testimonial">
+              <blockquote>“${item.quote}”</blockquote>
+              <figcaption>
+                ${renderTestimonialAvatar(item)}
+                <span class="testimonial-person">
+                  <span>${item.author}</span>
+                  <span class="testimonial-role">${item.role}</span>
+                </span>
+              </figcaption>
+            </figure>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+// Profilna slika iz polja image; bez nje se prikazuju inicijali
+function renderTestimonialAvatar(item) {
+  if (item.image) {
+    return `<img class="testimonial-avatar" src="${item.image}" alt="" loading="lazy" />`;
+  }
+  const initials = item.author
+    .split(/\s+/)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("");
+  return `<span class="testimonial-avatar" aria-hidden="true">${initials}</span>`;
 }
 
 function renderProjectStory(text) {
@@ -1142,24 +1530,24 @@ function renderProjectStory(text) {
 
   return `
     <section class="project-story">
-      <div class="project-story-pin">
-        <p class="project-story-text">${words}</p>
-      </div>
+      <p class="project-story-text">${words}</p>
     </section>
   `;
 }
 
-// Dok je sekcija zakačena, riječi se redom pune crnom bojom prema napretku scrolla
+// Riječi se redom pune crnom bojom dok tekst putuje od dna prema gornjem dijelu ekrana
 function updateProjectStories() {
   const viewportHeight = window.innerHeight;
+  const start = viewportHeight * 0.9;
+  const end = viewportHeight * 0.35;
 
-  document.querySelectorAll(".project-story").forEach((story) => {
-    const words = story.querySelectorAll(".story-word");
-    const scrollable = story.offsetHeight - viewportHeight;
-    const progress =
-      scrollable > 0 ? Math.min(Math.max(-story.getBoundingClientRect().top / scrollable, 0), 1) : 1;
-    // Ispuna završava malo prije kraja da tekst ostane potpuno crn prije odlaska
-    const filledCount = Math.round(Math.min(progress / 0.8, 1) * words.length);
+  document.querySelectorAll(".project-story-text").forEach((text) => {
+    const words = text.querySelectorAll(".story-word");
+    const rect = text.getBoundingClientRect();
+    // Napredak prati sredinu teksta, pa i dulji odlomci završe dok su još na ekranu
+    const center = rect.top + rect.height / 2;
+    const progress = Math.min(Math.max((start - center) / (start - end), 0), 1);
+    const filledCount = Math.round(progress * words.length);
 
     words.forEach((word, index) => {
       word.classList.toggle("is-filled", index < filledCount);
@@ -1242,6 +1630,11 @@ window.addEventListener("hashchange", routeWithTransition);
 window.addEventListener("resize", updateNavIndicators);
 window.addEventListener("resize", updateProjectStories);
 window.addEventListener("scroll", updateProjectStories, { passive: true });
+window.addEventListener("scroll", updateActiveSection, { passive: true });
+window.addEventListener("scrollend", () => {
+  releaseSectionLock();
+  updateActiveSection();
+});
 document.fonts?.ready.then(updateNavIndicators);
 createNavIndicator(bottomSwitch);
 createNavIndicator(categoryBar);
