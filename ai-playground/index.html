@@ -5,51 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
-      content="A virtual playground for digital projects exploring AI."
+      content="A small place on my web where I test ideas and show projects."
     />
-    <title>AI Playground · Teo Peter</title>
+    <title>Playground · Teo Peter</title>
     <link rel="stylesheet" href="playground.css" />
+    <script src="backgrounds.js"></script>
+    <script>
+      // Pick a random wallpaper from backgrounds/ before the page paints.
+      (function () {
+        var list = window.playgroundBackgrounds || [];
+        if (!list.length) return;
+        var pick = list[Math.floor(Math.random() * list.length)];
+        window.playgroundWallpaper = pick;
+        document.documentElement.style.setProperty("--wallpaper", 'url("' + pick + '")');
+      })();
+    </script>
   </head>
   <body>
-    <main
-      class="playground-stage"
-      aria-label="A virtual playground for digital projects exploring AI"
-    >
-      <header class="playground-header">
-        <h1 id="playground-title">This is my virtual playground for all digital projects that I am currently doing to learn and integrate AI in my workflow.</h1>
+    <main class="desktop" aria-label="Playground">
+      <header class="desktop-bar">
+        <a class="desktop-back" href="../index.html">&larr; Back to Teo Peter.work</a>
+        <time class="desktop-clock" aria-live="off"></time>
       </header>
-      <div class="playground-item playground-folder" data-x="0.14" data-y="0.52" data-vx="54" data-vy="42">
-        Project 1 is<br />Coming soon™
-      </div>
-      <div class="playground-item playground-folder" data-x="0.76" data-y="0.56" data-vx="-48" data-vy="52">
-        Project 2 is<br />Coming soon™
-      </div>
-      <a
-        class="playground-item playground-tool"
-        href="Logo3D.html"
-        target="_blank"
-        rel="noopener"
-        aria-label="Open the 2D to 3D tool in a new window"
-        data-x="0.44"
-        data-y="0.2"
-        data-vx="42"
-        data-vy="-46"
-        data-change-color="false"
-      >
-        <img src="2dto3d.png" alt="2D to 3D tool" draggable="false" />
-      </a>
-      <div
-        class="playground-item playground-model"
-        role="img"
-        aria-label="Rotating 3D model"
-        data-x="0.47"
-        data-y="0.55"
-        data-vx="62"
-        data-vy="-38"
-        data-change-color="false"
-      >
-        <canvas aria-hidden="true"></canvas>
-      </div>
+
+      <section class="window window-photos" aria-label="Some images I took">
+        <div class="window-body">
+          <div class="carousel">
+            <img class="carousel-image" alt="" draggable="false" />
+            <p class="carousel-caption" aria-live="polite"></p>
+            <p class="carousel-empty">Photos coming soon</p>
+            <button class="carousel-button carousel-prev" type="button" aria-label="Previous image">&larr;</button>
+            <button class="carousel-button carousel-next" type="button" aria-label="Next image">&rarr;</button>
+            <button class="carousel-set-bg" type="button" hidden>Set as background</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="window window-note" aria-labelledby="note-title">
+        <h2 class="window-title" id="note-title">Note</h2>
+        <div class="window-body">
+          <p class="note-text">
+            Hey, welcome to the playground. This is a small place on my web where I test ideas and
+            show projects I do to practice my creativity and learning new tools.
+          </p>
+        </div>
+      </section>
+
+      <section class="window window-apps" aria-labelledby="apps-title">
+        <h2 class="window-title" id="apps-title">My Apps</h2>
+        <div class="window-body">
+          <ul class="app-grid">
+            <li>
+              <a class="app-icon" href="Logo3D.html" target="_blank" rel="noopener" title="2D to 3D">
+                <img src="2dto3d.png" alt="2D to 3D tool" draggable="false" />
+              </a>
+            </li>
+            <li><span class="app-icon" aria-label="Coming soon"></span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="window window-model" aria-labelledby="model-title">
+        <h2 class="window-title" id="model-title">3D models</h2>
+        <div class="window-body">
+          <canvas aria-label="Rotating 3D model" role="img"></canvas>
+        </div>
+      </section>
+
+      <section class="window window-radio" aria-labelledby="radio-title">
+        <h2 class="window-title" id="radio-title">Playground Radio</h2>
+        <div class="window-body">
+          <p>Coming soon!</p>
+        </div>
+      </section>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/STLLoader.js"></script>
