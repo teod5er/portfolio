@@ -51,7 +51,7 @@ function makeLogoPlaceholder(label, background = "#f3efe9", accent = "#111111") 
 const portfolio = {
   name: "Teo Peter",
   intro:
-    "Hey, I am Teo Peter. Graphic engineer moving between screens, paper, code, and socials.",
+    "Hey, I am Teo Peter. Creative graphic engineer moving between screens, paper, code, and socials.",
   introSecond:
     "",
   email: "teo_peter@outlook.com",
@@ -198,6 +198,17 @@ const works = [
     category: "Web",
     services: ["Coming soon"],
     images: ["web_vlado-marek/hero_0.png"],
+  },
+  {
+    slug: "frankie",
+    title: "Frankie AI assistant",
+    // externalUrl: kartica vodi na vanjsku stranicu, bez stranice projekta
+    externalUrl: "https://frankie.frankfurt-school.de/",
+    client: "Frankfurt School",
+    year: "2026",
+    category: "Web",
+    services: ["Web", "UX/UI flows"],
+    images: ["web_frankie/0_hero.jpg"],
   },
   {
     slug: "skola-grada",
@@ -735,7 +746,7 @@ function renderWorkThumb(src, className, alt) {
 }
 
 // Radovi koji imaju svoju stranicu (bez onih koji tek dolaze)
-const publishedWorks = works.filter((work) => !work.comingSoon);
+const publishedWorks = works.filter((work) => !work.comingSoon && !work.externalUrl);
 
 function renderWorkCards(items) {
   return items
@@ -771,11 +782,11 @@ function renderWorkCards(items) {
       `;
 
       return `
-        <a class="work-card" href="${projectHref(work.slug)}" aria-label="${work.title}, ${work.client}">
+        <a class="work-card" href="${work.externalUrl || projectHref(work.slug)}"${work.externalUrl ? ' target="_blank" rel="noopener noreferrer"' : ""} aria-label="${work.title}, ${work.client}${work.externalUrl ? " (opens in a new tab)" : ""}">
           ${mediaHtml}
           <div class="work-card-copy">
             <div class="work-title-row">
-              <h2>${work.title}</h2>
+              <h2>${work.title}${work.externalUrl ? '<span class="external-icon" aria-hidden="true">↗</span>' : ""}</h2>
               <span class="project-year">${work.year}</span>
             </div>
             <p class="services-line">${work.services.join(", ")}</p>
@@ -1049,7 +1060,7 @@ function renderCv() {
         <h1 id="cv-title">
           <span class="hero-intro-line">Hey, I am Teo Peter.</span>
           <span class="hero-main-line">
-            Graphic <span class="hero-typed" data-typed-words="engineer,designer"><span class="hero-typed-text">engineer</span></span> moving between
+            Creative graphic <span class="hero-typed" data-typed-words="engineer,designer"><span class="hero-typed-text">engineer</span></span> moving between
             <span class="hero-inline-group" data-title-group="screens">
               <a class="cv-title-thumb" data-title-group="screens" href="${projectHref("jadrolinija")}" aria-label="View Jadrolinija project">
                 <video autoplay loop muted playsinline preload="metadata" aria-hidden="true">

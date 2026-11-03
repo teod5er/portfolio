@@ -856,6 +856,21 @@ h3 {
   color: var(--muted);
 }
 
+/* Ikona za projekte koji vode na vanjsku stranicu */
+.work-card .external-icon {
+  display: inline-block;
+  margin-left: 0.3em;
+  color: var(--muted);
+  font-size: 0.8em;
+  transition: color 140ms ease, transform 140ms ease;
+}
+
+.work-card:hover .external-icon,
+.work-card:focus-visible .external-icon {
+  color: var(--ink);
+  transform: translate(2px, -2px);
+}
+
 .back-link {
   display: inline-flex;
   margin-bottom: 24px;
