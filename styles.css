@@ -160,6 +160,851 @@ main {
   text-align: left;
 }
 
+/* ───────── Bento naslovnica ───────── */
+/* Bento zauzima cijeli prozor, od ruba do ruba; vanjska margina = 3 × unutarnji gap */
+.bento {
+  --bento-gap: var(--work-grid-gap);
+  --bento-outer: calc(var(--bento-gap) * 3);
+  --bento-pad: clamp(12px, 1.15vw, 20px);
+  --bento-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.8fr);
+  grid-template-areas:
+    "hero hero hero hero hero hero hero hero work work work work"
+    "hero hero hero hero hero hero hero hero work work work work"
+    "about about about tools tools tools note note play play clients clients";
+  gap: var(--bento-gap);
+  width: calc(100vw - var(--scrollbar-width, 0px));
+  height: 100vh;
+  height: 100svh;
+  min-height: 620px;
+  margin-top: calc(-1 * (var(--frame) + var(--shell-padding)));
+  margin-left: calc(50% - (100vw - var(--scrollbar-width, 0px)) / 2);
+  padding: var(--bento-outer);
+}
+
+.bento-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: var(--bento-pad);
+  border: 0;
+  border-radius: var(--bento-radius);
+  background: var(--bg);
+  color: var(--ink);
+  text-align: left;
+  animation: bentoIn 760ms cubic-bezier(0.22, 1, 0.36, 1) calc(120ms + var(--i, 0) * 70ms) both;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+a.bento-tile:hover,
+a.bento-tile:focus-visible,
+button.bento-tile:hover,
+button.bento-tile:focus-visible {
+  transform: translateY(-3px);
+}
+
+.bento-tile:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+@keyframes bentoIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.bento-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75em;
+  line-height: 1.2;
+}
+
+/* Hero */
+.bento-hero {
+  grid-area: hero;
+  justify-content: space-between;
+  gap: clamp(24px, 3vw, 48px);
+  font-size: clamp(32px, 3.9vw, 68px);
+}
+
+.bento-hero #cv-title {
+  max-width: none;
+}
+
+/* Drugi dio naslova je sivi i manji; riječ na hover postaje crna */
+.bento-hero .hero-main-line {
+  color: var(--muted-soft);
+  font-size: 0.72em;
+  line-height: 1.02;
+  /* Flex ne čuva razmake između dijelova retka, pa razmak nakon zareza daje gap */
+  column-gap: 0.26em;
+  /* Razmak između "Hey, I am Teo Peter." i ostatka naslova */
+  margin-top: 0.45em;
+}
+
+.bento-hero #cv-title[data-active-title-group] .hero-main-line .hero-word,
+.bento-hero #cv-title[data-active-title-group] .title-hover-group {
+  color: var(--muted-soft);
+}
+
+.bento-hero #cv-title[data-active-title-group="screens"] [data-title-group="screens"],
+.bento-hero #cv-title[data-active-title-group="paper"] [data-title-group="paper"],
+.bento-hero #cv-title[data-active-title-group="code"] [data-title-group="code"] {
+  color: var(--ink);
+}
+
+.bento-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--font-size);
+  line-height: 1.2;
+}
+
+.bento-meta-sep {
+  margin: 0 0.5em;
+}
+
+.bento-hero-meta a {
+  margin-left: 0.3em;
+  transition: color 160ms ease;
+}
+
+.bento-hero-meta a:hover,
+.bento-hero-meta a:focus-visible {
+  color: var(--muted);
+}
+
+/* Latest work: izgleda kao Instagram story, bez unutarnjeg paddinga */
+.bento-work {
+  grid-area: work;
+  padding: 0;
+  background: #111;
+  color: #fff;
+}
+
+.bento-slides {
+  position: absolute;
+  inset: 0;
+}
+
+.bento-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 700ms ease, visibility 0s linear 700ms;
+}
+
+.bento-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 700ms ease, visibility 0s;
+}
+
+/* Desna strana storyja: klik vodi na idući projekt */
+.bento-next {
+  position: absolute;
+  top: 64px;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 35%;
+  min-height: 0;
+  border-radius: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.12));
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.bento-next:hover,
+.bento-next:focus-visible {
+  opacity: 1;
+}
+
+/* Tamni prijelaz gore i dolje da se tekst čita na svakoj slici */
+.bento-slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0) 26%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+}
+
+.bento-slide-media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--panel);
+  transform: scale(1.06);
+  transition: transform 4200ms linear;
+}
+
+.bento-slide.is-active .bento-slide-media {
+  transform: scale(1);
+}
+
+.bento-slide-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 2px;
+  padding: var(--bento-pad);
+  font-size: clamp(15px, 1.15vw, 22px);
+  line-height: 1.2;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1) 150ms, opacity 500ms ease 150ms;
+}
+
+.bento-slide.is-active .bento-slide-copy {
+  transform: none;
+  opacity: 1;
+}
+
+.bento-slide-meta {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.bento-story-head {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  display: grid;
+  gap: 10px;
+  padding: 12px 12px 0;
+  pointer-events: none;
+}
+
+.bento-story-head a,
+.bento-story-head button {
+  pointer-events: auto;
+}
+
+.bento-story-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75em;
+  line-height: 1;
+}
+
+.bento-story-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+}
+
+.bento-more {
+  margin-left: auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.bento-more:hover,
+.bento-more:focus-visible {
+  background: #fff;
+  color: #000;
+}
+
+.bento-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.bento-dot {
+  position: relative;
+  flex: 1 1 0;
+  height: 3px;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Veća površina za klik bez promjene izgleda */
+.bento-dot::before {
+  content: "";
+  position: absolute;
+  inset: -10px 0;
+}
+
+.bento-dot.is-done::after,
+.bento-dot.is-active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transform-origin: left;
+}
+
+.bento-dot.is-active::after {
+  animation: bentoProgress 4s linear both;
+}
+
+.bento-work.is-paused .bento-dot.is-active::after,
+.bento-work.is-paused .bento-slide-media {
+  animation-play-state: paused;
+}
+
+@keyframes bentoProgress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* About: avatar, gumbi i rečenice koje se izmjenjuju */
+.bento-about {
+  grid-area: about;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.bento-about-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Avatar kao profilna slika: krug u gornjem lijevom kutu */
+.bento-avatar {
+  display: block;
+  flex: 0 0 auto;
+  width: clamp(44px, 3.4vw, 56px);
+  height: clamp(44px, 3.4vw, 56px);
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--panel);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* avatar.png ima prozirni rub, pa se slika uveća unutar kruga */
+.bento-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.45) translateY(6%);
+}
+
+.bento-about:hover .bento-avatar {
+  transform: rotate(-6deg);
+}
+
+.bento-about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.bento-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45em 0.9em;
+  border: 1px solid var(--stroke);
+  border-radius: 999px;
+  font-size: 0.75em;
+  line-height: 1.1;
+  white-space: nowrap;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.bento-pill:hover,
+.bento-pill:focus-visible {
+  border-color: var(--ink);
+}
+
+/* Okrugli gumb s ikonom (ChatGPT sažetak) */
+.bento-pill--icon {
+  justify-content: center;
+  /* Iste visine kao "More" (line-height + padding + obrub) */
+  width: calc(2em + 2px);
+  height: calc(2em + 2px);
+  padding: 0;
+}
+
+.bento-pill--icon svg {
+  width: 1.1em;
+  height: 1.1em;
+  transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bento-pill--icon:hover svg,
+.bento-pill--icon:focus-visible svg {
+  transform: rotate(90deg);
+}
+
+.bento-pill--dark {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.bento-pill--dark:hover,
+.bento-pill--dark:focus-visible {
+  background: #333;
+}
+
+.bento-about-facts {
+  display: grid;
+}
+
+/* Sve rečenice su u istoj ćeliji, vidi se samo aktivna */
+.bento-fact {
+  grid-area: 1 / 1;
+  align-self: end;
+  max-width: 30ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--font-size);
+  line-height: 1.25;
+  text-wrap: pretty;
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(4px);
+  transition: opacity 500ms ease, transform 600ms cubic-bezier(0.22, 1, 0.36, 1), filter 500ms ease;
+}
+
+.bento-fact.is-active {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.bento-ink {
+  color: var(--ink);
+}
+
+/* Tools: ikone putuju ulijevo u beskonačnoj traci */
+.bento-tools {
+  grid-area: tools;
+  justify-content: flex-start;
+  gap: 14px;
+  padding-inline: 0;
+}
+
+.bento-tools .bento-label {
+  padding-inline: var(--bento-pad);
+}
+
+/* Traka zauzima prostor od labela do donjeg ruba i stoji na sredini */
+.bento-marquee {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  overflow: hidden;
+  padding-block: 10px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.bento-marquee-track {
+  display: flex;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: bentoMarquee 28s linear infinite;
+}
+
+.bento-tools:hover .bento-marquee-track {
+  animation-play-state: paused;
+}
+
+/* Razmak je padding (ne gap) da pomak od -50 % bude točno jedna kopija liste */
+.bento-marquee-track li {
+  flex: 0 0 auto;
+  padding-right: clamp(22px, 2.2vw, 40px);
+}
+
+.bento-marquee-track img {
+  display: block;
+  width: clamp(26px, 2.2vw, 38px);
+  height: clamp(26px, 2.2vw, 38px);
+  opacity: 0.85;
+  transition: opacity 200ms ease, transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bento-marquee-track li:hover img {
+  opacity: 1;
+  transform: translateY(-3px) scale(1.08);
+}
+
+@keyframes bentoMarquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Notes */
+.bento-note {
+  grid-area: note;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.bento-note-body {
+  display: grid;
+  gap: 4px;
+}
+
+.bento-note-date {
+  color: var(--muted);
+  font-size: 0.75em;
+}
+
+.bento-note-title {
+  font-size: var(--font-size);
+  line-height: 1.2;
+  text-wrap: pretty;
+}
+
+.bento-note:hover .bento-note-title {
+  color: var(--muted);
+}
+
+/* AI Playground */
+.bento-playground {
+  grid-area: play;
+  justify-content: space-between;
+  gap: 14px;
+  color: #fff;
+  background: #2f6fd6;
+}
+
+.bento-playground .bento-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.bento-playground-bg {
+  position: absolute;
+  inset: 0;
+  background: url("./ai-playground/backgrounds/bliss.png") center / cover no-repeat;
+  transform: scale(1.02);
+  transition: transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bento-playground-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.28));
+}
+
+.bento-playground:hover .bento-playground-bg {
+  transform: scale(1.1);
+}
+
+.bento-playground > :not(.bento-playground-bg) {
+  position: relative;
+}
+
+.bento-apps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.bento-app {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  font-size: 0.6em;
+  line-height: 1.1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.bento-app img {
+  width: clamp(36px, 3vw, 48px);
+  height: clamp(36px, 3vw, 48px);
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bento-playground:hover .bento-app img {
+  transform: translateY(-3px);
+}
+
+.bento-playground:hover .bento-app:nth-child(2) img {
+  transition-delay: 60ms;
+}
+
+/* Klijenti */
+.bento-clients {
+  grid-area: clients;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bento-client-list {
+  position: relative;
+  display: grid;
+  flex: 1 1 auto;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Svi logotipi su u istoj ćeliji, vidi se samo aktivni */
+.bento-client {
+  grid-area: 1 / 1;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(14px);
+  filter: blur(4px);
+  transition: opacity 500ms ease, transform 600ms cubic-bezier(0.22, 1, 0.36, 1), filter 500ms ease;
+}
+
+/* Početni položaj: naprijed dolazi odozdo, unatrag odozgo */
+.bento-client.from-prev {
+  transform: translateY(-14px);
+}
+
+/* Skriveni logotipi ne smiju hvatati klik */
+.bento-client:not(.is-active) {
+  pointer-events: none;
+}
+
+.bento-client-link {
+  display: block;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bento-client-link:hover,
+.bento-client-link:focus-visible {
+  transform: scale(1.05);
+}
+
+.bento-client.is-active {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.bento-client.is-leaving {
+  transform: translateY(-14px);
+}
+
+.bento-client.is-leaving-down {
+  transform: translateY(14px);
+}
+
+.bento-client-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.bento-client-arrow {
+  display: grid;
+  place-items: center;
+  width: 2em;
+  height: 2em;
+  min-height: 0;
+  padding: 0;
+  border: 1px solid var(--stroke);
+  border-radius: 50%;
+  font-size: 0.75em;
+  line-height: 1;
+  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.bento-client-arrow:hover,
+.bento-client-arrow:focus-visible {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+.bento-client img {
+  display: block;
+  width: auto;
+  max-width: 70%;
+  height: clamp(22px, 2vw, 34px);
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+/* Clients: logo stoji na sredini cijele kućice, label i strelice su iznad njega */
+.bento-clients .bento-client-list {
+  position: absolute;
+  inset: 0;
+}
+
+.bento-clients .bento-label,
+.bento-clients .bento-client-nav {
+  position: relative;
+  z-index: 1;
+}
+
+/* Nagovještaj skrolanja: bento se lagano podigne i vrati */
+.bento.is-nudging {
+  animation: bentoNudge 1400ms cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+@keyframes bentoNudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-56px);
+  }
+  70% {
+    transform: translateY(6px);
+  }
+}
+
+/* Sivi placeholder blokovi dok se kućica "učitava" */
+.sk {
+  border-radius: 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: color 450ms ease, background-color 450ms ease;
+}
+
+.bento-tile.is-loading .sk,
+.bento-tile.is-loading .sk * {
+  color: transparent !important;
+}
+
+.bento-tile.is-loading .sk {
+  background-color: #ececec;
+  animation: skPulse 1.1s ease-in-out infinite;
+}
+
+.bento-work.is-loading .sk,
+.bento-playground.is-loading .sk {
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
+@keyframes skPulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* Tablet i mobitel: kućice se slažu jedna ispod druge, visina prati sadržaj */
+@media (max-width: 920px) {
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: minmax(150px, auto);
+    grid-template-areas:
+      "hero hero"
+      "work work"
+      "about tools"
+      "note note"
+      "play clients";
+    height: auto;
+    min-height: 0;
+  }
+
+  .bento-hero {
+    font-size: clamp(32px, 6.4vw, 60px);
+  }
+
+  .bento-work {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 680px) {
+  /* Na mobitelu je vanjska margina jednaka razmaku između kućica */
+  .bento {
+    --bento-gap: 8px;
+    --bento-outer: var(--bento-gap);
+    grid-template-areas:
+      "hero hero"
+      "work work"
+      "about about"
+      "tools tools"
+      "note note"
+      "play clients";
+  }
+
+  .bento-hero {
+    font-size: var(--title-size);
+  }
+
+  .bento-tile {
+    min-height: 140px;
+  }
+
+  /* Hero je na mobitelu viši, tekst gore, lokacija dolje */
+  .bento-hero {
+    min-height: 58svh;
+  }
+
+  .bento-work {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bento-tile,
+  .bento-marquee-track,
+  .bento-slide,
+  .bento-dot.is-active::after {
+    animation: none;
+  }
+
+  .bento-tile,
+  .bento-slide,
+  .bento-slide-media,
+  .bento-slide-copy,
+  .bento-fact,
+  .bento-client,
+  .bento-playground-bg {
+    transition: none;
+  }
+
+  .bento-dot.is-active::after {
+    transform: none;
+  }
+
+  .bento-marquee-track {
+    flex-wrap: wrap;
+    width: auto;
+  }
+
+  .bento-marquee-track li[aria-hidden="true"] {
+    display: none;
+  }
+}
+
 h1,
 h2,
 h3,
@@ -1878,4 +2723,10 @@ input[type="button"],
 input[type="checkbox"],
 input[type="radio"] {
   cursor: url("./pointinghand.svg") 17 2, pointer;
+}
+
+/* Navigacija se skriva dok je bento naslovnica u prozoru */
+.navigation-stack.is-loaded.is-over-bento {
+  transform: translateX(-50%) translateY(120px) scale(var(--switch-scale));
+  opacity: 0;
 }

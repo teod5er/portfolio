@@ -657,7 +657,19 @@ function updateSwitch() {
   }
 
   updateNavIndicators();
+  updateNavOverBento();
 }
+
+// Na naslovnici je navigacija skrivena dok je bento u prozoru (bento ima svoje linkove)
+function updateNavOverBento() {
+  const bento = state.view === "cv" ? app.querySelector(".bento") : null;
+  const isOver = Boolean(bento) && bento.getBoundingClientRect().bottom > window.innerHeight * 0.6;
+  navigationStack?.classList.toggle("is-over-bento", isOver);
+  if (navigationStack) navigationStack.inert = isOver;
+}
+
+window.addEventListener("scroll", updateNavOverBento, { passive: true });
+window.addEventListener("resize", updateNavOverBento);
 
 function createSectionNav() {
   if (!navigationStack) return null;
@@ -1056,7 +1068,8 @@ function renderCv() {
 
   app.innerHTML = `
     <article class="view cv-view fade-in-section" aria-labelledby="cv-title">
-      <section class="cv-hero">
+      <section class="bento" aria-label="Overview">
+      <div class="bento-tile bento-hero" style="--i:0">
         <h1 id="cv-title">
           <span class="hero-intro-line">Hey, I am Teo Peter.</span>
           <span class="hero-main-line">
@@ -1084,9 +1097,12 @@ function renderCv() {
             <span class="hero-nowrap">and socials.</span>
           </span>
         </h1>
+        <p class="bento-hero-meta"><span class="sk">Currently at <a class="bento-ink" href="https://www.sawraft.com" target="_blank" rel="noopener noreferrer">Sawraft Studio</a></span><span class="bento-meta-sep" aria-hidden="true">·</span><span class="sk">Zagreb, Croatia &amp; Remote</span></p>
+      </div>
+      ${renderBentoTiles()}
       </section>
 
-      <div class="rest-of-content content-reveal">
+      <div class="rest-of-content content-reveal" id="about-more">
         <section class="cv-section" aria-labelledby="skills-title">
           <h2 id="skills-title">Skills and tools</h2>
           <div class="skill-columns">
@@ -1197,18 +1213,371 @@ function renderCv() {
               .join("")}
           </div>
         </section>
-
-        <section class="cv-section" aria-labelledby="latest-projects-title">
-          <h2 id="latest-projects-title">Latest work</h2>
-          <div class="works-grid">
-            ${renderWorkCards(publishedWorks.slice(0, 2))}
-          </div>
-        </section>
       </div>
     </article>
   `;
 
   animateHeroTitle();
+  revealBentoSkeletons();
+  initScrollHint();
+  initBentoProjects();
+  initBentoFacts();
+  initBentoClients();
+  renderBentoNote();
+}
+
+// Radovi za rotirajuću kućicu: svi koji imaju thumbnail, bez onih koji tek dolaze
+const bentoWorks = works.filter((work) => !work.comingSoon).slice(0, 5);
+
+// Alati u kućici "Tools I use"
+// Alati u traci "Tools I use" (ikone iz Simple Icons, mapa tools/)
+const bentoTools = [
+  { name: "Figma", icon: "figma" },
+  { name: "Photoshop", icon: "adobephotoshop" },
+  { name: "Illustrator", icon: "adobeillustrator" },
+  { name: "InDesign", icon: "adobeindesign" },
+  { name: "Claude", icon: "claude" },
+  { name: "Notion", icon: "notion" },
+  { name: "Jira", icon: "jira" },
+  { name: "Google Workspace", icon: "google" },
+  { name: "Slack", icon: "slack" },
+];
+
+// Izmjenjive rečenice u About kućici
+const bentoFacts = [
+  "M.A. in Graphic Product Design &amp; Engineering, University of Zagreb.",
+  "Designing interfaces, brands and design systems at <span class=\"bento-ink\">Sawraft Studio</span>.",
+  "Published research on brutalist web design in <span class=\"bento-ink\">Acta Graphica</span>.",
+  "Prototyping with AI and finishing the Google AI Professional Certificate.",
+  "Volunteer designer for 1postozagrad and Sindikat biciklista.",
+];
+
+// Logotipi klijenata (mapa logos/); project: slug rada koji se otvara klikom u novoj kartici
+const bentoClients = [
+  { name: "Frankfurt School", file: "frankfurt school.svg", project: "frankie" },
+  { name: "Kotsovolos", file: "kotsovolos.svg", project: "split-payments" },
+  { name: "INmusic festival", file: "inmusic festival.svg" },
+  { name: "LeaseUp", file: "leaseup.svg" },
+  { name: "Sindikat biciklista", file: "sindikat-biciklista 1.svg" },
+];
+
+// Logo vodi na projekt klijenta u novoj kartici (vanjski link ili stranica projekta)
+function renderClientLogo(client) {
+  const img = `<img src="logos/${encodeURIComponent(client.file)}?v=2" alt="${client.name}" />`;
+  const work = client.project && works.find((item) => item.slug === client.project);
+  if (!work) return img;
+  const href = work.externalUrl || projectHref(work.slug);
+  return `<a class="bento-client-link" href="${href}" target="_blank" rel="noopener noreferrer" aria-label="${work.title} (opens in a new tab)">${img}</a>`;
+}
+
+// Isti link kao "Get a summary" u footeru
+const SUMMARY_URL =
+  "https://chatgpt.com/?q=Give+me+a+concise%2C+well-sourced+summary+of+Teo+Peter%2C+a+graphic+designer+from+Zagreb.+Cover+his+projects%2C+put+focus+on+UX%2FUI+solution+and+branding+work%2C+previous+experience%2C+education%2C+and+notable+design+projects+as+well+as+published+research+articles+in+Acta+Graphica.+Make+it+short+and+helpful.&utm_source=chatgpt.com";
+
+// OpenAI/ChatGPT ikona (Simple Icons)
+const OPENAI_ICON_PATH =
+  "M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z";
+
+function renderBentoTiles() {
+  const slides = bentoWorks
+    .map((work, index) => {
+      const href = work.externalUrl || projectHref(work.slug);
+      const target = work.externalUrl ? ' target="_blank" rel="noopener noreferrer"' : "";
+      return `
+        <a class="bento-slide${index === 0 ? " is-active" : ""}" href="${href}"${target} aria-label="${work.title}, ${work.client}" ${index === 0 ? "" : 'tabindex="-1" aria-hidden="true"'}>
+          ${renderWorkThumb(work.images[0], "bento-slide-media", "")}
+          <span class="bento-slide-copy">
+            <span class="bento-slide-title"><span class="sk">${work.title}</span></span>
+            <span class="bento-slide-meta"><span class="sk">${work.services.join(", ")} · ${work.year}</span></span>
+          </span>
+        </a>
+      `;
+    })
+    .join("");
+
+  const dots = bentoWorks
+    .map((_, index) => `<button type="button" class="bento-dot${index === 0 ? " is-active" : ""}" data-slide="${index}" aria-label="Show project ${index + 1}"></button>`)
+    .join("");
+
+  const toolItems = (hidden) =>
+    bentoTools
+      .map(
+        (tool) => `
+          <li${hidden ? ' aria-hidden="true"' : ""} title="${tool.name}">
+            <img src="tools/${tool.icon}.svg" alt="${hidden ? "" : tool.name}" />
+          </li>`
+      )
+      .join("");
+
+  return `
+    <div class="bento-tile bento-work" style="--i:1" aria-roledescription="carousel" aria-label="Latest work">
+      <div class="bento-slides">${slides}</div>
+      <button class="bento-next" type="button" aria-label="Next project"></button>
+      <div class="bento-story-head">
+        <div class="bento-dots">${dots}</div>
+        <div class="bento-story-meta">
+          <img class="bento-story-avatar" src="avatar.png" alt="" />
+          <span>Latest work</span>
+          <a class="bento-more" href="#projects">All work</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="bento-tile bento-about" style="--i:2" aria-label="About me" role="group">
+      <div class="bento-about-top">
+        <span class="bento-avatar"><img src="avatar.png" alt="" /></span>
+        <div class="bento-about-actions">
+          <button class="bento-pill" type="button" data-scroll-about>More</button>
+          <a class="bento-pill bento-pill--icon" href="${SUMMARY_URL}" target="_blank" rel="noopener noreferrer" aria-label="Get a summary from ChatGPT (opens in a new tab)" title="Get a summary">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="${OPENAI_ICON_PATH}"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="bento-about-facts" aria-live="polite">
+        ${bentoFacts.map((fact, index) => `<p class="bento-fact${index === 0 ? " is-active" : ""}"><span class="sk">${fact}</span></p>`).join("")}
+      </div>
+    </div>
+
+    <div class="bento-tile bento-tools" style="--i:3">
+      <span class="bento-label"><span class="sk">Tools I use</span></span>
+      <div class="bento-marquee">
+        <ul class="bento-marquee-track">${toolItems(false)}${toolItems(true)}</ul>
+      </div>
+    </div>
+
+    <a class="bento-tile bento-note" href="#blog" style="--i:4" aria-label="Latest note">
+      <span class="bento-label"><span class="sk">Notes</span></span>
+      <span class="bento-note-body">
+        <span class="bento-note-date"><span class="sk">25 Oct 2026</span></span>
+        <span class="bento-note-title"><span class="sk">Reading the latest note…</span></span>
+      </span>
+    </a>
+
+    <a class="bento-tile bento-playground" href="./ai-playground/index.html" target="_blank" rel="noopener noreferrer" style="--i:5" aria-label="AI Playground (opens in a new tab)">
+      <span class="bento-playground-bg" aria-hidden="true"></span>
+      <span class="bento-label"><span class="sk">AI Playground</span></span>
+      <span class="bento-apps" aria-hidden="true">
+        <span class="bento-app"><img src="ai-playground/2dto3d.png" alt="" /><span>2D to 3D</span></span>
+        <span class="bento-app"><img src="ai-playground/posta.png" alt="" /><span>Posta</span></span>
+      </span>
+    </a>
+
+    <div class="bento-tile bento-clients" style="--i:6">
+      <span class="bento-label"><span class="sk">Clients</span></span>
+      <ul class="bento-client-list" aria-live="polite">
+        ${bentoClients.map((client, index) => `<li class="bento-client${index === 0 ? " is-active" : ""}">${renderClientLogo(client)}</li>`).join("")}
+      </ul>
+      <div class="bento-client-nav">
+        <button class="bento-client-arrow" type="button" data-client-step="-1" aria-label="Previous client">←</button>
+        <button class="bento-client-arrow" type="button" data-client-step="1" aria-label="Next client">→</button>
+      </div>
+    </div>
+  `;
+}
+
+let bentoTimer = 0;
+
+// Širina scrollbara, da bento od ruba do ruba ne gura stranicu u stranu
+function updateScrollbarWidth() {
+  const width = window.innerWidth - document.documentElement.clientWidth;
+  document.documentElement.style.setProperty("--scrollbar-width", `${width}px`);
+}
+updateScrollbarWidth();
+window.addEventListener("resize", updateScrollbarWidth);
+
+// Rotirajući projekti: izmjena svakih 4 s, pauza na hover/focus
+function initBentoProjects() {
+  clearInterval(bentoTimer);
+  const tile = app.querySelector(".bento-work");
+  if (!tile) return;
+  const slides = [...tile.querySelectorAll(".bento-slide")];
+  const dots = [...tile.querySelectorAll(".bento-dot")];
+  if (slides.length < 2) return;
+
+  let current = 0;
+  let paused = false;
+
+  const show = (index) => {
+    current = (index + slides.length) % slides.length;
+
+    slides.forEach((slide, i) => {
+      const active = i === current;
+      slide.classList.toggle("is-active", active);
+      slide.toggleAttribute("aria-hidden", !active);
+      if (active) slide.removeAttribute("tabindex");
+      else slide.setAttribute("tabindex", "-1");
+    });
+    dots.forEach((dot, i) => {
+      // Kao u storyju: prijašnje trake su pune, aktivna se puni
+      dot.classList.remove("is-active");
+      dot.classList.toggle("is-done", i < current);
+    });
+    // Reflow da se animacija trake pokrene ispočetka
+    void dots[current].offsetWidth;
+    dots[current].classList.add("is-active");
+  };
+
+  const restart = () => {
+    clearInterval(bentoTimer);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    bentoTimer = setInterval(() => {
+      if (!tile.isConnected) return clearInterval(bentoTimer);
+      if (!paused) show(current + 1);
+    }, 4000);
+  };
+
+  tile.addEventListener("pointerenter", () => { paused = true; tile.classList.add("is-paused"); });
+  tile.addEventListener("pointerleave", () => { paused = false; tile.classList.remove("is-paused"); });
+  tile.addEventListener("focusin", () => { paused = true; });
+  tile.addEventListener("focusout", () => { paused = false; });
+  tile.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    // Klik na desnu stranu vodi na idući projekt, kao u storyju
+    if (event.target.closest(".bento-next")) {
+      show(current + 1);
+      restart();
+      return;
+    }
+    const dot = event.target.closest("[data-slide]");
+    if (!dot) return;
+    show(Number(dot.dataset.slide));
+    restart();
+  });
+
+  restart();
+}
+
+let clientsTimer = 0;
+
+// Klijenti: jedan logotip za drugim svakih 3,5 s, strelice listaju ručno
+function initBentoClients() {
+  clearInterval(clientsTimer);
+  const tile = app.querySelector(".bento-clients");
+  const items = [...app.querySelectorAll(".bento-client")];
+  if (!tile || items.length < 2) return;
+  let current = 0;
+
+  const show = (index, step) => {
+    // Naprijed: stari ide gore, novi dolazi odozdo; unatrag obrnuto
+    const leaving = items[current];
+    leaving.classList.remove("is-active", "from-prev");
+    leaving.classList.add(step < 0 ? "is-leaving-down" : "is-leaving");
+    setTimeout(() => leaving.classList.remove("is-leaving", "is-leaving-down"), 600);
+
+    current = (index + items.length) % items.length;
+    const incoming = items[current];
+    incoming.classList.remove("is-leaving", "is-leaving-down");
+    incoming.classList.toggle("from-prev", step < 0);
+    void incoming.offsetWidth;
+    incoming.classList.add("is-active");
+  };
+
+  const restart = () => {
+    clearInterval(clientsTimer);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    clientsTimer = setInterval(() => {
+      if (!tile.isConnected) return clearInterval(clientsTimer);
+      show(current + 1, 1);
+    }, 3500);
+  };
+
+  tile.addEventListener("click", (event) => {
+    const arrow = event.target instanceof Element && event.target.closest("[data-client-step]");
+    if (!arrow) return;
+    const step = Number(arrow.dataset.clientStep);
+    show(current + step, step);
+    restart();
+  });
+
+  restart();
+}
+
+// Sivi placeholder blokovi: kućice se redom "pune" tekstom
+function revealBentoSkeletons() {
+  const tiles = [...app.querySelectorAll(".bento-tile")];
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  tiles.forEach((tile, index) => {
+    tile.classList.add("is-loading");
+    setTimeout(() => tile.classList.remove("is-loading"), reduceMotion ? 0 : 900 + index * 140);
+  });
+}
+
+let scrollHintTimer = 0;
+
+// Ako korisnik dugo stoji na vrhu naslovnice, bento se lagano pomakne gore i vrati
+// da pokaže da ispod ima još sadržaja. Prestaje čim korisnik skrola.
+function initScrollHint() {
+  clearTimeout(scrollHintTimer);
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const bento = app.querySelector(".bento");
+  if (!bento) return;
+
+  const delays = [7000, 12000, 12000];
+  let count = 0;
+
+  const stop = () => {
+    clearTimeout(scrollHintTimer);
+    window.removeEventListener("scroll", onScroll);
+  };
+  const onScroll = () => {
+    if (window.scrollY > 10) stop();
+  };
+
+  const schedule = () => {
+    if (count >= delays.length) return stop();
+    scrollHintTimer = setTimeout(() => {
+      if (!bento.isConnected) return stop();
+      if (window.scrollY > 10) return stop();
+      bento.classList.remove("is-nudging");
+      void bento.offsetWidth;
+      bento.classList.add("is-nudging");
+      count += 1;
+      schedule();
+    }, delays[count]);
+  };
+
+  bento.addEventListener("animationend", (event) => {
+    if (event.animationName === "bentoNudge") bento.classList.remove("is-nudging");
+  });
+  window.addEventListener("scroll", onScroll, { passive: true });
+  schedule();
+}
+
+let factsTimer = 0;
+
+// About: rečenice se izmjenjuju svakih 3,5 s
+function initBentoFacts() {
+  clearInterval(factsTimer);
+  const facts = [...app.querySelectorAll(".bento-fact")];
+  if (facts.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let current = 0;
+  factsTimer = setInterval(() => {
+    if (!facts[0].isConnected) return clearInterval(factsTimer);
+    facts[current].classList.remove("is-active");
+    current = (current + 1) % facts.length;
+    facts[current].classList.add("is-active");
+  }, 3500);
+}
+
+// About kućica skrola do detalja ispod bento mreže (bez promjene hasha)
+app.addEventListener("click", (event) => {
+  const trigger = event.target instanceof Element && event.target.closest("[data-scroll-about]");
+  if (!trigger) return;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.getElementById("about-more")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+});
+
+async function renderBentoNote() {
+  const notes = await loadNotes();
+  const tile = app.querySelector(".bento-note");
+  if (!tile) return;
+  const latest = [...notes].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+  if (!latest) {
+    tile.querySelector(".bento-note-title .sk").textContent = "Notes coming soon";
+    return;
+  }
+  tile.querySelector(".bento-note-date .sk").textContent = formatNoteDate(latest.date);
+  tile.querySelector(".bento-note-title .sk").textContent = latest.title;
 }
 
 function renderProjects() {
