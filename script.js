@@ -742,6 +742,7 @@ function updateActiveSection() {
   if (atBottom) activeId = projectSections[projectSections.length - 1].id;
 
   setActiveSection(activeId);
+  trackProjectSection(activeId);
 }
 
 function renderWorkThumb(src, className, alt) {
@@ -1935,6 +1936,132 @@ function updateProjectStories() {
   });
 }
 
+// ───────── Analitika: Umami + Google Analytics (oboje bez kolačića) ─────────
+
+// Umami se učitava s defer, pa pozivi prije učitavanja čekaju u redu
+const umamiQueue = [];
+
+function withUmami(callback) {
+  if (window.umami) callback(window.umami);
+  else umamiQueue.push(callback);
+}
+
+function flushUmami() {
+  if (!window.umami) return;
+  umamiQueue.splice(0).forEach((callback) => callback(window.umami));
+}
+
+document.addEventListener("DOMContentLoaded", flushUmami);
+window.addEventListener("load", flushUmami);
+
+function track(name, params = {}) {
+  if (typeof window.gtag === "function") window.gtag("event", name, params);
+  // Umami ne prima prazne vrijednosti, pa se šalju samo popunjeni parametri
+  const data = Object.fromEntries(Object.entries(params).filter(([, value]) => value != null && value !== ""));
+  withUmami((umami) => umami.track(name, data));
+}
+
+// Svaki prikaz dobiva svoju putanju, da se About, Work, Notes i projekti vide odvojeno
+const viewPaths = { cv: "/", projects: "/work", blog: "/notes" };
+let lastTrackedPath = "";
+
+function trackPageView(slug) {
+  const path = state.view === "project" ? `/project/${slug}` : viewPaths[state.view];
+  if (!path || path === lastTrackedPath) return;
+  lastTrackedPath = path;
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "page_view", {
+      page_title: document.title,
+      page_location: `${window.location.origin}${path}`,
+      page_referrer: document.referrer,
+    });
+  }
+  const title = document.title;
+  withUmami((umami) => umami.track((props) => ({ ...props, url: path, title })));
+}
+
+// Koliko daleko je posjetitelj došao kroz projekt; svaka sekcija se šalje jednom po posjetu
+const trackedSections = new Set();
+
+function trackProjectSection(id) {
+  const key = `${window.location.search}|${id}`;
+  if (trackedSections.has(key)) return;
+  trackedSections.add(key);
+  const slug = new URLSearchParams(window.location.search).get("slug");
+  track("project_section", { project_name: slug, section: id });
+}
+
+// Gdje je kliknuto, da se zna radi li bento, Work grid, footer...
+function clickLocation(element) {
+  const places = [
+    [".bento-work", "home_story"],
+    [".bento-about", "home_about"],
+    [".bento-clients", "home_clients"],
+    [".bento-playground", "home_playground"],
+    [".bento-note", "home_notes"],
+    ["#cv-title", "home_hero"],
+    [".bento", "home_bento"],
+    [".project-more", "see_more"],
+    [".works-grid", "work_grid"],
+    [".blog-modal-project-link", "note_modal"],
+    [".site-footer", "footer"],
+  ];
+  const match = places.find(([selector]) => element.closest(selector));
+  return match ? match[1] : "other";
+}
+
+function projectFromLink(link) {
+  const href = link.getAttribute("href") || "";
+  const slug = new URL(href, window.location.href).searchParams.get("slug");
+  if (slug) return slug;
+  return works.find((work) => work.externalUrl && href.startsWith(work.externalUrl))?.slug;
+}
+
+document.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return;
+  const target = event.target;
+  const location = clickLocation(target);
+
+  if (target.closest(".bento-next")) return track("story_next");
+  const dot = target.closest(".bento-dot");
+  if (dot) return track("story_dot", { slide: Number(dot.dataset.slide) + 1 });
+  const clientArrow = target.closest("[data-client-step]");
+  if (clientArrow) return track("client_nav", { direction: clientArrow.dataset.clientStep === "1" ? "next" : "prev" });
+  if (target.closest("[data-scroll-about]")) return track("about_more_click");
+
+  const link = target.closest("a[href]");
+  if (!link) return;
+  const href = link.getAttribute("href");
+
+  const clientLink = link.closest(".bento-client-link");
+  if (clientLink) {
+    return track("client_click", {
+      client_name: clientLink.querySelector("img")?.alt,
+      project_name: projectFromLink(link),
+    });
+  }
+  if (href.startsWith("https://chatgpt.com")) return track("ai_summary_click", { click_location: location });
+  if (href.endsWith(".pdf")) return track("cv_download", { click_location: location });
+  if (href.startsWith("mailto:")) return track("contact_click", { method: "email", click_location: location });
+  if (href.includes("linkedin.com")) return track("contact_click", { method: "linkedin", click_location: location });
+  if (href.includes("ai-playground")) return track("playground_open", { click_location: location });
+  if (link.closest(".bento-note")) return track("note_open", { click_location: location });
+
+  const project = projectFromLink(link);
+  if (project) track("select_project", { project_name: project, click_location: location });
+});
+
+// Otvaranje bilješke na stranici Notes
+document.addEventListener(
+  "toggle",
+  (event) => {
+    const note = event.target;
+    if (!(note instanceof HTMLDetailsElement) || !note.classList.contains("note") || !note.open) return;
+    track("note_open", { note_title: note.querySelector("h2")?.textContent, click_location: "notes_page" });
+  },
+  true
+);
+
 function route() {
   const hash = window.location.hash.replace("#", "");
   const projectSlug = new URLSearchParams(window.location.search).get("slug");
@@ -1955,6 +2082,7 @@ function route() {
   updateSwitch();
   window.scrollTo({ top: 0, behavior: "instant" });
   app.focus({ preventScroll: true });
+  trackPageView(projectSlug || hash.split("/")[1]);
 }
 
 bottomSwitch?.addEventListener("click", (event) => {
@@ -1992,6 +2120,7 @@ categoryBar?.addEventListener("click", (event) => {
   if (!(categoryButton instanceof HTMLButtonElement)) return;
 
   state.category = categoryButton.dataset.category || "All";
+  track("filter_work", { category: state.category });
   renderProjects();
   updateSwitch();
 });
