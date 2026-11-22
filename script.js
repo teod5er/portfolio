@@ -1219,7 +1219,6 @@ function renderCv() {
   `;
 
   animateHeroTitle();
-  revealBentoSkeletons();
   initScrollHint();
   initBentoProjects();
   initBentoFacts();
@@ -1491,16 +1490,6 @@ function initBentoClients() {
   });
 
   restart();
-}
-
-// Sivi placeholder blokovi: kućice se redom "pune" tekstom
-function revealBentoSkeletons() {
-  const tiles = [...app.querySelectorAll(".bento-tile")];
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  tiles.forEach((tile, index) => {
-    tile.classList.add("is-loading");
-    setTimeout(() => tile.classList.remove("is-loading"), reduceMotion ? 0 : 900 + index * 140);
-  });
 }
 
 let scrollHintTimer = 0;
