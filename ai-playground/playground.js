@@ -357,3 +357,23 @@ startClock();
 animateNote();
 setupCarousel();
 setupModel();
+
+/* Live website window: vladomartek.com renders at 1440 × 900 and is scaled to the window width.
+   It loads after the page is ready so it doesn't slow down the desktop. */
+
+(function initSiteWindow() {
+  const body = document.querySelector(".window-site .window-body");
+  const frame = body?.querySelector("iframe[data-src]");
+  if (!frame) return;
+  const SITE_WIDTH = 1440;
+  const fit = () => body.style.setProperty("--site-scale", body.clientWidth / SITE_WIDTH);
+  fit();
+  new ResizeObserver(fit).observe(body);
+  const load = () => {
+    frame.addEventListener("load", () => body.classList.add("is-loaded"), { once: true });
+    frame.src = frame.dataset.src;
+    frame.removeAttribute("data-src");
+  };
+  if (document.readyState === "complete") setTimeout(load, 300);
+  else window.addEventListener("load", () => setTimeout(load, 300), { once: true });
+})();

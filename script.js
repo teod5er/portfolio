@@ -737,8 +737,10 @@ function updateActiveSection() {
   });
 
   // Na dnu stranice zadnja sekcija je uvijek aktivna
-  const atBottom =
-    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+  const scroller = overlayScroller();
+  const atBottom = scroller
+    ? scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2
+    : window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
   if (atBottom) activeId = projectSections[projectSections.length - 1].id;
 
   setActiveSection(activeId);
@@ -1069,7 +1071,7 @@ function renderCv() {
 
   app.innerHTML = `
     <article class="view cv-view fade-in-section" aria-labelledby="cv-title">
-      <section class="bento" aria-label="Overview">
+      <section class="bento${quickProject.enabled ? " has-quick" : ""}" aria-label="Overview">
       <div class="bento-tile bento-hero" style="--i:0">
         <h1 id="cv-title">
           <span class="hero-intro-line">Hey, I am Teo Peter.</span>
@@ -1102,6 +1104,7 @@ function renderCv() {
       </div>
       ${renderBentoTiles()}
       </section>
+      ${renderQuickProjectModal()}
 
       <div class="rest-of-content content-reveal" id="about-more">
         <section class="cv-section" aria-labelledby="skills-title">
@@ -1223,6 +1226,7 @@ function renderCv() {
   initBentoProjects();
   initBentoFacts();
   initBentoClients();
+  initQuickProject();
   renderBentoNote();
 }
 
@@ -1271,12 +1275,129 @@ function renderClientLogo(client) {
 }
 
 // Isti link kao "Get a summary" u footeru
+// Ista ikona za "+" u Notes listi i "×" za zatvaranje overlaya (× je ovaj + zakrenut za 45°)
+const PLUS_ICON =
+  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v11M2.5 8h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+
+// Strelice istog crteža kao "+" (linija 1,5 px, zaobljeni krajevi)
+const ARROW_ICON_RIGHT =
+  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ARROW_ICON_LEFT =
+  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
 const SUMMARY_URL =
   "https://chatgpt.com/?q=Give+me+a+concise%2C+well-sourced+summary+of+Teo+Peter%2C+a+graphic+designer+from+Zagreb.+Cover+his+projects%2C+put+focus+on+UX%2FUI+solution+and+branding+work%2C+previous+experience%2C+education%2C+and+notable+design+projects+as+well+as+published+research+articles+in+Acta+Graphica.+Make+it+short+and+helpful.&utm_source=chatgpt.com";
 
 // OpenAI/ChatGPT ikona (Simple Icons)
 const OPENAI_ICON_PATH =
   "M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z";
+
+// Quick project: mala kućica koja otvara jednostavnu prezentaciju zadnjeg projekta preko cijelog ekrana.
+// Slajdovi: "cover" (naslov i slika), "story" (priča o projektu), "site" (živi web), "phone" (živi web na mobitelu).
+// label je oznaka slajda u gornjoj traci.
+const quickProject = {
+  // enabled: false sakriva kućicu i prezentaciju s naslovnice
+  enabled: false,
+  name: "Vlado Martek",
+  meta: "Website · 2026",
+  url: "https://vladomartek.com",
+  thumb: "web_vlado-marek/hero_0.png",
+  slides: [
+    { type: "cover", label: "Project", title: "Vlado Martek", text: "Bilingual portfolio website for a Croatian conceptual artist and poet.", image: "web_vlado-marek/hero_0.png" },
+    {
+      type: "story",
+      label: "Story",
+      title: "A gallery, not a catalogue",
+      image: "web_vlado-marek/hero_B.png",
+      paragraphs: [
+        "Vlado Martek writes, paints and stages actions, and much of it is done by hand. The site had to hold poems, books, paintings, actions, texts and photography without flattening them into a catalogue.",
+        "So the works hang in an endless gallery instead of a grid. They drift past one by one, stop on hover and can be dragged, swiped or scrolled. Grid and list views are there for anyone who wants an overview, and every click answers with a small sound.",
+      ],
+      facts: "Croatian and English · Vite and vanilla JS · No backend",
+    },
+    { type: "site", label: "Live site" },
+    { type: "phone", label: "On mobile" },
+  ],
+};
+
+function renderQuickSlide(slide) {
+  // Web se prikazuje u stvarnoj veličini (1440 × 900 ili 390 × 844) i skalira da stane
+  const site = `<iframe class="qp-site" data-src="${quickProject.url}" title="${quickProject.name} website" loading="lazy"></iframe>`;
+  switch (slide.type) {
+    case "cover":
+      return `
+        <div class="qp-cover-copy">
+          <h2 class="qp-title">${slide.title}</h2>
+          <p class="qp-text">${slide.text}</p>
+        </div>
+        <img class="qp-cover-img" src="${slide.image}" alt="" />`;
+    case "story":
+      return `
+        <img class="qp-story-img" src="${slide.image}" alt="${quickProject.name}" />
+        <div class="qp-story-copy">
+          <h2 class="qp-heading">${slide.title}</h2>
+          ${slide.paragraphs.map((text) => `<p class="qp-text">${text}</p>`).join("")}
+          <p class="qp-facts">${slide.facts}</p>
+        </div>`;
+    case "site":
+      return `<div class="qp-fit"><div class="qp-screen" data-w="1440" data-h="900">${site}</div></div>`;
+    case "phone":
+      return `<div class="qp-fit"><div class="qp-screen qp-screen--phone" data-w="390" data-h="844">${site}</div></div>`;
+    default:
+      return "";
+  }
+}
+
+function renderQuickProjectTile() {
+  if (!quickProject.enabled) return "";
+  return `
+    <button class="bento-tile bento-quick" type="button" data-quick-open aria-haspopup="dialog" aria-label="Quick project: ${quickProject.name}, open presentation">
+      <img class="bento-quick-bg" src="${quickProject.thumb}" alt="" aria-hidden="true" />
+      <span class="bento-label"><span class="sk">Quick project</span></span>
+      <span class="bento-quick-body">
+        <span class="bento-quick-title">${quickProject.name}</span>
+        <span class="bento-quick-meta">${quickProject.meta}</span>
+      </span>
+      <span class="bento-quick-play" aria-hidden="true">
+        <svg viewBox="0 0 16 16"><path d="M5 3.5v9l7.5-4.5z" fill="currentColor"/></svg>
+      </span>
+    </button>
+  `;
+}
+
+function renderQuickProjectModal() {
+  if (!quickProject.enabled) return "";
+  const total = quickProject.slides.length;
+  const slides = quickProject.slides
+    .map(
+      (slide, index) => `
+        <section class="qp-slide qp-slide--${slide.type}${index === 0 ? " is-active" : ""}" aria-roledescription="slide" aria-label="${index + 1} of ${total}"${index === 0 ? "" : " aria-hidden=\"true\""}>
+          ${renderQuickSlide(slide)}
+        </section>`
+    )
+    .join("");
+
+  return `
+    <dialog class="qp-modal" aria-label="Quick project: ${quickProject.name}">
+      <div class="qp-shell">
+        <header class="qp-bar">
+          <nav class="qp-tabs" aria-label="Slides">
+            ${quickProject.slides.map((slide, index) => `<button class="qp-tab${index === 0 ? " is-active" : ""}" type="button" data-qp-go="${index}"${index === 0 ? ' aria-current="true"' : ""}>${slide.label}</button>`).join("")}
+          </nav>
+          <span class="qp-bar-end">
+            <a class="qp-link" href="${quickProject.url}" target="_blank" rel="noopener noreferrer">${quickProject.url.replace("https://", "")} ↗</a>
+            <button class="qp-btn" type="button" data-qp-close aria-label="Close">×</button>
+          </span>
+        </header>
+        <div class="qp-stage" tabindex="-1" aria-roledescription="carousel">${slides}</div>
+        <footer class="qp-nav">
+          <button class="qp-btn" type="button" data-qp-step="-1" aria-label="Previous slide">←</button>
+          <button class="qp-btn" type="button" data-qp-step="1" aria-label="Next slide">→</button>
+        </footer>
+      </div>
+    </dialog>
+  `;
+}
 
 function renderBentoTiles() {
   const slides = bentoWorks
@@ -1345,6 +1466,8 @@ function renderBentoTiles() {
       </div>
     </div>
 
+    ${renderQuickProjectTile()}
+
     <a class="bento-tile bento-note" href="#blog" style="--i:4" aria-label="Latest note">
       <span class="bento-label"><span class="sk">Notes</span></span>
       <span class="bento-note-body">
@@ -1368,8 +1491,8 @@ function renderBentoTiles() {
         ${bentoClients.map((client, index) => `<li class="bento-client${index === 0 ? " is-active" : ""}">${renderClientLogo(client)}</li>`).join("")}
       </ul>
       <div class="bento-client-nav">
-        <button class="bento-client-arrow" type="button" data-client-step="-1" aria-label="Previous client">←</button>
-        <button class="bento-client-arrow" type="button" data-client-step="1" aria-label="Next client">→</button>
+        <button class="bento-client-arrow" type="button" data-client-step="-1" aria-label="Previous client">${ARROW_ICON_LEFT}</button>
+        <button class="bento-client-arrow" type="button" data-client-step="1" aria-label="Next client">${ARROW_ICON_RIGHT}</button>
       </div>
     </div>
   `;
@@ -1385,7 +1508,9 @@ function updateScrollbarWidth() {
 updateScrollbarWidth();
 window.addEventListener("resize", updateScrollbarWidth);
 
-// Rotirajući projekti: izmjena svakih 4 s, pauza na hover/focus
+// Rotirajući projekti: izmjena svakih 6,5 s (isto trajanje kao traka u CSS-u), pauza na hover/focus
+const BENTO_STORY_MS = 6500;
+
 function initBentoProjects() {
   clearInterval(bentoTimer);
   const tile = app.querySelector(".bento-work");
@@ -1393,6 +1518,7 @@ function initBentoProjects() {
   const slides = [...tile.querySelectorAll(".bento-slide")];
   const dots = [...tile.querySelectorAll(".bento-dot")];
   if (slides.length < 2) return;
+  tile.style.setProperty("--story-duration", `${BENTO_STORY_MS}ms`);
 
   let current = 0;
   let paused = false;
@@ -1423,7 +1549,7 @@ function initBentoProjects() {
     bentoTimer = setInterval(() => {
       if (!tile.isConnected) return clearInterval(bentoTimer);
       if (!paused) show(current + 1);
-    }, 4000);
+    }, BENTO_STORY_MS);
   };
 
   tile.addEventListener("pointerenter", () => { paused = true; tile.classList.add("is-paused"); });
@@ -1445,6 +1571,78 @@ function initBentoProjects() {
   });
 
   restart();
+}
+
+// Quick project prezentacija: <dialog> preko cijelog ekrana; oznake gore i strelice listaju, Esc zatvara.
+// Web se u iframe učitava tek kad se prezentacija otvori.
+function initQuickProject() {
+  document.documentElement.classList.remove("qp-open");
+  const tile = app.querySelector("[data-quick-open]");
+  const modal = app.querySelector(".qp-modal");
+  if (!tile || !modal) return;
+  const slides = [...modal.querySelectorAll(".qp-slide")];
+  const tabs = [...modal.querySelectorAll(".qp-tab")];
+  const prev = modal.querySelector("[data-qp-step='-1']");
+  const next = modal.querySelector("[data-qp-step='1']");
+  let current = 0;
+
+  // Ekran zadržava omjer weba (16:10 ili mobitel) i staje u slobodan prostor; iframe se skalira
+  const fitScreens = () => {
+    modal.querySelectorAll(".qp-screen").forEach((screen) => {
+      const box = screen.parentElement;
+      const w = Number(screen.dataset.w);
+      const h = Number(screen.dataset.h);
+      const scale = Math.min(box.clientWidth / w, box.clientHeight / h) || 1;
+      screen.style.width = `${w * scale}px`;
+      screen.style.height = `${h * scale}px`;
+      screen.style.setProperty("--qp-scale", scale);
+    });
+  };
+
+  const show = (index) => {
+    const target = Math.max(0, Math.min(slides.length - 1, index));
+    if (target === current) return;
+    slides[current].classList.remove("is-active");
+    slides[current].setAttribute("aria-hidden", "true");
+    current = target;
+    slides[current].classList.add("is-active");
+    slides[current].removeAttribute("aria-hidden");
+    tabs.forEach((tab, i) => {
+      tab.classList.toggle("is-active", i === current);
+      tab.toggleAttribute("aria-current", i === current);
+    });
+    prev.disabled = current === 0;
+    next.disabled = current === slides.length - 1;
+    fitScreens();
+  };
+
+  tile.addEventListener("click", () => {
+    modal.querySelectorAll("iframe[data-src]").forEach((frame) => {
+      frame.src = frame.dataset.src;
+      frame.removeAttribute("data-src");
+    });
+    document.documentElement.classList.add("qp-open");
+    modal.showModal();
+    fitScreens();
+    modal.querySelector(".qp-stage").focus({ preventScroll: true });
+  });
+  modal.addEventListener("close", () => document.documentElement.classList.remove("qp-open"));
+  modal.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return;
+    if (event.target.closest("[data-qp-close]")) return modal.close();
+    const arrow = event.target.closest("[data-qp-step]");
+    if (arrow) return show(current + Number(arrow.dataset.qpStep));
+    const tab = event.target.closest("[data-qp-go]");
+    if (tab) show(Number(tab.dataset.qpGo));
+  });
+  modal.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+    event.preventDefault();
+    show(current + (event.key === "ArrowRight" ? 1 : -1));
+  });
+  window.addEventListener("resize", () => modal.open && fitScreens());
+
+  prev.disabled = true;
 }
 
 let clientsTimer = 0;
@@ -1640,31 +1838,39 @@ async function renderNotes() {
   list.innerHTML = notes
     .map(
       (note) => `
-        <details class="note">
-          <summary class="note-summary">
+        <article class="note">
+          <a class="note-summary" href="index.html?note=${encodeURIComponent(noteId(note))}#blog" data-note="${noteId(note)}">
             <span class="note-heading">
               <span class="blog-card-meta">${formatNoteDate(note.date)}</span>
               <h2>${note.title}</h2>
               ${note.subtitle ? `<span class="note-subtitle">${note.subtitle}</span>` : ""}
             </span>
-            <span class="note-toggle" aria-hidden="true">+</span>
-          </summary>
-          <div class="note-body">
-            ${note.html}
-          </div>
-        </details>
+            <span class="note-toggle icon-button" aria-hidden="true">${PLUS_ICON}</span>
+          </a>
+        </article>
       `
     )
     .join("");
 }
 
 function renderProject(slug) {
-  const projectIndex = publishedWorks.findIndex((work) => work.slug === slug);
-  const project = publishedWorks[projectIndex];
+  const project = publishedWorks.find((work) => work.slug === slug);
   if (!project) {
     window.location.replace("index.html#projects");
     return;
   }
+  state.view = "project";
+  document.title = `${project.title} · Teo Peter`;
+  removeProjectDescription();
+
+  app.innerHTML = projectMarkup(project);
+
+  updateProjectStories();
+  animateProjectTitle(document.querySelector("#project-title"));
+}
+
+// Sadržaj stranice projekta; isti markup koristi i samostalna stranica i overlay nad listom radova
+function projectMarkup(project) {
   // See more: dva najnovija rada iz iste kategorije; ako ih nema dovoljno,
   // dopunjuje se najnovijim radovima iz ostalih kategorija
   const newestFirst = publishedWorks
@@ -1674,9 +1880,6 @@ function renderProject(slug) {
     ...newestFirst.filter((work) => work.category === project.category),
     ...newestFirst.filter((work) => work.category !== project.category),
   ].slice(0, 2);
-  state.view = "project";
-  document.title = `${project.title} · Teo Peter`;
-  removeProjectDescription();
 
   function renderMedia(src, altClass, altText) {
     if (!src) return "";
@@ -1725,7 +1928,7 @@ function renderProject(slug) {
   const result = project.result || defaultProjectSections.result;
   const testimonials = project.testimonials;
 
-  app.innerHTML = `
+  return `
     <article class="view project-view fade-in-section" aria-labelledby="project-title">
       <section class="project-hero project-section" id="overview">
         <p class="project-section-title content-reveal">Overview</p>
@@ -1781,10 +1984,280 @@ function renderProject(slug) {
       </section>
     </article>
   `;
-
-  updateProjectStories();
-  animateProjectTitle(document.querySelector("#project-title"));
 }
+
+// ───────── Overlay: projekt nad listom radova, bilješka nad Notes ─────────
+// Klik na rad u listi (ili u See more unutar overlaya) ili na bilješku u Notes otvara sadržaj preko
+// stranice: pozadina se zamuti, sadržaj izroni iz kliknutog elementa, × u kutu zatvara.
+// URL se mijenja (project.html?slug=… ili ?note=…#blog), pa Back zatvara overlay, a link se može podijeliti.
+const siteShell = document.querySelector(".site-shell");
+let activeOverlay = null; // { el, kind, returnView, returnTitle, returnFocus }
+let ignoreNextHashchange = false;
+const OVERLAY_CLOSE_MS = 420;
+
+function overlayScroller() {
+  return activeOverlay?.el.querySelector(".project-overlay-scroll") || null;
+}
+
+function createOverlayElement() {
+  const overlay = document.createElement("div");
+  overlay.className = "project-overlay";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.innerHTML = `
+    <div class="project-overlay-scroll" tabindex="-1">
+      <div class="project-overlay-body"></div>
+    </div>
+    <button class="project-overlay-close icon-button" type="button" aria-label="Close">${PLUS_ICON}</button>
+  `;
+
+  const scroller = overlay.querySelector(".project-overlay-scroll");
+  scroller.addEventListener("scroll", () => {
+    updateProjectStories();
+    updateActiveSection();
+  }, { passive: true });
+  scroller.addEventListener("scrollend", () => {
+    releaseSectionLock();
+    updateActiveSection();
+  });
+  // Klik na zamućenu pozadinu (izvan sadržaja) zatvara overlay
+  scroller.addEventListener("click", (event) => {
+    if (event.target === scroller || event.target.classList.contains("project-overlay-body")) {
+      requestCloseOverlay();
+    }
+  });
+  overlay.querySelector(".project-overlay-close").addEventListener("click", requestCloseOverlay);
+
+  document.body.append(overlay);
+  return overlay;
+}
+
+// Sadržaj izranja iz kliknutog elementa: točka iz koje raste je njegova sredina
+function setOverlayOrigin(body, source) {
+  const rect = source?.getBoundingClientRect();
+  if (!rect) {
+    body.style.removeProperty("--overlay-origin");
+    return;
+  }
+  const bodyRect = body.getBoundingClientRect();
+  const x = rect.left + rect.width / 2 - bodyRect.left;
+  const y = rect.top + rect.height / 2 - bodyRect.top;
+  body.style.setProperty("--overlay-origin", `${x}px ${y}px`);
+}
+
+// content: { kind, html, label, view, title, url, historyState, afterFill }
+function openOverlay(content, { source = null, push = true } = {}) {
+  const isSwap = Boolean(activeOverlay);
+  if (!activeOverlay) {
+    activeOverlay = {
+      el: createOverlayElement(),
+      returnView: state.view,
+      returnTitle: document.title,
+      returnFocus: source || document.activeElement,
+    };
+    updateScrollbarWidth();
+    document.documentElement.classList.add("has-project-overlay");
+    if (siteShell) siteShell.inert = true;
+  }
+  activeOverlay.kind = content.kind;
+  // Uz bilješku nema navigacije (ne treba joj, a prekrivala bi tekst); uz projekt ostaje traka sekcija
+  document.documentElement.classList.toggle("has-note-overlay", content.kind === "note");
+
+  const overlay = activeOverlay.el;
+  const scroller = overlayScroller();
+  const body = overlay.querySelector(".project-overlay-body");
+
+  const fill = () => {
+    body.innerHTML = content.html;
+    overlay.setAttribute("aria-label", content.label);
+    overlay.dataset.kind = content.kind;
+    scroller.scrollTop = 0;
+    state.view = content.view;
+    document.title = content.title;
+    updateSwitch();
+    content.afterFill?.(body);
+  };
+
+  if (push) history.pushState(content.historyState, "", content.url);
+
+  if (isSwap) {
+    // Drugi sadržaj (npr. projekt iz See more): stari se spusti i nestane, novi izroni
+    body.classList.add("is-swapping");
+    setTimeout(() => {
+      fill();
+      body.style.removeProperty("--overlay-origin");
+      body.classList.remove("is-swapping");
+    }, OVERLAY_CLOSE_MS);
+  } else {
+    fill();
+    setOverlayOrigin(body, source);
+    // Dva framea da preglednik prvo nacrta početno stanje, pa tek onda animira
+    requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add("is-open")));
+  }
+
+  scroller.focus({ preventScroll: true });
+  return true;
+}
+
+function closeOverlay() {
+  const current = activeOverlay;
+  if (!current) return;
+  activeOverlay = null;
+
+  const overlay = current.el;
+  overlay.classList.remove("is-open");
+  overlay.classList.add("is-closing");
+  state.view = current.returnView;
+  document.title = current.returnTitle;
+  updateSwitch();
+  trackPageView();
+
+  setTimeout(() => {
+    overlay.remove();
+    document.documentElement.classList.remove("has-project-overlay", "has-note-overlay");
+    if (siteShell) siteShell.inert = false;
+    current.returnFocus?.focus?.({ preventScroll: true });
+  }, OVERLAY_CLOSE_MS);
+}
+
+// Zatvaranje ide kroz povijest, da Back i × rade isto
+function requestCloseOverlay() {
+  if (!activeOverlay) return;
+  if (history.state?.projectOverlay || history.state?.noteOverlay) {
+    history.back();
+  } else {
+    history.replaceState(null, "", activeOverlay.kind === "note" ? "index.html#blog" : "index.html#projects");
+    closeOverlay();
+  }
+}
+
+function openProjectOverlay(slug, options = {}) {
+  const project = publishedWorks.find((work) => work.slug === slug);
+  if (!project) return false;
+  openOverlay(
+    {
+      kind: "project",
+      html: projectMarkup(project),
+      label: project.title,
+      view: "project",
+      title: `${project.title} · Teo Peter`,
+      url: projectHref(slug),
+      historyState: { projectOverlay: slug },
+      afterFill: (body) => {
+        updateProjectStories();
+        animateProjectTitle(body.querySelector("#project-title"));
+      },
+    },
+    options
+  );
+  trackPageView(slug);
+  return true;
+}
+
+// Bilješka se prepoznaje po zadnjem dijelu Substack adrese
+function noteId(note) {
+  try {
+    return new URL(note.url).pathname.split("/").filter(Boolean).pop() || "";
+  } catch {
+    return "";
+  }
+}
+
+// Vrijeme čitanja: oko 220 riječi u minuti
+function noteReadingTime(html) {
+  const text = new DOMParser().parseFromString(html, "text/html").body.textContent || "";
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 220));
+}
+
+function noteMarkup(note) {
+  return `
+    <article class="note-view" aria-labelledby="note-view-title">
+      <header class="note-view-header">
+        <p class="note-view-meta">
+          <span>${formatNoteDate(note.date)}</span>
+          <span aria-hidden="true">·</span>
+          <span>${noteReadingTime(note.html)} min read</span>
+        </p>
+        <h1 id="note-view-title">${note.title}</h1>
+        ${note.subtitle ? `<p class="note-view-subtitle">${note.subtitle}</p>` : ""}
+      </header>
+      <div class="note-body note-view-body">
+        ${note.html}
+      </div>
+      ${note.url ? `
+        <footer class="note-view-footer">
+          <span>Originally published on Substack</span>
+          <a class="bento-pill note-view-source" href="${note.url}" target="_blank" rel="noopener noreferrer">Read on Substack ↗</a>
+        </footer>` : ""}
+    </article>
+  `;
+}
+
+async function openNoteOverlay(id, options = {}) {
+  const notes = await loadNotes();
+  const note = notes.find((item) => noteId(item) === id);
+  if (!note) return false;
+  openOverlay(
+    {
+      kind: "note",
+      html: noteMarkup(note),
+      label: note.title,
+      view: "blog",
+      title: `${note.title} · Teo Peter`,
+      url: `index.html?note=${encodeURIComponent(id)}#blog`,
+      historyState: { noteOverlay: id },
+    },
+    options
+  );
+  track("note_open", { note_title: note.title, click_location: options.source ? "notes_page" : "direct" });
+  return true;
+}
+
+document.addEventListener("click", (event) => {
+  if (!(event.target instanceof Element)) return;
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Bilješka u Notes
+  const noteLink = event.target.closest("a[data-note]");
+  if (noteLink) {
+    event.preventDefault();
+    openNoteOverlay(noteLink.dataset.note, { source: reduceMotion ? null : noteLink });
+    return;
+  }
+
+  // Rad u listi radova ili u See more unutar overlaya
+  const card = event.target.closest("a.work-card");
+  if (!card || card.target === "_blank") return;
+  if (state.view !== "projects" && !card.closest(".project-overlay")) return;
+  const slug = new URL(card.href, window.location.href).searchParams.get("slug");
+  if (!slug) return;
+  if (openProjectOverlay(slug, { source: reduceMotion ? null : card.querySelector(".work-thumbs") || card })) {
+    event.preventDefault();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && activeOverlay) {
+    event.preventDefault();
+    requestCloseOverlay();
+  }
+});
+
+window.addEventListener("popstate", (event) => {
+  const { projectOverlay: slug, noteOverlay: note } = event.state || {};
+  if (slug) {
+    openProjectOverlay(slug, { push: false });
+  } else if (note) {
+    openNoteOverlay(note, { push: false });
+  } else if (activeOverlay) {
+    // Povratak na listu: hashchange koji uz to stigne ne smije ponovno iscrtati stranicu
+    ignoreNextHashchange = true;
+    setTimeout(() => { ignoreNextHashchange = false; }, 100);
+    closeOverlay();
+  }
+});
 
 // Naslov projekta tipka se slovo po slovo, kao naslov na početnoj stranici
 function animateProjectTitle(title) {
@@ -2040,16 +2513,7 @@ document.addEventListener("click", (event) => {
   if (project) track("select_project", { project_name: project, click_location: location });
 });
 
-// Otvaranje bilješke na stranici Notes
-document.addEventListener(
-  "toggle",
-  (event) => {
-    const note = event.target;
-    if (!(note instanceof HTMLDetailsElement) || !note.classList.contains("note") || !note.open) return;
-    track("note_open", { note_title: note.querySelector("h2")?.textContent, click_location: "notes_page" });
-  },
-  true
-);
+// Otvaranje bilješke na stranici Notes prati se u openNoteOverlay()
 
 function route() {
   const hash = window.location.hash.replace("#", "");
@@ -2060,6 +2524,12 @@ function route() {
     renderProjects();
   } else if (hash === "blog") {
     renderBlog();
+    const noteParam = new URLSearchParams(window.location.search).get("note");
+    if (noteParam) {
+      // Ispod overlaya ostaje čista lista Notes, da × i Back vode na nju, a ne izvan stranice
+      history.replaceState(null, "", "index.html#blog");
+      openNoteOverlay(noteParam);
+    }
   } else if (hash === "cv") {
     renderCv();
   } else if (projectSlug) {
@@ -2124,7 +2594,15 @@ function routeWithTransition() {
   document.startViewTransition(route);
 }
 
-window.addEventListener("hashchange", routeWithTransition);
+window.addEventListener("hashchange", () => {
+  if (ignoreNextHashchange) {
+    ignoreNextHashchange = false;
+    return;
+  }
+  // Promjena prikaza (npr. About ili Notes) dok je projekt otvoren najprije zatvori overlay
+  if (activeOverlay) closeOverlay();
+  routeWithTransition();
+});
 window.addEventListener("resize", updateNavIndicators);
 window.addEventListener("resize", updateProjectStories);
 window.addEventListener("scroll", updateProjectStories, { passive: true });

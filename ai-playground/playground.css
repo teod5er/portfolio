@@ -428,6 +428,60 @@ a.app-icon:hover {
   color: rgba(17, 17, 17, 0.6);
 }
 
+/* Live website (vladomartek.com) */
+
+.window-site {
+  width: 480px;
+}
+
+.window-site .window-body {
+  position: relative;
+  flex: none;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #fff url("../web_vlado-marek/hero_0.png") center / cover no-repeat;
+}
+
+.window-site iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1440px;
+  height: 900px;
+  border: 0;
+  transform: scale(var(--site-scale, 0.33));
+  transform-origin: 0 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.window-site .window-body.is-loaded iframe {
+  opacity: 1;
+}
+
+/* Dok se prozor vuče, iframe ne smije "progutati" pokazivač */
+.window.is-dragging iframe {
+  pointer-events: none;
+}
+
+.site-open {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.15s ease;
+}
+
+.site-open:hover {
+  transform: scale(1.04);
+}
+
 /* Small screens: stack windows */
 
 @media (max-width: 760px) {
