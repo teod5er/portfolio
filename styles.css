@@ -2312,6 +2312,35 @@ h3 {
   font-size: var(--font-size);
 }
 
+/* Mail velikim slovima preko cijele širine footera */
+.footer-email {
+  grid-column: 1 / -1;
+  justify-self: start;
+  max-width: 100%;
+  margin-bottom: clamp(24px, 4vw, 64px);
+  font-size: clamp(32px, 7.6vw, 148px);
+  line-height: var(--leading-display);
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+  transition: color 180ms ease;
+}
+
+.footer-email:hover,
+.footer-email:focus-visible {
+  color: var(--muted);
+}
+
+/* "Copy e-mail" izgleda kao ostali linkovi u footeru */
+.footer-copy {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
 .footer-credit {
   margin: 0;
   color: var(--muted);
@@ -2320,6 +2349,8 @@ h3 {
 
 .social-links a:hover,
 .social-links a:focus-visible,
+.footer-copy:hover,
+.footer-copy:focus-visible,
 .back-link:hover,
 .back-link:focus-visible,
 .work-card:hover h2 {
@@ -2357,13 +2388,15 @@ h3 {
   --switch-scale: 1.04;
 }
 
-.navigation-stack.is-scrolling-down {
-  --switch-scale: 0.8;
-  gap: 9px;
+/* Scroll prema dolje: traka klizne ispod ruba ekrana i nestane; scroll prema gore je vraća.
+   Ostaje vidljiva dok je fokus tipkovnice u njoj. */
+.navigation-stack.is-loaded.is-scrolling-down:not(:focus-within) {
+  transform: translateX(-50%) translateY(calc(100% + 40px)) scale(var(--switch-scale));
+  opacity: 0;
 }
 
-.navigation-stack.is-loaded.is-scrolling-down:hover {
-  --switch-scale: 0.8;
+.navigation-stack.is-scrolling-down:not(:focus-within) * {
+  pointer-events: none !important;
 }
 
 .bottom-switch {
@@ -2890,9 +2923,6 @@ h3 {
     --switch-scale: 1;
   }
 
-  .navigation-stack.is-loaded.is-scrolling-down:hover {
-    --switch-scale: 0.8;
-  }
 
   .bottom-switch {
     --switch-inner-radius: 8px;
@@ -3202,11 +3232,21 @@ html.has-project-overlay body {
   transition-duration: 420ms;
 }
 
-.project-overlay-close {
+/* × (i expand uz vanjsku stranicu) u gornjem desnom kutu */
+.project-overlay-actions {
   position: absolute;
   top: 16px;
   right: calc(16px + var(--scrollbar-width, 0px));
   z-index: 1;
+  display: flex;
+  gap: 8px;
+}
+
+.project-overlay-actions .icon-button[hidden] {
+  display: none;
+}
+
+.project-overlay-actions .icon-button {
   opacity: 0;
   transform: scale(0.8);
   transition:
@@ -3216,18 +3256,34 @@ html.has-project-overlay body {
     color 180ms ease;
 }
 
-.project-overlay.is-open .project-overlay-close {
+.project-overlay.is-open .project-overlay-actions .icon-button {
   opacity: 1;
   transform: none;
 }
 
-.project-overlay.is-closing .project-overlay-close {
+.project-overlay.is-closing .project-overlay-actions .icon-button {
   transition-delay: 0s;
 }
 
-/* × je isti + kao u Notes listi, zakrenut za 45° */
+/* × je isti + kao u Notes listi, zakrenut za 45°, ali deblji i u crnom krugu.
+   Stoji uvijek na istom mjestu (gore desno), uz projekt, bilješku i vanjsku stranicu. */
+.project-overlay-close.icon-button {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.project-overlay-close.icon-button:hover,
+.project-overlay-close.icon-button:focus-visible {
+  background: #333;
+  color: var(--bg);
+}
+
 .project-overlay-close svg {
   transform: rotate(45deg);
+}
+
+.project-overlay-close svg path {
+  stroke-width: 2.25;
 }
 
 /* Unutar overlaya stranica projekta nema svoju fade animaciju, prijelaz radi overlay */
@@ -3241,7 +3297,7 @@ html.has-project-overlay body {
     padding: 72px 8px 120px;
   }
 
-  .project-overlay-close {
+  .project-overlay-actions {
     top: 14px;
     right: 14px;
   }
@@ -3250,7 +3306,7 @@ html.has-project-overlay body {
 @media (prefers-reduced-motion: reduce) {
   .project-overlay,
   .project-overlay-body,
-  .project-overlay-close {
+  .project-overlay-actions .icon-button {
     transition: none;
   }
 }
@@ -3336,7 +3392,8 @@ html.has-project-overlay body {
   color: var(--muted);
 }
 
-html.has-note-overlay .navigation-stack {
+html.has-note-overlay .navigation-stack,
+html.has-site-overlay .navigation-stack {
   opacity: 0;
   pointer-events: none;
 }
@@ -3363,6 +3420,8 @@ html.has-note-overlay .navigation-stack {
 
 button.icon-button:hover,
 button.icon-button:focus-visible,
+a.icon-button:hover,
+a.icon-button:focus-visible,
 .note-summary:hover .icon-button,
 .note-summary:focus-visible .icon-button {
   background: var(--ink);
@@ -3372,4 +3431,70 @@ button.icon-button:focus-visible,
 button.icon-button:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
+}
+
+
+/* ───────── Vanjska stranica u overlayu (iframe) ───────── */
+/* Jedan bijeli box preko cijelog ekrana; traka s nazivom stoji u visini gumba × i expand. */
+.project-overlay[data-kind="site"] .project-overlay-scroll {
+  overflow: hidden;
+  padding: 16px var(--frame) var(--frame);
+}
+
+.project-overlay[data-kind="site"] .project-overlay-body {
+  max-width: none;
+  height: 100%;
+}
+
+.site-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.site-view-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  /* Mjesto za × i expand desno */
+  padding-right: calc(44px * 2 + 8px + 16px);
+  font-size: var(--text-small);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.site-view-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.site-view-domain {
+  color: var(--muted, rgba(0, 0, 0, 0.5));
+}
+
+.site-view-frame {
+  flex: 1;
+  min-height: 0;
+  background: #fff;
+  border-radius: var(--radius-box);
+  overflow: hidden;
+}
+
+.site-view-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 680px) {
+  .project-overlay[data-kind="site"] .project-overlay-scroll {
+    padding: 14px 8px 8px;
+  }
+
+  .site-view-domain {
+    display: none;
+  }
 }

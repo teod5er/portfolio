@@ -191,18 +191,17 @@ const works = [
   {
     slug: "vlado-marek",
     title: "Website for Croatian artist Vlado Marek",
-    // comingSoon: prikazuje se samo na popisu radova, bez stranice projekta i bez linka
-    comingSoon: true,
+    // externalUrl: na listi radova stranica se otvara u overlayu (iframe), drugdje u novoj kartici
+    externalUrl: "https://vladomartek.com/",
     client: "Vlado Marek",
     year: "2026",
     category: "Web",
-    services: ["Coming soon"],
+    services: ["Web"],
     images: ["web_vlado-marek/hero_0.png"],
   },
   {
     slug: "frankie",
     title: "Frankie AI assistant",
-    // externalUrl: kartica vodi na vanjsku stranicu, bez stranice projekta
     externalUrl: "https://frankie.frankfurt-school.de/",
     client: "Frankfurt School",
     year: "2026",
@@ -797,7 +796,7 @@ function renderWorkCards(items) {
       `;
 
       return `
-        <a class="work-card" href="${work.externalUrl || projectHref(work.slug)}"${work.externalUrl ? ' target="_blank" rel="noopener noreferrer"' : ""} aria-label="${work.title}, ${work.client}${work.externalUrl ? " (opens in a new tab)" : ""}">
+        <a class="work-card" href="${work.externalUrl || projectHref(work.slug)}"${work.externalUrl ? ` target="_blank" rel="noopener noreferrer" data-site="${work.slug}"` : ""} aria-label="${work.title}, ${work.client}${work.externalUrl ? " (opens in a new tab)" : ""}">
           ${mediaHtml}
           <div class="work-card-copy">
             <div class="work-title-row">
@@ -1282,6 +1281,9 @@ const PLUS_ICON =
 // Strelice istog crteža kao "+" (linija 1,5 px, zaobljeni krajevi)
 const ARROW_ICON_RIGHT =
   '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+// "Otvori u novoj kartici": dijagonalna strelica istog crteža
+const EXPAND_ICON =
+  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const ARROW_ICON_LEFT =
   '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
@@ -2008,11 +2010,15 @@ function createOverlayElement() {
     <div class="project-overlay-scroll" tabindex="-1">
       <div class="project-overlay-body"></div>
     </div>
-    <button class="project-overlay-close icon-button" type="button" aria-label="Close">${PLUS_ICON}</button>
+    <div class="project-overlay-actions">
+      <a class="project-overlay-expand icon-button" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open in a new tab" hidden>${EXPAND_ICON}</a>
+      <button class="project-overlay-close icon-button" type="button" aria-label="Close">${PLUS_ICON}</button>
+    </div>
   `;
 
   const scroller = overlay.querySelector(".project-overlay-scroll");
   scroller.addEventListener("scroll", () => {
+    updateNavOnScroll(scroller.scrollTop);
     updateProjectStories();
     updateActiveSection();
   }, { passive: true });
@@ -2062,6 +2068,8 @@ function openOverlay(content, { source = null, push = true } = {}) {
   activeOverlay.kind = content.kind;
   // Uz bilješku nema navigacije (ne treba joj, a prekrivala bi tekst); uz projekt ostaje traka sekcija
   document.documentElement.classList.toggle("has-note-overlay", content.kind === "note");
+  // Isto uz vanjsku stranicu: traka bi prekrila dno iframea
+  document.documentElement.classList.toggle("has-site-overlay", content.kind === "site");
 
   const overlay = activeOverlay.el;
   const scroller = overlayScroller();
@@ -2071,7 +2079,12 @@ function openOverlay(content, { source = null, push = true } = {}) {
     body.innerHTML = content.html;
     overlay.setAttribute("aria-label", content.label);
     overlay.dataset.kind = content.kind;
+    // Expand (nova kartica) postoji samo uz vanjsku stranicu
+    const expand = overlay.querySelector(".project-overlay-expand");
+    expand.hidden = !content.externalUrl;
+    if (content.externalUrl) expand.href = content.externalUrl;
     scroller.scrollTop = 0;
+    resetNavOnScroll(0);
     state.view = content.view;
     document.title = content.title;
     updateSwitch();
@@ -2109,12 +2122,13 @@ function closeOverlay() {
   overlay.classList.add("is-closing");
   state.view = current.returnView;
   document.title = current.returnTitle;
+  resetNavOnScroll(window.scrollY);
   updateSwitch();
   trackPageView();
 
   setTimeout(() => {
     overlay.remove();
-    document.documentElement.classList.remove("has-project-overlay", "has-note-overlay");
+    document.documentElement.classList.remove("has-project-overlay", "has-note-overlay", "has-site-overlay");
     if (siteShell) siteShell.inert = false;
     current.returnFocus?.focus?.({ preventScroll: true });
   }, OVERLAY_CLOSE_MS);
@@ -2123,7 +2137,7 @@ function closeOverlay() {
 // Zatvaranje ide kroz povijest, da Back i × rade isto
 function requestCloseOverlay() {
   if (!activeOverlay) return;
-  if (history.state?.projectOverlay || history.state?.noteOverlay) {
+  if (history.state?.projectOverlay || history.state?.noteOverlay || history.state?.siteOverlay) {
     history.back();
   } else {
     history.replaceState(null, "", activeOverlay.kind === "note" ? "index.html#blog" : "index.html#projects");
@@ -2147,6 +2161,38 @@ function openProjectOverlay(slug, options = {}) {
         updateProjectStories();
         animateProjectTitle(body.querySelector("#project-title"));
       },
+    },
+    options
+  );
+  trackPageView(slug);
+  return true;
+}
+
+// Vanjska stranica (Frankie, Vlado Martek) u iframeu, s × i expand u kutu
+function openSiteOverlay(slug, options = {}) {
+  const work = works.find((item) => item.slug === slug && item.externalUrl);
+  if (!work) return false;
+  const domain = new URL(work.externalUrl).hostname.replace(/^www\./, "");
+  openOverlay(
+    {
+      kind: "site",
+      html: `
+        <div class="site-view">
+          <div class="site-view-bar">
+            <span class="site-view-title">${work.title}</span>
+            <span class="site-view-domain">${domain}</span>
+          </div>
+          <div class="site-view-frame">
+            <iframe src="${work.externalUrl}" title="${work.title}" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+        </div>
+      `,
+      label: work.title,
+      view: "projects",
+      title: `${work.title} · Teo Peter`,
+      url: `index.html?site=${encodeURIComponent(slug)}#projects`,
+      historyState: { siteOverlay: slug },
+      externalUrl: work.externalUrl,
     },
     options
   );
@@ -2229,8 +2275,15 @@ document.addEventListener("click", (event) => {
 
   // Rad u listi radova ili u See more unutar overlaya
   const card = event.target.closest("a.work-card");
-  if (!card || card.target === "_blank") return;
+  if (!card) return;
   if (state.view !== "projects" && !card.closest(".project-overlay")) return;
+  if (card.dataset.site) {
+    if (openSiteOverlay(card.dataset.site, { source: reduceMotion ? null : card.querySelector(".work-thumbs") || card })) {
+      event.preventDefault();
+    }
+    return;
+  }
+  if (card.target === "_blank") return;
   const slug = new URL(card.href, window.location.href).searchParams.get("slug");
   if (!slug) return;
   if (openProjectOverlay(slug, { source: reduceMotion ? null : card.querySelector(".work-thumbs") || card })) {
@@ -2246,9 +2299,11 @@ document.addEventListener("keydown", (event) => {
 });
 
 window.addEventListener("popstate", (event) => {
-  const { projectOverlay: slug, noteOverlay: note } = event.state || {};
+  const { projectOverlay: slug, noteOverlay: note, siteOverlay: site } = event.state || {};
   if (slug) {
     openProjectOverlay(slug, { push: false });
+  } else if (site) {
+    openSiteOverlay(site, { push: false });
   } else if (note) {
     openNoteOverlay(note, { push: false });
   } else if (activeOverlay) {
@@ -2522,6 +2577,11 @@ function route() {
     renderProject(hash.split("/")[1]);
   } else if (hash === "projects") {
     renderProjects();
+    const siteParam = new URLSearchParams(window.location.search).get("site");
+    if (siteParam) {
+      history.replaceState(null, "", "index.html#projects");
+      openSiteOverlay(siteParam);
+    }
   } else if (hash === "blog") {
     renderBlog();
     const noteParam = new URLSearchParams(window.location.search).get("note");
@@ -2540,6 +2600,7 @@ function route() {
 
   updateSwitch();
   window.scrollTo({ top: 0, behavior: "instant" });
+  resetNavOnScroll(0);
   app.focus({ preventScroll: true });
   trackPageView(projectSlug || hash.split("/")[1]);
 }
@@ -2614,33 +2675,41 @@ window.addEventListener("scrollend", () => {
 document.fonts?.ready.then(updateNavIndicators);
 createNavIndicator(bottomSwitch);
 createNavIndicator(categoryBar);
+// Na radovima i Notes (i u overlayu projekta) navigacija se skriva pri scrollu prema dolje
+// i vraća pri scrollu prema gore ili na vrhu. Na naslovnici ostaje stalno vidljiva.
 let lastSwitchScrollY = window.scrollY;
 let scrollFrame = 0;
+
+function updateNavOnScroll(currentScrollY) {
+  if (scrollFrame) return;
+  scrollFrame = window.requestAnimationFrame(() => {
+    scrollFrame = 0;
+    const scrollDifference = currentScrollY - lastSwitchScrollY;
+
+    if (currentScrollY <= 0 || (state.view === "cv" && !activeOverlay)) {
+      navigationStack?.classList.remove("is-scrolling-down");
+      lastSwitchScrollY = currentScrollY;
+      return;
+    }
+
+    if (Math.abs(scrollDifference) >= 8) {
+      navigationStack?.classList.toggle("is-scrolling-down", scrollDifference > 0);
+      lastSwitchScrollY = currentScrollY;
+    }
+  });
+}
+
+// Nakon otvaranja ili zatvaranja overlaya traka se ponovno prikaže
+function resetNavOnScroll(currentScrollY = 0) {
+  lastSwitchScrollY = currentScrollY;
+  navigationStack?.classList.remove("is-scrolling-down");
+}
 
 window.addEventListener(
   "scroll",
   () => {
-    if (scrollFrame) return;
-
-    scrollFrame = window.requestAnimationFrame(() => {
-      const currentScrollY = window.scrollY;
-      const scrollDifference = currentScrollY - lastSwitchScrollY;
-
-      if (currentScrollY <= 0) {
-        navigationStack?.classList.remove("is-scrolling-down");
-        lastSwitchScrollY = currentScrollY;
-        scrollFrame = 0;
-        return;
-      }
-
-      if (Math.abs(scrollDifference) >= 8) {
-        const scrollingDown = scrollDifference > 0;
-        navigationStack?.classList.toggle("is-scrolling-down", scrollingDown);
-        lastSwitchScrollY = currentScrollY;
-      }
-
-      scrollFrame = 0;
-    });
+    if (activeOverlay) return;
+    updateNavOnScroll(window.scrollY);
   },
   { passive: true }
 );
