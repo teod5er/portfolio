@@ -2312,24 +2312,6 @@ h3 {
   font-size: var(--font-size);
 }
 
-/* Mail velikim slovima preko cijele širine footera */
-.footer-email {
-  grid-column: 1 / -1;
-  justify-self: start;
-  max-width: 100%;
-  margin-bottom: clamp(24px, 4vw, 64px);
-  font-size: clamp(32px, 7.6vw, 148px);
-  line-height: var(--leading-display);
-  letter-spacing: -0.02em;
-  overflow-wrap: anywhere;
-  transition: color 180ms ease;
-}
-
-.footer-email:hover,
-.footer-email:focus-visible {
-  color: var(--muted);
-}
-
 /* "Copy e-mail" izgleda kao ostali linkovi u footeru */
 .footer-copy {
   padding: 0;
@@ -2360,28 +2342,34 @@ h3 {
 .navigation-stack {
   --switch-scale: 1;
   /* Zajednički unutarnji razmak za navigacijsku traku i traku za filtriranje */
-  --switch-pad: 8px;
+  /* Unutarnji kut 4 px kao slike (--radius-media), vanjski = unutarnji + padding */
+  --switch-pad: 6px;
   --switch-gap: 4px;
+  --switch-inner-radius: var(--radius-media);
+  /* Zajednički materijal svih traka: bijelo staklo (kao boxevi) s istim blurom kao overlay.
+     Aktivna stavka je crna, kao × i hover na okruglim gumbima. */
+  --switch-glass: rgba(255, 255, 255, 0.72);
+  --switch-blur: blur(28px) saturate(1.15);
   position: fixed;
   z-index: 10;
   left: 50%;
   bottom: max(18px, env(safe-area-inset-bottom));
-  transform: translateX(-50%) translateY(100px) scale(var(--switch-scale));
-  opacity: 0;
+  /* Skrivena traka je ispod ruba ekrana. Bez animacije prozirnosti:
+     dok je opacity < 1, preglednik isključi blur i on se pojavi tek naknadno. */
+  transform: translateX(-50%) translateY(calc(100% + 40px)) scale(var(--switch-scale));
   transform-origin: bottom center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   width: max-content;
   max-width: calc(100vw - 24px);
-  transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease, gap 220ms ease;
+  transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1), gap 220ms ease;
   pointer-events: none;
 }
 
 .navigation-stack.is-loaded {
   transform: translateX(-50%) translateY(0) scale(var(--switch-scale));
-  opacity: 1;
 }
 
 .navigation-stack.is-loaded:hover {
@@ -2392,7 +2380,6 @@ h3 {
    Ostaje vidljiva dok je fokus tipkovnice u njoj. */
 .navigation-stack.is-loaded.is-scrolling-down:not(:focus-within) {
   transform: translateX(-50%) translateY(calc(100% + 40px)) scale(var(--switch-scale));
-  opacity: 0;
 }
 
 .navigation-stack.is-scrolling-down:not(:focus-within) * {
@@ -2403,24 +2390,24 @@ h3 {
   display: inline-flex;
   align-items: center;
   border: 0;
-  --switch-inner-radius: 8px;
   border-radius: calc(var(--switch-inner-radius) + var(--switch-pad));
   padding: var(--switch-pad);
-  background: #000;
-  color: #fff;
+  background: var(--switch-glass);
+  color: var(--ink);
   gap: var(--switch-gap);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: var(--switch-blur);
+  backdrop-filter: var(--switch-blur);
   width: max-content;
   max-width: calc(100vw - 24px);
   overflow: hidden;
   pointer-events: auto;
 }
 
+/* Visina 44 px, ista kao okrugli gumbi (× i +) */
 .bottom-switch .switch-button {
   border-radius: var(--switch-inner-radius);
-  min-height: 64px;
-  padding: 18px 24px;
+  min-height: 44px;
+  padding: 10px 18px;
 }
 
 .work-filters {
@@ -2433,29 +2420,29 @@ h3 {
   padding: var(--switch-pad);
   overflow-x: auto;
   border: 0;
-  border-radius: var(--radius-pill);
-  background: #fff;
+  border-radius: calc(var(--switch-inner-radius) + var(--switch-pad));
+  background: var(--switch-glass);
+  -webkit-backdrop-filter: var(--switch-blur);
+  backdrop-filter: var(--switch-blur);
   color: var(--ink);
-  opacity: 0;
+  /* Bez animacije: kategorije se samo pojave ili nestanu, s blurom od prvog framea */
   visibility: hidden;
   pointer-events: none;
-  transform: translateY(8px);
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease, visibility 0s linear 220ms;
 }
 
 .work-filters.is-visible {
-  opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translateY(0);
-  transition-delay: 0s;
 }
 
-.work-filters.category-bar button {
+.work-filters.category-bar button,
+.section-nav.category-bar button {
   color: var(--ink);
+  border-radius: var(--switch-inner-radius);
 }
 
-.work-filters.category-bar button.is-active {
+.work-filters.category-bar button.is-active,
+.section-nav.category-bar button.is-active {
   color: #fff;
 }
 
@@ -2465,8 +2452,10 @@ h3 {
   max-width: calc(100vw - 24px);
   padding: var(--switch-pad);
   overflow-x: auto;
-  border-radius: var(--radius-pill);
-  background: #fff;
+  border-radius: calc(var(--switch-inner-radius) + var(--switch-pad));
+  background: var(--switch-glass);
+  -webkit-backdrop-filter: var(--switch-blur);
+  backdrop-filter: var(--switch-blur);
   scrollbar-width: none;
   pointer-events: auto;
 }
@@ -2479,13 +2468,6 @@ h3 {
   display: none;
 }
 
-.section-nav.category-bar button {
-  color: var(--ink);
-}
-
-.section-nav.category-bar button.is-active {
-  color: #fff;
-}
 
 .switch-core {
   display: flex;
@@ -2512,7 +2494,7 @@ h3 {
   border-radius: var(--radius-media);
   padding: 8px 12px;
   background: transparent;
-  color: #fff;
+  color: var(--ink);
   cursor: url("./pointinghand.svg") 17 2, pointer;
   font-size: var(--font-size);
   line-height: 1.1;
@@ -2521,13 +2503,14 @@ h3 {
 }
 
 .category-bar button {
-  padding: 8px 12px;
-  border-radius: var(--radius-pill);
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: var(--switch-inner-radius);
 }
 
 .switch-button[aria-current="page"],
 .switch-button.is-active {
-  color: #000;
+  color: #fff;
 }
 
 .category-bar button.is-active {
@@ -2550,7 +2533,7 @@ h3 {
   top: 0;
   left: 0;
   border-radius: var(--switch-inner-radius);
-  background: #fff;
+  background: var(--ink);
   opacity: 0;
   pointer-events: none;
   transition: transform 380ms cubic-bezier(0.22, 1, 0.36, 1), width 380ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -2566,8 +2549,8 @@ h3 {
 }
 
 .category-bar .nav-indicator {
-  border-radius: var(--radius-pill);
-  background: #000;
+  border-radius: var(--switch-inner-radius);
+  background: var(--ink);
 }
 
 .switch-button.is-hidden {
@@ -2925,7 +2908,6 @@ h3 {
 
 
   .bottom-switch {
-    --switch-inner-radius: 8px;
     display: inline-flex;
     justify-content: center;
     width: max-content;
@@ -2940,8 +2922,8 @@ h3 {
   .bottom-switch .switch-button {
     flex: 0 0 auto;
     text-align: center;
-    min-height: 58px;
-    padding: 14px 14px;
+    min-height: 44px;
+    padding: 10px 14px;
   }
 
   .work-filters {
@@ -2957,7 +2939,7 @@ h3 {
 
   .category-bar button {
     flex: 0 0 auto;
-    padding: 8px 9px;
+    padding: 6px 9px;
     font-size: 0.78em;
   }
 }
@@ -3009,8 +2991,33 @@ h3 {
   navigation: auto;
 }
 
-.navigation-stack {
+/* Ime prijelaza samo dok prijelaz traje (između index.html i project.html):
+   stalno postavljeno isključuje backdrop-filter (blur) na traci */
+html:active-view-transition .navigation-stack {
   view-transition-name: navigation;
+}
+
+/* Prijelaz unutar stranice (About, Work, Notes): animira se samo sadržaj, traka ostaje s blurom */
+.site-shell {
+  transition:
+    opacity 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.site-shell.is-page-leaving {
+  opacity: 0;
+  transform: translateY(-12px);
+  filter: blur(8px);
+  transition-duration: 220ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.site-shell.is-page-entering {
+  opacity: 0;
+  transform: translateY(16px);
+  filter: blur(8px);
+  transition: none;
 }
 
 ::view-transition-old(root) {
@@ -3092,8 +3099,7 @@ input[type="radio"] {
 
 /* Navigacija se skriva dok je bento naslovnica u prozoru */
 .navigation-stack.is-loaded.is-over-bento {
-  transform: translateX(-50%) translateY(120px) scale(var(--switch-scale));
-  opacity: 0;
+  transform: translateX(-50%) translateY(calc(100% + 40px)) scale(var(--switch-scale));
 }
 
 
@@ -3392,9 +3398,9 @@ html.has-project-overlay body {
   color: var(--muted);
 }
 
-html.has-note-overlay .navigation-stack,
-html.has-site-overlay .navigation-stack {
-  opacity: 0;
+html.has-note-overlay .navigation-stack.is-loaded,
+html.has-site-overlay .navigation-stack.is-loaded {
+  transform: translateX(-50%) translateY(calc(100% + 40px)) scale(var(--switch-scale));
   pointer-events: none;
 }
 

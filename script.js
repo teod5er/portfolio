@@ -2645,14 +2645,31 @@ categoryBar?.addEventListener("click", (event) => {
   updateSwitch();
 });
 
+// Prijelaz između About, Work i Notes animira samo sadržaj (.site-shell), ne navigaciju.
+// View Transition API bi traku snimio kao sliku bez blura, pa bi se blur pojavio tek na kraju.
+const PAGE_LEAVE_MS = 220;
+let pageTransitionId = 0;
+
 function routeWithTransition() {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (!document.startViewTransition || reduceMotion) {
+  if (reduceMotion || !siteShell) {
     route();
     return;
   }
 
-  document.startViewTransition(route);
+  const id = ++pageTransitionId;
+  siteShell.classList.remove("is-page-entering");
+  siteShell.classList.add("is-page-leaving");
+  setTimeout(() => {
+    if (id !== pageTransitionId) return;
+    route();
+    siteShell.classList.remove("is-page-leaving");
+    siteShell.classList.add("is-page-entering");
+    // Dva framea da se početno stanje nacrta prije animacije ulaska
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (id === pageTransitionId) siteShell.classList.remove("is-page-entering");
+    }));
+  }, PAGE_LEAVE_MS);
 }
 
 window.addEventListener("hashchange", () => {
